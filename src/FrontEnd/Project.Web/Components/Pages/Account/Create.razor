@@ -56,7 +56,7 @@
                           UserAttributes="@(new() { { "autocomplete", "email" }, { "aria-required", "true" } })" />
 
             <MudTextField For="@(() => Input.Password)" @bind-Value="Input.Password"
-                          Label="Password"
+                          Label="Senha"
                           Placeholder="••••••••"
                           Variant="Variant.Outlined"
                           Margin="Margin.Dense"
@@ -64,6 +64,16 @@
                           Adornment="Adornment.Start"
                           AdornmentIcon="@Icons.Material.Filled.Lock"
                           UserAttributes="@(new() { { "autocomplete", "current-password" }, { "aria-required", "true" } })" />
+
+            <MudTextField For="@(() => Input.ConfirmPassword)" @bind-Value="Input.ConfirmPassword"
+                          Label="Confirme a Senha"
+                          Placeholder="••••••••"
+                          Variant="Variant.Outlined"
+                          Margin="Margin.Dense"
+                          InputType="InputType.Password"
+                          Adornment="Adornment.Start"
+                          AdornmentIcon="@Icons.Material.Filled.Lock"
+                          UserAttributes="@(new() { { "autocomplete", "current-confirmpassword" }, { "aria-required", "true" } })" />
 
             <MudButton Variant="Variant.Filled"
                        Color="Color.Primary"
@@ -110,7 +120,7 @@
             isLoading = true;
             Errors.Clear();
 
-        
+
         }
         catch (Exception ex)
         {
@@ -136,8 +146,13 @@
         [EmailAddress(ErrorMessage = "E-mail informado é inválido!")]
         public string Email { get; set; }
 
-        [Required(ErrorMessage = "O campo 'Senha' é obrigatório!")]
+        [Required(ErrorMessage = "O campo 'Senha' é obrigatória!")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
+
+        [Required(ErrorMessage = "Confirme sua senha!")]
+        [DataType(DataType.Password)]
+        [Compare("Password", ErrorMessage = "As senhas não coincidem.")]
+        public string ConfirmPassword { get; set; }
     }
 }
