@@ -1,4 +1,4 @@
-# 🚗 Projeto MudBlazor + .NET 8 + MongoDB
+# 🚗 MudBlazor + .NET 8 + MongoDB
 
 Uma aplicação web moderna construída com **MudBlazor** e **.NET 8**, integrando **MongoDB**, autenticação com **JWT**, arquitetura baseada em **UseCases**, e cobertura com **testes de unidade**.
 
