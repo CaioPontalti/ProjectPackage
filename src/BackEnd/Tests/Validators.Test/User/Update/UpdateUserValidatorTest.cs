@@ -6,7 +6,7 @@ namespace Validators.Test.User.Update;
 public class UpdateUserValidatorTest
 {
     [Fact]
-    public void UpdateUserUseCase_WhenDataIsValid_ReturnsSuccess()
+    public void UpdateUserValidate_WhenRequestIsValid_ReturnsSuccess()
     {
         var request = UpdateUserRequestBuilder.BuildSuccess();
 
@@ -16,7 +16,7 @@ public class UpdateUserValidatorTest
     }
 
     [Fact]
-    public void UpdateUserUseCase_WhenNameIsEmpty_ReturnsError()
+    public void UpdateUserValidate_WhenNameIsEmpty_ReturnsError()
     {
         var request = UpdateUserRequestBuilder.BuildNameIsEmpty();
 

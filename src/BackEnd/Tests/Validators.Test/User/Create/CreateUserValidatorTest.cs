@@ -3,10 +3,10 @@ using Project.Application.Resources.Messages.User;
 
 namespace Validators.Test.User.Create;
 
-public class CreateUserValidadorTest
+public class CreateUserValidatorTest
 {
     [Fact]
-    public void CreateUserUseCase_WhenDataIsValid_ReturnsSuccess()
+    public void CreateUserValidate_WhenRequestIsValid_ReturnsSuccess()
     {
         var request = CreateUserRequestBuilder.BuildSuccess();
 
@@ -16,7 +16,7 @@ public class CreateUserValidadorTest
     }
 
     [Fact]
-    public void CreateUserUseCase_WhenEmailIsEmpty_ReturnsError()
+    public void CreateUserValidate_WhenEmailIsEmpty_ReturnsError()
     {
         var request = CreateUserRequestBuilder.BuildEmailIsEmpty();
 
@@ -28,7 +28,7 @@ public class CreateUserValidadorTest
     }
 
     [Fact]
-    public void CreateUserUseCase_WhenEmailIsNull_ReturnsError()
+    public void CreateUserValidate_WhenEmailIsNull_ReturnsError()
     {
         var request = CreateUserRequestBuilder.BuildEmailIsNull();
 
@@ -40,7 +40,7 @@ public class CreateUserValidadorTest
     }
 
     [Fact]
-    public void CreateUserUseCase_WhenEmailIsInvalid_ReturnsError()
+    public void CreateUserValidate_WhenEmailIsInvalid_ReturnsError()
     {
         var request = CreateUserRequestBuilder.BuildEmailIsInvalid();
 
@@ -52,7 +52,7 @@ public class CreateUserValidadorTest
     }
 
     [Fact]
-    public void CreateUserUseCase_WhenNameEmailPasswordAreEmpty_ReturnsErrors()
+    public void CreateUserValidate_WhenNameEmailPasswordAreEmpty_ReturnsErrors()
     {
         var request = CreateUserRequestBuilder.BuildUserEmailPasswordIsEmpty();
 
