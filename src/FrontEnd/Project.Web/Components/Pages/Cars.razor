@@ -1,0 +1,144 @@
+﻿@page "/cars"
+@rendermode InteractiveServer
+@attribute [Authorize]
+
+<PageTitle>Carros</PageTitle>
+<AuthGuard/>
+
+<MudTable @ref="_tableRef"
+          ServerData="LoadServerData"
+          Dense="@dense"
+          Hover="@hover"
+          Bordered="@bordered"
+          Striped="@striped"
+          @bind-SelectedItem="selectedItem1">
+
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Lista de Carros</MudText>
+        <MudSpacer />
+        <MudTextField @bind-Value="searchInput"
+                      @onkeyup="HandleKeyUp"
+                      Placeholder="Search"
+                      Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search"
+                      IconSize="Size.Medium"
+                      Class="mt-0" />
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Fabricante</MudTh>
+        <MudTh>Modelo</MudTh>
+        <MudTh>Cor</MudTh>
+        <MudTh>Ano</MudTh>
+        <MudTh>Placa</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Fb">@context.Fabricante</MudTd>
+        <MudTd DataLabel="Modelo">@context.Modelo</MudTd>
+        <MudTd DataLabel="Cor">@context.Cor</MudTd>
+        <MudTd DataLabel="Ano">@context.Ano</MudTd>
+        <MudTd DataLabel="Placa">@context.Placa</MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager PageSizeOptions="new int[] { 5, 10, 15, int.MaxValue }"
+                       RowsPerPageString="@rowsPerPageString"
+                       InfoFormat="@infoFormat"
+                       AllItemsText="@allItemsText"
+                       HorizontalAlignment="@horizontalAlignment"
+                       HideRowsPerPage="@hideRowsPerPage"
+                       HidePageNumber="@hidePageNumber"
+                       HidePagination="@hidePagination" />
+    </PagerContent>
+</MudTable>
+
+<div class="d-flex flex-wrap mt-4">
+    <MudSwitch @bind-Value="hover" Color="Color.Primary">Hover</MudSwitch>
+    <MudSwitch @bind-Value="dense" Color="Color.Secondary">Dense</MudSwitch>
+    <MudSwitch @bind-Value="striped" Color="Color.Tertiary">Striped</MudSwitch>
+    <MudSwitch @bind-Value="bordered" Color="Color.Warning">Bordered</MudSwitch>
+    <MudSpacer />
+    <div style="min-width:200px;">
+        <MudText>Selected1: @selectedItem1?.Modelo</MudText>
+    </div>
+</div>
+
+@code {
+    private bool dense = true;
+    private bool hover = false;
+    private bool striped = false;
+    private bool bordered = false;
+    private string searchString1 = "";  // usado para filtro real
+    private string searchInput = "";    // usado para manter o valor digitado
+    private Elementt selectedItem1 = null;
+    private MudTable<Elementt> _tableRef;
+
+    private HorizontalAlignment horizontalAlignment = HorizontalAlignment.Right;
+    private bool hidePageNumber;
+    private bool hidePagination;
+    private bool hideRowsPerPage;
+    private string rowsPerPageString = "Itens por pagina";
+    private string infoFormat = "{first_item}-{last_item} of {all_items}";
+    private string allItemsText = "Todos";
+
+    private async Task OnSearchChanged(string value)
+    {
+        searchInput = value;
+    }
+
+    private async Task HandleKeyUp(KeyboardEventArgs args)
+    {
+        if (args.Key == "Enter")
+        {
+            searchString1 = searchInput;
+            await _tableRef.ReloadServerData();
+        }
+    }
+
+    private async Task<TableData<Elementt>> LoadServerData(TableState state, CancellationToken cancellationToken)
+    {
+        var todos = GerarListaCompleta();
+
+        if (!string.IsNullOrWhiteSpace(searchString1))
+        {
+            todos = todos.Where(e => e.Modelo.Contains(searchString1, StringComparison.OrdinalIgnoreCase) || 
+                                e.Fabricante.Contains(searchString1, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+
+        var paginados = todos.Skip(state.Page * state.PageSize).Take(state.PageSize).ToList();
+
+        return new TableData<Elementt>
+        {
+            Items = paginados,
+            TotalItems = todos.Count
+        };
+    }
+
+    private List<Elementt> GerarListaCompleta()
+    {
+        return new List<Elementt>
+        {
+            new Elementt { Cor = "Branco", Modelo = "TSI", Fabricante = "Volkswagen", Ano = 2010, Placa = "EXM-3h98" },
+            new Elementt { Cor = "Branco", Modelo = "GLS", Fabricante = "Ferrari", Ano = 2020, Placa = "EXM-3h98" },
+            new Elementt { Cor = "Preto", Modelo = "TSI", Fabricante = "Volkswagen", Ano = 2010, Placa = "EXM-3h98" },
+            new Elementt { Cor = "Vermelho", Modelo = "TSI", Fabricante = "Volkswagen", Ano = 2020, Placa = "EXM-3h98" },
+            new Elementt { Cor = "Preto", Modelo = "TSI", Fabricante = "Volkswagen", Ano = 2025, Placa = "EXM-3h98" },
+            new Elementt { Cor = "Vermelho", Modelo = "TSI", Fabricante = "Chevrolet", Ano = 2010, Placa = "EXM-3h98" },
+            new Elementt { Cor = "Preto", Modelo = "GLS", Fabricante = "Volkswagen", Ano = 2025, Placa = "EXM-3h98" },
+            new Elementt { Cor = "Vermelho", Modelo = "GLS", Fabricante = "Chevrolet", Ano = 2023, Placa = "EXM-3h98" },
+            new Elementt { Cor = "Branco", Modelo = "TSI", Fabricante = "Volkswagen", Ano = 2010, Placa = "EXM-3h98" },
+            new Elementt { Cor = "Vermelho", Modelo = "GLS", Fabricante = "Chevrolet", Ano = 2020, Placa = "EXM-3h98" },
+            new Elementt { Cor = "Amarelo", Modelo = "GLS", Fabricante = "Chevrolet", Ano = 2010, Placa = "EXM-3h98" },
+            new Elementt { Cor = "Branco", Modelo = "TSI", Fabricante = "Volkswagen", Ano = 2023, Placa = "EXM-3h98" },
+            new Elementt { Cor = "Preto", Modelo = "GLS", Fabricante = "Chevrolet", Ano = 2025, Placa = "EXM-3h98" },
+            new Elementt { Cor = "Amarelo", Modelo = "TSI", Fabricante = "Volkswagen", Ano = 2010, Placa = "EXM-3h98" },
+        };
+    }
+
+    public class Elementt
+    {
+        public string Fabricante { get; set; }
+        public string Modelo { get; set; }
+        public string Cor { get; set; }
+        public int Ano { get; set; }
+        public string Placa { get; set; }
+    }
+}

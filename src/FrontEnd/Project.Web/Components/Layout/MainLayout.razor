@@ -1,0 +1,88 @@
+﻿@inherits LayoutComponentBase
+@inject AuthenticationStateProvider AuthStateProvider
+@inject NavigationManager Navigation
+@using Microsoft.AspNetCore.Components.Routing
+@using MudBlazor
+
+@if (_isAuthorization)
+{
+    <MudThemeProvider @bind-IsDarkMode="_isDarkMode" />
+    <MudPopoverProvider />
+    <MudDialogProvider />
+    <MudSnackbarProvider />
+    <MudLayout>
+        <MudAppBar Elevation="1" Style="background-color:#3E4F7C">
+            <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" OnClick="@ToggleDrawer" Edge="Edge.Start" />
+            <MudText Typo="Typo.h6" Class="ml-2">Projeto Blazor MudJWT</MudText>
+            <MudSpacer />
+            <MudIconButton Icon="@(DarkLightModeButtonIcon)" Color="Color.Inherit" OnClick="@DarkModeToggle" />
+        </MudAppBar>
+
+        <MudDrawer @bind-Open="_drawerOpen" Elevation="1" ClipMode="DrawerClipMode.Always">
+            <NavMenu />
+        </MudDrawer>
+
+        <MudMainContent Class="mt-4 px-4">
+            @Body
+        </MudMainContent>
+    </MudLayout>
+}
+
+@code {
+    private bool _isDarkMode = false;
+    private bool _drawerOpen = true;
+    private bool _isAuthorization { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity?.IsAuthenticated ?? false)
+            _isAuthorization = true;
+        else
+        {
+            _isAuthorization = false;
+            Navigation.NavigateTo("/auth/login");
+        }
+        
+    }
+
+    // private MudTheme _theme => _isDarkMode ? _darkTheme : _lightTheme;
+
+    // private readonly MudTheme _lightTheme = new MudTheme
+    // {
+    //     PaletteLight = new PaletteLight
+    //     {
+    //         Primary = Colors.Blue.Default,
+    //         Background = "#f5f5f5",
+    //         AppbarBackground = "#455387"
+    //     }
+    // };
+
+    // private readonly MudTheme _darkTheme = new MudTheme
+    // {
+    //     PaletteDark = new PaletteDark
+    //     {
+    //         Primary = Colors.Blue.Lighten1,
+    //         Background = "#2e3238",
+    //         AppbarBackground = "#252531"
+    //     }
+    // };
+
+    private void ToggleDrawer()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+
+    private void DarkModeToggle()
+    {
+        _isDarkMode = !_isDarkMode;
+    }
+
+    public string DarkLightModeButtonIcon => _isDarkMode switch
+    {
+        true => Icons.Material.Rounded.AutoMode,
+        false => Icons.Material.Outlined.DarkMode,
+    };
+}

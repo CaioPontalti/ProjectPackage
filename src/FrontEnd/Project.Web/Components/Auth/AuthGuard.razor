@@ -1,0 +1,46 @@
+﻿@inject AuthenticationStateProvider AuthStateProvider
+@inject NavigationManager Navigation
+@inject IAccessTokenService AccessTokenService
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        var token = await AccessTokenService.GetTokenAsync();
+        var isTokenExpired = IsTokenExpired(token);
+
+        if (string.IsNullOrEmpty(token) || isTokenExpired)
+        {
+            await AccessTokenService.RemoveTokenAsync();
+            Navigation.NavigateTo("/auth/login");
+        }
+        
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (!user.Identity?.IsAuthenticated ?? false)
+            Navigation.NavigateTo("/auth/login");
+    }
+
+    private static bool IsTokenExpired(string token)
+    {
+        try
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var jwtToken = handler.ReadJwtToken(token);
+
+            var expClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == "exp");
+
+            if (expClaim != null && long.TryParse(expClaim.Value, out var expUnix))
+            {
+                var expirationDate = DateTimeOffset.FromUnixTimeSeconds(expUnix).UtcDateTime;
+                return expirationDate < DateTime.UtcNow;
+            }
+        }
+        catch
+        {
+            return true; // Se der erro, considera expirado por segurança
+        }
+
+        return true;
+    }
+}

@@ -1,0 +1,153 @@
+﻿@page "/auth/login"
+
+@layout Components.Layout.MainLayoutAuth
+@inject NavigationManager NavigationManager
+@inject IAuthService AuthService
+@inject CustomAuthenticationStateProvider AuthProvider
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject IAccessTokenService AccessTokenService
+
+<PageTitle>Log in</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.False" Class="pa-6 px-4 px-sm-6 px-md-8" Style="max-width: 450px; width: 100%;">
+    <MudPaper Elevation="12" Class="pa-6 px-4 px-sm-6 px-md-8" Style="max-width: 450px; width: 100%;">
+        <MudText Typo="Typo.h6"
+                 Align="Align.Center"
+                 Class="mb-2"
+                 Style="color: #7f8c8d;">
+            Bem-vindo
+        </MudText>
+
+        <MudText Typo="Typo.body2"
+                 Align="Align.Center"
+                 Style="color: #7f8c8d;">
+            Informe seus dados para entrar na plataforma
+        </MudText>
+
+        <div class="col-lg-12">
+            @if (Errors.Any())
+            {
+                @foreach (var error in Errors)
+                {
+                    <MudAlert Severity="Severity.Error" Dense="true" Class="my-1">@error</MudAlert>
+                }
+            }
+        </div>
+
+        <EditForm Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login">
+            <DataAnnotationsValidator />
+
+            <MudTextField For="@(() => Input.Email)" @bind-Value="Input.Email"
+                Label="Email"
+                Placeholder="name@email.com"
+                Variant="Variant.Outlined"
+                Margin="Margin.Dense"
+                Adornment="Adornment.Start"
+                AdornmentIcon="@Icons.Material.Filled.Email"
+                UserAttributes="@(new() { { "autocomplete", "email" }, { "aria-required", "true" } })" />
+
+            <MudTextField For="@(() => Input.Password)" @bind-Value="Input.Password"
+                Label="Password"
+                Placeholder="••••••••"
+                Variant="Variant.Outlined"
+                Margin="Margin.Dense"
+                InputType="InputType.Password"
+                Adornment="Adornment.Start"
+                AdornmentIcon="@Icons.Material.Filled.Lock"
+                UserAttributes="@(new() { { "autocomplete", "current-password" }, { "aria-required", "true" } })" />
+
+            <div class="d-flex justify-end mb-2">
+                <MudLink Href="Account/ForgotPassword"
+                         Style="cursor:pointer;"
+                         Class="hover-underline"
+                         Color="Color.Inherit">
+                    <MudText Typo="Typo.body2" Style="color: #7f8c8d; font-size: 0.75rem;">
+                        Esqueceu sua senha?
+                    </MudText>
+                </MudLink>
+            </div>
+
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       FullWidth="true"
+                       Class="mt-4 d-flex justify-center align-center"
+                       ButtonType="ButtonType.Submit"
+                       Size="Size.Medium"
+                       Disabled="@isLoading"
+                       Style="text-transform: none; background-color:#3E4F7C">
+                @if (isLoading)
+                {
+                    <MudProgressCircular Color="Color.Primary" Size=Size.Small Indeterminate="true" />
+                }
+                else
+                {
+                    <span>Login</span>
+                }
+            </MudButton>
+        </EditForm>
+
+        <MudDivider Class="my-3" />
+
+        <MudStack Spacing="1" Justify="Justify.Center" AlignItems="AlignItems.Center">
+            <MudLink Href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))" Color="Color.Inherit" Style="cursor:pointer;" Class="hover-underline"><MudText Typo="Typo.body2" Style="color: #7f8c8d;">Criar uma Conta</MudText></MudLink>
+            <MudLink Href="Account/ResendEmailConfirmation" Color="Color.Inherit" Style="cursor:pointer;" Class="hover-underline"><MudText Typo="Typo.body2" Style="color: #7f8c8d;">Reenviar e-mail de confirmação</MudText></MudLink>
+        </MudStack>
+    </MudPaper>
+</MudContainer>
+
+@code {
+    private bool isLoading = false;
+    private List<string> Errors = new List<string>();
+
+    private InputModel Input { get; set; } = new();
+
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public string? ReturnUrl { get; set; }
+
+    public async Task LoginUser()
+    {
+        try
+        {
+            isLoading = true;
+            Errors.Clear();
+
+            var result = await AuthService.LoginAsync(Input.Email, Input.Password);
+
+            if (!result.IsSuccess)
+            {
+                Errors.AddRange(result.Errors);
+                return;
+            }
+
+            await AccessTokenService.RemoveTokenAsync();
+            await AccessTokenService.SetTokenAsync(result.Data.Token);
+
+            AuthProvider.MarkUserAsAuthenticated(result.Data.Token);
+
+            NavigationManager.NavigateTo(ReturnUrl ?? "/", true);
+        }
+        catch (Exception ex)
+        {
+            Errors.Add("Falha ao fazer login: " + ex.Message);
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private sealed class InputModel
+    {
+        [Required(ErrorMessage = "O campo 'Email' é obrigatório!")]
+        [EmailAddress(ErrorMessage = "E-mail informado é inválido!")]
+        public string Email { get; set; }
+
+        [Required(ErrorMessage = "O campo 'Senha' é obrigatório!")]
+        [DataType(DataType.Password)]
+        public string Password { get; set; }
+
+        [Display(Name = "Remember me?")]
+        public bool RememberMe { get; set; }
+    }
+}

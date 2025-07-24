@@ -1,0 +1,48 @@
+﻿@page "/"
+@rendermode InteractiveServer
+@attribute [Authorize]
+
+@inject IAccessTokenService AccessTokenService
+@inject NavigationManager Navigation
+@inject CustomAuthenticationStateProvider AuthProvider
+
+<PageTitle>Home</PageTitle>
+<AuthGuard/>
+
+<MudText Typo="Typo.h3" GutterBottom="true">Hello, world!</MudText>
+<MudText Class="mb-3">Welcome to your new app, powered by MudBlazor and the .NET 8 Template!</MudText>
+
+<MudButton Class="mb-3" 
+           Variant="Variant.Filled" 
+           OnClick="Logout"
+           Style="text-transform: none;">
+    @if (isLoading)
+    {
+        <MudProgressCircular Color="Color.Primary" Size=Size.Small Indeterminate="true" />
+    }
+    else
+    {
+        <span>Logout</span>
+    }
+</MudButton>
+
+<MudAlert Severity="Severity.Normal">
+    You can find documentation and examples on our website here:
+    <MudLink Href="https://mudblazor.com" Target="_blank" Typo="Typo.body2" Color="Color.Primary">
+        <b>www.mudblazor.com</b>
+    </MudLink>
+</MudAlert>
+
+    @code{
+
+    private bool isLoading = false;
+
+    private async Task Logout()
+    {
+        isLoading = true;
+        AuthProvider.MarkUserAsLoggedOut();
+        await AccessTokenService.RemoveTokenAsync();
+
+        Navigation.NavigateTo("/auth/login");
+    }
+}

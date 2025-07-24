@@ -1,0 +1,81 @@
+﻿@inherits LayoutComponentBase
+
+<MudThemeProvider Theme="@_theme" IsDarkMode="_isDarkMode" />
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+<MudLayout>
+    <MudMainContent Class="main-content">
+        <div class="centralizador">
+            @Body
+        </div>
+    </MudMainContent>
+</MudLayout>
+
+<style>
+    html, body, .mud-main-content, .main-content {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    .centralizador {
+        height: 100vh;
+        width: 100vw;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        background-image: linear-gradient(rgb(23 88 155), rgb(186 206 247 / 62%)), url(/images/login.jpg);;
+
+        background-size: cover; /* cobre toda a área */
+        background-position: center; /* centraliza a imagem */
+        background-repeat: no-repeat;
+    }
+</style>
+
+
+<div id="blazor-error-ui">
+    An unhandled error has occurred.
+    <a href="" class="reload">Reload</a>
+    <a class="dismiss">🗙</a>
+</div>
+
+@code {
+    private bool _isDarkMode = false;
+
+    private void DarkModeToggle()
+    {
+        _isDarkMode = !_isDarkMode;
+    }
+
+    private MudTheme _theme => _isDarkMode ? _darkTheme : _lightTheme;
+
+    private readonly MudTheme _lightTheme = new MudTheme
+    {
+        PaletteLight = new PaletteLight
+        {
+            Primary = Colors.Blue.Default,
+            Background = "#f5f5f5",
+            AppbarBackground = Colors.Blue.Darken3
+        }
+    };
+
+    private readonly MudTheme _darkTheme = new MudTheme
+    {
+        PaletteDark = new PaletteDark
+        {
+            Primary = Colors.Blue.Lighten1,
+            Background = "#2e3238",
+            AppbarBackground = "#2D2D30"
+        }
+    };
+
+    public string DarkLightModeButtonIcon => _isDarkMode switch
+    {
+        true => Icons.Material.Rounded.AutoMode,
+        false => Icons.Material.Outlined.DarkMode,
+    };
+}
+
+
