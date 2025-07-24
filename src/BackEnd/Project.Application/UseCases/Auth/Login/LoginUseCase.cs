@@ -1,4 +1,5 @@
-﻿using Project.Application.Resources.Messages.Auth;
+﻿using Project.Application.DTOs.v1.User;
+using Project.Application.Resources.Messages.Auth;
 using Project.Application.Resources.Response;
 using Project.Application.UseCases.Auth.Login.Request;
 using Project.Application.UseCases.Auth.Login.Response;
@@ -37,6 +38,6 @@ public class LoginUseCase : ILoginUseCase
         var token = _authService.GenerateToken(user);
 
         return Result<LoginResponse>
-            .Success(HttpStatusCode.OK, new LoginResponse(token.AcccessToken));
+            .Success(HttpStatusCode.OK, new LoginResponse(token.AcccessToken, (DTOs.v1.User.User)user));
     }
 }

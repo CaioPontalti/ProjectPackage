@@ -1,5 +1,4 @@
-﻿using Project.Application.DTOs.User.GetAll;
-using Project.Application.Resources.Response;
+﻿using Project.Application.Resources.Response;
 using Project.Application.UseCases.User.GetUsers.Response;
 using Project.Domain.Interfaces.Repositories;
 
@@ -18,6 +17,6 @@ public class GetAllUsersUseCase : IGetAllUsersUseCase
     {
         var users = await _userRepository.GetAllAsync();
         return Result<GetAllUsersResponse>.Success(System.Net.HttpStatusCode.OK, 
-            new GetAllUsersResponse(users.Select(user => (UserResponse)user)));
+            new GetAllUsersResponse(users.Select(user => (DTOs.v1.User.User)user)));
     }
 }
