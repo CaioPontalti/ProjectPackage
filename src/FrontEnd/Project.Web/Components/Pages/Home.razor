@@ -5,12 +5,15 @@
 @inject IAccessTokenService AccessTokenService
 @inject NavigationManager Navigation
 @inject CustomAuthenticationStateProvider AuthProvider
+@inject AuthenticationStateProvider AuthStateProvider
 
 <PageTitle>Home</PageTitle>
 <AuthGuard/>
 
 <MudText Typo="Typo.h3" GutterBottom="true">Hello, world!</MudText>
 <MudText Class="mb-3">Welcome to your new app, powered by MudBlazor and the .NET 8 Template!</MudText>
+
+<MudText Typo="Typo.h6" GutterBottom="true">@TokenExpiredTime()</MudText>
 
 <MudButton Class="mb-3" 
            Variant="Variant.Filled" 
@@ -36,6 +39,18 @@
     @code{
 
     private bool isLoading = false;
+    private DateTime tokenExpired { get; set; }
+    public DateTime currentTime { get; set; }
+    private Timer timer;
+    private DateTime dateDif { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await InitialValues();
+
+        timer = new Timer(UpdateClock, null, 0, 1000); 
+    }
 
     private async Task Logout()
     {
@@ -44,5 +59,40 @@
         await AccessTokenService.RemoveTokenAsync();
 
         Navigation.NavigateTo("/auth/login");
+    }
+
+    private async Task InitialValues()
+    {
+        var state = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = state.User;
+        if (user.Identity.IsAuthenticated)
+        {
+
+            var expires = user.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Exp).Value;
+            if(long.TryParse(expires, out var exp))
+            {
+                tokenExpired = DateTimeOffset.FromUnixTimeSeconds(exp).LocalDateTime;
+            }
+        }
+    }
+
+    private void UpdateClock(object state)
+    {
+        // Update current time
+        currentTime = DateTime.Now;
+
+        // Trigger UI update
+        InvokeAsync(StateHasChanged);
+    }
+
+    private string TokenExpiredTime()
+    {
+        TimeSpan restante = tokenExpired - currentTime;
+
+        if (restante <= TimeSpan.Zero)
+            return $"Sua sessão expirou. Faça login novamente para continuar navegando.";
+        
+        var hora = new TimeOnly(restante.Hours, restante.Minutes, restante.Seconds);
+            return $"Faltam {hora.Hour}:{hora.Minute}:{hora.Second} para sua sessão expirar";
     }
 }
