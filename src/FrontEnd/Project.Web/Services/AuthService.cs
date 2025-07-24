@@ -1,9 +1,9 @@
 ﻿using Newtonsoft.Json;
 using Project.Web.DTOs;
 using Project.Web.DTOs.Response.Auth;
-using Project.Web.Interfaces.Services.Auth;
+using Project.Web.Interfaces.Services;
 
-namespace Project.Web.Services.Auth;
+namespace Project.Web.Services;
 
 public class AuthService : IAuthService
 {

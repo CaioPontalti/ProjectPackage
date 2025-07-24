@@ -1,7 +1,7 @@
 ﻿using Project.Web.DTOs;
 using Project.Web.DTOs.Response.Auth;
 
-namespace Project.Web.Interfaces.Services.Auth;
+namespace Project.Web.Interfaces.Services;
 
 public interface IAuthService
 {

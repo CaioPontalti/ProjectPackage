@@ -16,8 +16,6 @@
 
 
   <ItemGroup>
-    <Folder Include="Interfaces\Services\User\" />
-    <Folder Include="Services\User\" />
     <Folder Include="wwwroot\js\" />
     <Folder Include="wwwroot\images\" />
   </ItemGroup>

@@ -2,9 +2,9 @@ using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor.Services;
 using Project.Web.Components;
-using Project.Web.Interfaces.Services.Auth;
+using Project.Web.Interfaces.Services;
 using Project.Web.Interfaces.Services.Security;
-using Project.Web.Services.Auth;
+using Project.Web.Services;
 using Project.Web.Services.Security;
 using ProjectAuthentication.Web.Security;
 
