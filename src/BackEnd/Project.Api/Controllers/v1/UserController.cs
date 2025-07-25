@@ -13,7 +13,6 @@ using Project.Application.UseCases.User.Update.Request;
 
 namespace Project.Api.Controllers.v1
 {
-    [Authorize]
     [Route("api/v1/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -92,6 +91,7 @@ namespace Project.Api.Controllers.v1
         /// <response code="400">Request Invalid</response>
         /// <response code="404">User not found</response>
         /// <response code="500">Internal Server Error</response>
+        [Authorize]
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> UpdateUserAsync(
@@ -142,6 +142,7 @@ namespace Project.Api.Controllers.v1
         /// <returns>Return list of users</returns>
         /// <response code="200">Users retrieved successfully</response>
         /// <response code="500">Internal Server Error</response>
+        [Authorize]
         [HttpGet]
         [ProducesResponseType(typeof(Result<GetAllUsersResponse>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAllUsersAsync(
@@ -182,6 +183,7 @@ namespace Project.Api.Controllers.v1
         /// <response code="404">User not found</response>
         /// <response code="409">User is already inactive</response>
         /// <response code="500">Internal Server Error</response>
+        [Authorize]
         [HttpPatch("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> InactivateUserAsync(

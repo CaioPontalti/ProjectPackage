@@ -5,8 +5,8 @@
 @inject NavigationManager NavigationManager
 @inject IAuthService AuthService
 @inject CustomAuthenticationStateProvider AuthProvider
-@inject Blazored.LocalStorage.ILocalStorageService localStorage
 @inject IAccessTokenService AccessTokenService
+@inject IUserService UserService
 
 <PageTitle>Log in</PageTitle>
 
@@ -32,6 +32,10 @@
                 {
                     <MudAlert Severity="Severity.Error" Dense="true" Class="my-1">@error</MudAlert>
                 }
+            }
+            @if (!string.IsNullOrEmpty(MessageSuccess))
+            {
+                <MudAlert Severity="Severity.Success" Dense="true" Class="my-1">@MessageSuccess</MudAlert>
             }
         </div>
 
@@ -110,7 +114,8 @@
 
 @code {
     private bool isLoading = false;
-    private List<string> Errors = new List<string>();
+    private readonly List<string> Errors = new List<string>();
+    private string MessageSuccess;
 
     private InputModel Input { get; set; } = new();
 
@@ -118,10 +123,22 @@
     {
         try
         {
+            MessageSuccess = string.Empty;
             isLoading = true;
             Errors.Clear();
 
+            var response = await UserService.CreateUser(Input.Name, Input.Email, Input.Password);
+            if (!response.IsSuccess)
+            {
+                Errors.AddRange(response.Errors);
+                return;
+            }
 
+            if (!string.IsNullOrEmpty(response?.Data?.Id))
+            {
+                MessageSuccess = "Conta criada com sucesso.";
+                Input = new();
+            }            
         }
         catch (Exception ex)
         {
