@@ -111,7 +111,6 @@ namespace Project.Api.Controllers.v1
         /// Example of successful 200 response:
         ///
         ///     {
-        ///         "isSuccess": true,
         ///         "data": {
         ///             "users": [
         ///                 {
@@ -122,8 +121,10 @@ namespace Project.Api.Controllers.v1
         ///                     "lastUpdatedDate": "2025-07-11T14:40:31.993Z",
         ///                     "isActive": true
         ///                 }
-        ///             ]
+        ///             ],
+        ///             "totalItems": 1
         ///         },
+        ///         "isSuccess": true,
         ///         "errors": []
         ///     }
         ///
@@ -139,6 +140,9 @@ namespace Project.Api.Controllers.v1
         ///
         /// </remarks>
         /// <param name="useCaseGetAllUsers"></param>
+        /// <param name="search"> Texto para pesquisa</param>
+        /// <param name="page">Pagina </param>
+        /// <param name="pageSize">Itens por página</param>
         /// <returns>Return list of users</returns>
         /// <response code="200">Users retrieved successfully</response>
         /// <response code="500">Internal Server Error</response>
@@ -146,9 +150,10 @@ namespace Project.Api.Controllers.v1
         [HttpGet]
         [ProducesResponseType(typeof(Result<GetAllUsersResponse>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAllUsersAsync(
-            [FromServices] IGetAllUsersUseCase useCaseGetAllUsers)
+            [FromServices] IGetAllUsersUseCase useCaseGetAllUsers,
+            [FromQuery] int page, int pageSize, string search)
         {
-            var result = await useCaseGetAllUsers.ExecuteAsync();
+            var result = await useCaseGetAllUsers.ExecuteAsync(page, pageSize, search);
 
             return result.ToActionResult();
         }

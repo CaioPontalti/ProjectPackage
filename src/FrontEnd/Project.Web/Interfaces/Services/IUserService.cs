@@ -5,5 +5,6 @@ namespace Project.Web.Interfaces.Services;
 
 public interface IUserService
 {
-    Task<ApiResponse<CreateUser>> CreateUser(string name, string email, string password);
+    Task<ApiResponse<CreateUser>> CreateUserAsync(string name, string email, string password);
+    Task<ApiResponse<GetAllUser>> GetAllAsync(int page, int pageSize, string search);
 }

@@ -1,5 +1,4 @@
 ﻿@page "/account/create"
-@using Project.Web.Interfaces.Services
 
 @layout Components.Layout.MainLayoutAuth
 @inject NavigationManager NavigationManager
@@ -7,6 +6,7 @@
 @inject CustomAuthenticationStateProvider AuthProvider
 @inject IAccessTokenService AccessTokenService
 @inject IUserService UserService
+@inject ILogger<Create> Logger
 
 <PageTitle>Log in</PageTitle>
 
@@ -39,7 +39,7 @@
             }
         </div>
 
-        <EditForm Model="Input" method="post" OnValidSubmit="CreateAccount" FormName="create">
+        <EditForm Model="Input" method="post" OnValidSubmit="CreateAccountAsync" FormName="create">
             <DataAnnotationsValidator />
 
             <MudTextField For="@(() => Input.Name)" @bind-Value="Input.Name"
@@ -119,7 +119,7 @@
 
     private InputModel Input { get; set; } = new();
 
-    public async Task CreateAccount()
+    public async Task CreateAccountAsync()
     {
         try
         {
@@ -127,7 +127,7 @@
             isLoading = true;
             Errors.Clear();
 
-            var response = await UserService.CreateUser(Input.Name, Input.Email, Input.Password);
+            var response = await UserService.CreateUserAsync(Input.Name, Input.Email, Input.Password);
             if (!response.IsSuccess)
             {
                 Errors.AddRange(response.Errors);
@@ -143,6 +143,7 @@
         catch (Exception ex)
         {
             Errors.Add("Falha ao criar a conta: " + ex.Message);
+            Logger.LogError(ex, "An error occurred in the method CreateAccountAsync.");
         }
         finally
         {

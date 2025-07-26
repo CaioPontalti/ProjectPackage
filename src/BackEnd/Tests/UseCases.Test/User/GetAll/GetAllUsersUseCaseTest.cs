@@ -10,31 +10,33 @@ public class GetAllUsersUseCaseTest
 {
     private readonly Mock<IUserRepository> _userRepository = new Mock<IUserRepository>();
 
-    [Fact]
-    public async Task GetAllUsersUseCase_WithExistingUsers_ReturnsListOfUsers()
+    [Theory]
+    [InlineData(0, 2, "")]
+    public async Task GetAllUsersUseCase_WithExistingUsers_ReturnsListOfUsers(int page, int pageSize, string search)
     {
         var usersList = GetAllUsersResponseBuilder.GetUsersLists();
 
         var useCase = CreateUseCase();
         _userRepository
-            .Setup(rep => rep.GetAllAsync())
+            .Setup(rep => rep.GetAllAsync(""))
             .ReturnsAsync(usersList);
 
-        var result = await useCase.ExecuteAsync();
+        var result = await useCase.ExecuteAsync(page, pageSize, search);
         Assert.NotEmpty(result.Data.Users);
         Assert.True(result.IsSuccess);
         Assert.Equal(HttpStatusCode.OK, result.StatusCode);
     }
 
-    [Fact]
-    public async Task GetAllUsersUseCase_WhenNoUsersExist_ReturnsEmptyList()
+    [Theory]
+    [InlineData(0, 2, "")]
+    public async Task GetAllUsersUseCase_WhenNoUsersExist_ReturnsEmptyList(int page, int pageSize, string search)
     {
         var useCase = CreateUseCase();
         _userRepository
-            .Setup(rep => rep.GetAllAsync())
+            .Setup(rep => rep.GetAllAsync(""))
             .ReturnsAsync(Enumerable.Empty<Project.Domain.Entities.v1.User>);
 
-        var result = await useCase.ExecuteAsync();
+        var result = await useCase.ExecuteAsync(page, pageSize, search);
         Assert.Empty(result.Data.Users);
         Assert.True(result.IsSuccess);
     }

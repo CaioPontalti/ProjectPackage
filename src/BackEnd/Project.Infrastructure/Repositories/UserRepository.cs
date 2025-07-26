@@ -3,6 +3,7 @@ using MongoDB.Driver;
 using Project.Domain.Entities.v1;
 using Project.Domain.Interfaces.Repositories;
 using Project.Domain.Models.v1.MongoDb;
+using Project.Infrastructure.Filters;
 
 namespace Project.Infrastructure.Repositories;
 
@@ -47,9 +48,11 @@ public class UserRepository : IUserRepository
         return userMongoDb is null ? null : (User)userMongoDb;
     }
 
-    public async Task<IEnumerable<User>> GetAllAsync()
+    public async Task<IEnumerable<User>> GetAllAsync(string search)
     {
-        var users = await _collection.Find(_ => true).ToListAsync();
+        var filter = UserFilter.BuilderFilder(search);
+
+        var users = await _collection.Find(filter).ToListAsync();
         return users.Select(user => (User)user);
     }
 }

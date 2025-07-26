@@ -6,6 +6,7 @@
 @inject IAuthService AuthService
 @inject CustomAuthenticationStateProvider AuthProvider
 @inject IAccessTokenService AccessTokenService
+@inject ILogger<Login> Logger
 
 <PageTitle>Log in</PageTitle>
 
@@ -34,7 +35,7 @@
             }
         </div>
 
-        <EditForm Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login">
+        <EditForm Model="Input" method="post" OnValidSubmit="LoginUserAsync" FormName="login">
             <DataAnnotationsValidator />
 
             <MudTextField For="@(() => Input.Email)" @bind-Value="Input.Email"
@@ -105,7 +106,7 @@
     [SupplyParameterFromQuery]
     public string? ReturnUrl { get; set; }
 
-    public async Task LoginUser()
+    public async Task LoginUserAsync()
     {
         try
         {
@@ -136,6 +137,7 @@
         catch (Exception ex)
         {
             Errors.Add("Falha ao fazer login: " + ex.Message);
+            Logger.LogError(ex, "An error occurred in the method LoginUserAsync.");
         }
         finally
         {
