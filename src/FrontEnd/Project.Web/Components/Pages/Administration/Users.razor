@@ -3,9 +3,16 @@
 
 @inject IUserService UserService
 @inject ILogger<Users> Logger
+@inject IJSRuntime JS
 
 <PageTitle>Usuários</PageTitle>
 <AuthGuard />
+
+<script>
+    window.isMobileScreen = () => {
+        return window.innerWidth <= 768;
+    };
+</script>
 
 <div class="col-lg-12">
     @if (Errors.Any())
@@ -82,6 +89,7 @@
     private bool hover = true;
     private bool striped = false;
     private bool bordered = false;
+    private bool _initialized = false;
     private string search = string.Empty;  // usado para filtro real
     private string searchInput = string.Empty;    // usado para manter o valor digitado
     private User selectedItem = null;
@@ -95,6 +103,17 @@
     private readonly string rowsPerPageString = "Itens por pagina";
     private readonly string infoFormat = "{first_item}-{last_item} of {all_items}";
     private readonly string allItemsText = "Todos";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !_initialized)
+        {
+            var isMobile = await JS.InvokeAsync<bool>("isMobileScreen");
+            striped = isMobile;
+            _initialized = true;
+            StateHasChanged(); // Atualiza a UI com o valor novo
+        }
+    }
 
     private async Task OnSearchChanged(string value)
     {
