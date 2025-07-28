@@ -101,9 +101,9 @@
     private readonly List<string> Errors = new List<string>();
 
     private HorizontalAlignment horizontalAlignment = HorizontalAlignment.Right;
-    private bool hidePageNumber;
-    private bool hidePagination;
-    private bool hideRowsPerPage;
+    private bool hidePageNumber = false;
+    private bool hidePagination = false;
+    private bool hideRowsPerPage = false;
     private readonly string rowsPerPageString = "Itens por pagina";
     private readonly string infoFormat = "{first_item}-{last_item} of {all_items}";
     private readonly string allItemsText = "Todos";
