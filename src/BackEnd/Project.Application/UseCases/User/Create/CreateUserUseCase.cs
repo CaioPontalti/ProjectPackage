@@ -27,7 +27,7 @@ namespace Project.Application.UseCases.User.Create
             if(userDb is not null)
                 return Result<CreateUserResponse>.Failure(HttpStatusCode.Conflict, UserMessageValidation.UserExists);
 
-            var user = Domain.Entities.v1.User.Create(request.Email, request.Name, request.Password);
+            var user = Domain.Entities.v1.User.Create(request.Email, request.Name, request.Password, request.Role);
 
             await _userRepository.CreateAsync(user);
 

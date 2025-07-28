@@ -10,6 +10,7 @@ public class CreateUserRequest : RequestBase
     public string Name { get; set; }
     public string Email { get; set; }
     public string Password { get; set; }
+    public string Role { get; set; }
 
     public override void Validate()
     {
@@ -18,6 +19,9 @@ public class CreateUserRequest : RequestBase
 
         if (string.IsNullOrEmpty(Password))
             Notifications.Add(UserMessageValidation.UserPasswordRequired);
+
+        if (string.IsNullOrEmpty(Role))
+            Notifications.Add(UserMessageValidation.UserRoleRequired);
 
         if (string.IsNullOrEmpty(Email))
         {

@@ -12,6 +12,8 @@ public class User
 
     public string PasswordHash { get; private set; }
 
+    public string Role { get; set; }
+
     public DateTime CreatedDate { get; private set; }
 
     public DateTime LastUpdatedDate { get; private set; }
@@ -20,22 +22,23 @@ public class User
 
     public User() { }
 
-    public User(ObjectId id, string email, string name, string passwordHash, DateTime createdDate, DateTime lastUpdatedDate, bool isActive)
+    public User(ObjectId id, string email, string name, string passwordHash, string role, DateTime createdDate, DateTime lastUpdatedDate, bool isActive)
     {
         Id = id.ToString();
         Email = email;
         Name = name;
         PasswordHash = passwordHash;
+        Role = role;
         CreatedDate = createdDate;
         LastUpdatedDate = lastUpdatedDate;
         IsActive = isActive;
     }
 
-    public static User Create(string email, string name, string password)
+    public static User Create(string email, string name, string password, string role)
     {
         var createdDate = DateTime.Now;
         var hashPassword = BCrypt.Net.BCrypt.HashPassword(password);
-        return new User(ObjectId.GenerateNewId(), email, name, hashPassword, createdDate, createdDate, true);
+        return new User(ObjectId.GenerateNewId(), email, name, hashPassword, role, createdDate, createdDate, true);
     }
 
     public void Update(string name)

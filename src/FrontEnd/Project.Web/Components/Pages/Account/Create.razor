@@ -1,4 +1,6 @@
 ﻿@page "/account/create"
+@using Project.Web.Enums
+@using Project.Web.Extension
 
 @layout Components.Layout.MainLayoutAuth
 @inject NavigationManager NavigationManager
@@ -80,6 +82,19 @@
                           AdornmentIcon="@Icons.Material.Filled.Lock"
                           UserAttributes="@(new() { { "autocomplete", "current-confirmpassword" }, { "aria-required", "true" } })" />
 
+            <MudSelect T="Roles"
+                       Dense="true"
+                       Margin="Margin.Dense"
+                       @bind-Value="@Input.Role"
+                       Label="Role"
+                       Variant="Variant.Outlined"                       
+                       ShrinkLabel>
+                @foreach (Roles role in Enum.GetValues(typeof(Roles)))
+                {
+                    <MudSelectItem T="Roles" Value="@role">@role.GetDescription()</MudSelectItem>
+                }
+            </MudSelect>
+
             <MudButton Variant="Variant.Filled"
                        Color="Color.Primary"
                        FullWidth="true"
@@ -119,6 +134,11 @@
 
     private InputModel Input { get; set; } = new();
 
+    protected override void OnInitialized()
+    {
+        Input.Role = Roles.User;
+    }
+
     public async Task CreateAccountAsync()
     {
         try
@@ -127,7 +147,7 @@
             isLoading = true;
             Errors.Clear();
 
-            var response = await UserService.CreateUserAsync(Input.Name, Input.Email, Input.Password);
+            var response = await UserService.CreateUserAsync(Input.Name, Input.Email, Input.Password, Input.Role.ToString());
             if (!response.IsSuccess)
             {
                 Errors.AddRange(response.Errors);
@@ -173,5 +193,8 @@
         [DataType(DataType.Password)]
         [Compare("Password", ErrorMessage = "As senhas não coincidem.")]
         public string ConfirmPassword { get; set; }
+
+        [Required(ErrorMessage = "O campo 'Role' é obrigatório!")]
+        public Roles Role { get; set; }
     }
 }

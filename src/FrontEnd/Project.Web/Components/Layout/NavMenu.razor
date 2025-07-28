@@ -1,4 +1,8 @@
-﻿<MudNavMenu>
+﻿@using System.Security.Claims
+@using Project.Web.Enums
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<MudNavMenu>
     <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
     <MudNavLink Href="cars" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Carros</MudNavLink>
 
@@ -8,10 +12,28 @@
         <MudNavLink Href="categories" Icon="@Icons.Material.Filled.Category">Categorias</MudNavLink>
     </MudNavGroup>
 
-    <MudNavGroup Title="Administração" Icon="@Icons.Material.Filled.AdminPanelSettings">
-        <MudNavLink Href="/administration/users" Icon="@Icons.Material.Filled.People">Usuários</MudNavLink>
-        <MudNavLink Href="roles" Icon="@Icons.Material.Filled.Security">Funções</MudNavLink>
-    </MudNavGroup>
+    @if (adminRole == Roles.Admin.ToString())
+    {
+        <MudNavGroup Title="Administração" Icon="@Icons.Material.Filled.AdminPanelSettings">
+            <MudNavLink Href="/administration/users" Icon="@Icons.Material.Filled.People">Usuários</MudNavLink>
+            <MudNavLink Href="roles" Icon="@Icons.Material.Filled.Security">Funções</MudNavLink>
+        </MudNavGroup>
+    }
 </MudNavMenu>
 
+    @code{
 
+    private string adminRole;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity?.IsAuthenticated == true)
+        {
+            adminRole = user.FindFirst(ClaimTypes.Role)?.Value;
+        }
+    }
+
+}

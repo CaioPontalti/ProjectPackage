@@ -18,9 +18,9 @@ public class UserService : IUserService
         _accessTokenService = accessTokenService;
     }
 
-    public async Task<ApiResponse<CreateUser>> CreateUserAsync(string name, string email, string password)
+    public async Task<ApiResponse<CreateUser>> CreateUserAsync(string name, string email, string password, string role)
     {
-        var response = await _httpClient.PostAsJsonAsync("v1/user", new { Name = name, Email = email, Password = password });
+        var response = await _httpClient.PostAsJsonAsync("v1/user", new { Name = name, Email = email, Password = password, Role = role });
 
         var json = await response.Content.ReadAsStringAsync();
         var result = JsonConvert.DeserializeObject<ApiResponse<CreateUser>>(json);
