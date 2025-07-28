@@ -9,12 +9,18 @@
 
 <PageTitle>Log in</PageTitle>
 
-<MudContainer MaxWidth="MaxWidth.False" Class="pa-6 px-4 px-sm-6 px-md-8" Style="max-width: 450px; width: 100%;">
-    <MudPaper Elevation="12" Class="pa-6 px-4 px-sm-6 px-md-8" Style="max-width: 450px; width: 100%;">
-        <MudText Typo="Typo.h6"
+<MudContainer MaxWidth="MaxWidth.False"
+              Class="pa-6 px-4 px-sm-6 px-md-8"
+              Style="max-width: 500px; width: 100%;">
+
+    <MudPaper Elevation="2"
+              Class="pa-6"
+              Style="border-radius: 8px;">
+
+        <MudText Typo="Typo.h5"
                  Align="Align.Center"
                  Class="mb-2"
-                 Style="color: #7f8c8d;">
+                 Style="color: #34495e;">
             Bem-vindo
         </MudText>
 
@@ -24,76 +30,97 @@
             Informe seus dados para entrar na plataforma
         </MudText>
 
-        <div class="col-lg-12">
-            @if (Errors.Any())
-            {
-                @foreach (var error in Errors)
-                {
-                    <MudAlert Severity="Severity.Error" Dense="true" Class="my-1">@error</MudAlert>
-                }
-            }
-        </div>
+        <MudDivider Class="my-3" />
 
-        <EditForm Model="Input" method="post" OnValidSubmit="LoginUserAsync" FormName="login">
+        @if (Errors?.Any() == true)
+        {
+            @foreach (var error in Errors)
+            {
+                <MudAlert Severity="Severity.Error" Dense="true" Class="my-1">@error</MudAlert>
+            }
+        }
+
+        <EditForm Model="Input" OnValidSubmit="LoginUserAsync">
             <DataAnnotationsValidator />
 
-            <MudTextField For="@(() => Input.Email)" @bind-Value="Input.Email"
-                Label="Email"
-                Placeholder="name@email.com"
-                Variant="Variant.Outlined"
-                Margin="Margin.Dense"
-                Adornment="Adornment.Start"
-                AdornmentIcon="@Icons.Material.Filled.Email"
-                UserAttributes="@(new() { { "autocomplete", "email" }, { "aria-required", "true" } })" />
+            <MudGrid Spacing="2">
+                <MudItem xs="12">
+                    <MudTextField Label="Email"
+                                  For="@(() => Input.Email)"
+                                  @bind-Value="Input.Email"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="true"
+                                  Adornment="Adornment.Start"
+                                  AdornmentIcon="@Icons.Material.Filled.Email"
+                                  UserAttributes="@(new() { { "autocomplete", "email" }, { "aria-required", "true" } })" />
+                </MudItem>
 
-            <MudTextField For="@(() => Input.Password)" @bind-Value="Input.Password"
-                Label="Senha"
-                Placeholder="••••••••"
-                Variant="Variant.Outlined"
-                Margin="Margin.Dense"
-                InputType="InputType.Password"
-                Adornment="Adornment.Start"
-                AdornmentIcon="@Icons.Material.Filled.Lock"
-                UserAttributes="@(new() { { "autocomplete", "current-password" }, { "aria-required", "true" } })" />
+                <MudItem xs="12">
+                    <MudTextField Label="Senha"
+                                  For="@(() => Input.Password)"
+                                  @bind-Value="Input.Password"
+                                  InputType="InputType.Password"
+                                  Variant="Variant.Outlined"
+                                  FullWidth="true"
+                                  Adornment="Adornment.Start"
+                                  AdornmentIcon="@Icons.Material.Filled.Lock"
+                                  UserAttributes="@(new() { { "autocomplete", "current-password" }, { "aria-required", "true" } })" />
+                </MudItem>
 
-            <div class="d-flex justify-end mb-2">
-                <MudLink Href="Account/ForgotPassword"
-                         Style="cursor:pointer;"
-                         Class="hover-underline"
-                         Color="Color.Inherit">
-                    <MudText Typo="Typo.body2" Style="color: #7f8c8d; font-size: 0.75rem;">
-                        Esqueceu sua senha?
-                    </MudText>
-                </MudLink>
-            </div>
+                <MudItem xs="12" Class="d-flex justify-end mb-2">
+                    <MudLink Href="Account/ForgotPassword"
+                             Style="cursor:pointer;"
+                             Class="hover-underline"
+                             Color="Color.Inherit">
+                        <MudText Typo="Typo.caption"
+                                 Style="color: #7f8c8d;">
+                            Esqueceu sua senha?
+                        </MudText>
+                    </MudLink>
+                </MudItem>
 
-            <MudButton Variant="Variant.Filled"
-                       Color="Color.Primary"
-                       FullWidth="true"
-                       Class="mt-4 d-flex justify-center align-center"
-                       ButtonType="ButtonType.Submit"
-                       Size="Size.Medium"
-                       Disabled="@isLoading"
-                       Style="text-transform: none;">
-                @if (isLoading)
-                {
-                    <MudProgressCircular Color="Color.Primary" Size=Size.Small Indeterminate="true" />
-                }
-                else
-                {
-                    <span>Login</span>
-                }
-            </MudButton>
+                <MudItem xs="12">
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               Type="Submit"
+                               FullWidth="true"
+                               Disabled="@isLoading"
+                               Style="text-transform: none; transition: 0.2s ease-in-out;"
+                               ButtonType="ButtonType.Submit"
+                               Size="Size.Medium">
+                        @if (isLoading)
+                        {
+                            <MudProgressCircular Size="Size.Small" Indeterminate="true" />
+                        }
+                        else
+                        {
+                            <span>Login</span>
+                        }
+                    </MudButton>
+                </MudItem>
+            </MudGrid>
         </EditForm>
 
         <MudDivider Class="my-3" />
 
-        <MudStack Spacing="1" Justify="Justify.Center" AlignItems="AlignItems.Center">
-            <MudLink Href="account/create" Color="Color.Inherit" Style="cursor:pointer;" Class="hover-underline"><MudText Typo="Typo.body2" Style="color: #7f8c8d;">Criar uma Conta</MudText></MudLink>
-            <MudLink Href="Account/ResendEmailConfirmation" Color="Color.Inherit" Style="cursor:pointer;" Class="hover-underline"><MudText Typo="Typo.body2" Style="color: #7f8c8d;">Reenviar e-mail de confirmação</MudText></MudLink>
+        <MudStack Justify="Justify.Center" AlignItems="AlignItems.Center" Spacing="1">
+            <MudLink Href="user/create"
+                     Class="hover-underline"
+                     Style="cursor:pointer;"
+                     Color="Color.Inherit">
+                <MudText Typo="Typo.body2" Style="color: #7f8c8d;">Criar uma Conta</MudText>
+            </MudLink>
+            <MudLink Href="Account/ResendEmailConfirmation"
+                     Class="hover-underline"
+                     Style="cursor:pointer;"
+                     Color="Color.Inherit">
+                <MudText Typo="Typo.body2" Style="color: #7f8c8d;">Reenviar e-mail de confirmação</MudText>
+            </MudLink>
         </MudStack>
+
     </MudPaper>
 </MudContainer>
+
 
 @code {
     private bool isLoading = false;

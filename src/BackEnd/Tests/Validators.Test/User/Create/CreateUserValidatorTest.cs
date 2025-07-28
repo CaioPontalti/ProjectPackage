@@ -52,6 +52,18 @@ public class CreateUserValidatorTest
     }
 
     [Fact]
+    public void CreateUserValidate_WhenRolesIsEmpty_ReturnsError()
+    {
+        var request = CreateUserRequestBuilder.BuildRoleIsEmpty();
+
+        request.Validate();
+
+        Assert.NotEmpty(request.Notifications);
+        Assert.Contains(UserMessageValidation.UserRoleRequired, request.Notifications);
+        Assert.Single(request.Notifications);
+    }
+
+    [Fact]
     public void CreateUserValidate_WhenNameEmailPasswordAreEmpty_ReturnsErrors()
     {
         var request = CreateUserRequestBuilder.BuildUserEmailPasswordIsEmpty();

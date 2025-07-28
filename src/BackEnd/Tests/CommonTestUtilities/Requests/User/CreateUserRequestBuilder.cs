@@ -40,6 +40,15 @@ public static class CreateUserRequestBuilder
             .RuleFor(u => u.Email, f => "email.invalido-sem-arroba.com");
     }
 
+    public static CreateUserRequest BuildRoleIsEmpty()
+    {
+        return new Faker<CreateUserRequest>()
+            .RuleFor(user => user.Name, (f) => f.Person.FirstName)
+            .RuleFor(user => user.Email, (f, user) => f.Internet.Email(user.Name))
+            .RuleFor(user => user.Role, (f, user) => string.Empty)
+            .RuleFor(user => user.Password, (f) => f.Internet.Password(8));
+    }
+
     public static CreateUserRequest BuildUserEmailPasswordIsEmpty()
     {
         return new Faker<CreateUserRequest>()

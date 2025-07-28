@@ -1,4 +1,4 @@
-﻿@page "/account/create"
+﻿@page "/user/create"
 @using Project.Web.Enums
 @using Project.Web.Extension
 
@@ -102,7 +102,7 @@
                        ButtonType="ButtonType.Submit"
                        Size="Size.Medium"
                        Disabled="@isLoading"
-                       Style="text-transform: none; background-color:#3E4F7C">
+                       Style="text-transform: none;">
                 @if (isLoading)
                 {
                     <MudProgressCircular Color="Color.Primary" Size=Size.Small Indeterminate="true" />
