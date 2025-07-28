@@ -1,4 +1,4 @@
-﻿@page "/user/users"
+﻿@page "/users"
 @attribute [Authorize]
 
 @inject IUserService UserService
@@ -62,11 +62,11 @@
         <MudTd DataLabel="Name">@context.Name</MudTd>
         <MudTd DataLabel="E-mail">@context.Email</MudTd>
         <MudTd DataLabel="DtCadastro">@context.CreatedDate</MudTd>
-        <MudTd DataLabel="Tipo">@(context.Tipo == "User" ? "Usuário" : "Administrador")</MudTd>
+        <MudTd DataLabel="Tipo">@(context.Role == "User" ? "Usuário" : "Administrador")</MudTd>
         <MudTd DataLabel="Status">@(context.IsActive ? "Ativo" : "Inativo")</MudTd>
     </RowTemplate>
     <PagerContent>
-        <MudTablePager PageSizeOptions="new int[] { 5, 10, 15, int.MaxValue }"
+        <MudTablePager PageSizeOptions="new int[] { 10, 15, 20, 30, int.MaxValue }"
                        RowsPerPageString="@rowsPerPageString"
                        InfoFormat="@infoFormat"
                        AllItemsText="@allItemsText"
@@ -163,6 +163,6 @@
 
     private void HandleClick()
     {
-        NavigationManager.NavigateTo("/user/create2", false);
+        NavigationManager.NavigateTo("/user/create", false);
     }
 }

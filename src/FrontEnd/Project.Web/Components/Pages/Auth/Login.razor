@@ -57,6 +57,7 @@
 
                 <MudItem xs="12">
                     <MudTextField Label="Senha"
+                                  Class="mb-0"
                                   For="@(() => Input.Password)"
                                   @bind-Value="Input.Password"
                                   InputType="InputType.Password"
@@ -67,7 +68,7 @@
                                   UserAttributes="@(new() { { "autocomplete", "current-password" }, { "aria-required", "true" } })" />
                 </MudItem>
 
-                <MudItem xs="12" Class="d-flex justify-end mb-2">
+                <MudItem xs="12" Class="d-flex justify-end" Style="margin-top: -10px;">
                     <MudLink Href="Account/ForgotPassword"
                              Style="cursor:pointer;"
                              Class="hover-underline"
@@ -81,6 +82,7 @@
 
                 <MudItem xs="12">
                     <MudButton Variant="Variant.Filled"
+                               Class="mt-4"
                                Color="Color.Primary"
                                Type="Submit"
                                FullWidth="true"
@@ -104,12 +106,13 @@
         <MudDivider Class="my-3" />
 
         <MudStack Justify="Justify.Center" AlignItems="AlignItems.Center" Spacing="1">
-            <MudLink Href="user/create"
+            @* <MudLink Href="user/create"
                      Class="hover-underline"
                      Style="cursor:pointer;"
                      Color="Color.Inherit">
                 <MudText Typo="Typo.body2" Style="color: #7f8c8d;">Criar uma Conta</MudText>
-            </MudLink>
+            </MudLink> *@
+            
             <MudLink Href="Account/ResendEmailConfirmation"
                      Class="hover-underline"
                      Style="cursor:pointer;"

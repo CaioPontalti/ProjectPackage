@@ -1,0 +1,200 @@
+﻿@page "/user/create2"
+@using Project.Web.Enums
+@using Project.Web.Extension
+
+@layout Components.Layout.MainLayoutAuth
+@inject NavigationManager NavigationManager
+@inject IAuthService AuthService
+@inject CustomAuthenticationStateProvider AuthProvider
+@inject IAccessTokenService AccessTokenService
+@inject IUserService UserService
+@inject ILogger<Create> Logger
+
+<PageTitle>Log in</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.False" Class="pa-6 px-4 px-sm-6 px-md-8" Style="max-width: 450px; width: 100%;">
+    <MudPaper Elevation="12" Class="pa-6 px-4 px-sm-6 px-md-8" Style="max-width: 450px; width: 100%;">
+        <MudText Typo="Typo.h6"
+                 Align="Align.Center"
+                 Class="mb-2"
+                 Style="color: #7f8c8d;">
+            Criar uma nova conta
+        </MudText>
+
+        <MudText Typo="Typo.body2"
+                 Align="Align.Center"
+                 Style="color: #7f8c8d;">
+            Crie sua conta para acessar o app.
+        </MudText>
+
+        <div class="col-lg-12">
+            @if (Errors.Any())
+            {
+                @foreach (var error in Errors)
+                {
+                    <MudAlert Severity="Severity.Error" Dense="true" Class="my-1">@error</MudAlert>
+                }
+            }
+            @if (!string.IsNullOrEmpty(MessageSuccess))
+            {
+                <MudAlert Severity="Severity.Success" Dense="true" Class="my-1">@MessageSuccess</MudAlert>
+            }
+        </div>
+
+        <EditForm Model="Input" method="post" OnValidSubmit="CreateAccountAsync" FormName="create">
+            <DataAnnotationsValidator />
+
+            <MudTextField For="@(() => Input.Name)" @bind-Value="Input.Name"
+                          Label="Nome"
+                          Placeholder="nome"
+                          Variant="Variant.Outlined"
+                          Margin="Margin.Dense"
+                          Adornment="Adornment.Start"
+                          AdornmentIcon="@Icons.Material.Filled.Person"
+                          UserAttributes="@(new() { { "autocomplete", "name" }, { "aria-required", "true" } })" />
+
+            <MudTextField For="@(() => Input.Email)" @bind-Value="Input.Email"
+                          Label="Email"
+                          Placeholder="email@email.com"
+                          Variant="Variant.Outlined"
+                          Margin="Margin.Dense"
+                          Adornment="Adornment.Start"
+                          AdornmentIcon="@Icons.Material.Filled.Email"
+                          UserAttributes="@(new() { { "autocomplete", "email" }, { "aria-required", "true" } })" />
+
+            <MudTextField For="@(() => Input.Password)" @bind-Value="Input.Password"
+                          Label="Senha"
+                          Placeholder="••••••••"
+                          Variant="Variant.Outlined"
+                          Margin="Margin.Dense"
+                          InputType="InputType.Password"
+                          Adornment="Adornment.Start"
+                          AdornmentIcon="@Icons.Material.Filled.Lock"
+                          UserAttributes="@(new() { { "autocomplete", "current-password" }, { "aria-required", "true" } })" />
+
+            <MudTextField For="@(() => Input.ConfirmPassword)" @bind-Value="Input.ConfirmPassword"
+                          Label="Confirme a Senha"
+                          Placeholder="••••••••"
+                          Variant="Variant.Outlined"
+                          Margin="Margin.Dense"
+                          InputType="InputType.Password"
+                          Adornment="Adornment.Start"
+                          AdornmentIcon="@Icons.Material.Filled.Lock"
+                          UserAttributes="@(new() { { "autocomplete", "current-confirmpassword" }, { "aria-required", "true" } })" />
+
+            <MudSelect T="Roles"
+                       Dense="true"
+                       Margin="Margin.Dense"
+                       @bind-Value="@Input.Role"
+                       Label="Role"
+                       Variant="Variant.Outlined"                       
+                       ShrinkLabel>
+                @foreach (Roles role in Enum.GetValues(typeof(Roles)))
+                {
+                    <MudSelectItem T="Roles" Value="@role">@role.GetDescription()</MudSelectItem>
+                }
+            </MudSelect>
+
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       FullWidth="true"
+                       Class="mt-4 d-flex justify-center align-center"
+                       ButtonType="ButtonType.Submit"
+                       Size="Size.Medium"
+                       Disabled="@isLoading"
+                       Style="text-transform: none;">
+                @if (isLoading)
+                {
+                    <MudProgressCircular Color="Color.Primary" Size=Size.Small Indeterminate="true" />
+                }
+                else
+                {
+                    <span>Cadastre-se</span>
+                }
+            </MudButton>
+        </EditForm>
+
+        <MudDivider Class="my-3" />
+
+        <MudStack Spacing="1" Justify="Justify.Center" AlignItems="AlignItems.Center">
+            <MudLink OnClick="@HandleClick"
+                     Style="cursor:pointer;"
+                     Class="hover-underline"
+                     Color="Color.Inherit">
+                <MudText Typo="Typo.body2" Style="color: #7f8c8d;">Voltar para tela de login.</MudText>
+            </MudLink>
+        </MudStack>
+    </MudPaper>
+</MudContainer>
+
+@code {
+    private bool isLoading = false;
+    private readonly List<string> Errors = new List<string>();
+    private string MessageSuccess;
+
+    private InputModel Input { get; set; } = new();
+
+    protected override void OnInitialized()
+    {
+        Input.Role = Roles.User;
+    }
+
+    public async Task CreateAccountAsync()
+    {
+        try
+        {
+            MessageSuccess = string.Empty;
+            isLoading = true;
+            Errors.Clear();
+
+            var response = await UserService.CreateUserAsync(Input.Name, Input.Email, Input.Password, Input.Role.ToString());
+            if (!response.IsSuccess)
+            {
+                Errors.AddRange(response.Errors);
+                return;
+            }
+
+            if (!string.IsNullOrEmpty(response?.Data?.Id))
+            {
+                MessageSuccess = "Conta criada com sucesso.";
+                Input = new();
+            }            
+        }
+        catch (Exception ex)
+        {
+            Errors.Add("Falha ao criar a conta: " + ex.Message);
+            Logger.LogError(ex, "An error occurred in the method CreateAccountAsync.");
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private void HandleClick()
+    {
+        NavigationManager.NavigateTo("/auth/login", false);
+    }
+
+    private sealed class InputModel
+    {
+        [Required(ErrorMessage = "O campo 'Nome' é obrigatório!")]
+        public string Name { get; set; }
+
+        [Required(ErrorMessage = "O campo 'Email' é obrigatório!")]
+        [EmailAddress(ErrorMessage = "E-mail informado é inválido!")]
+        public string Email { get; set; }
+
+        [Required(ErrorMessage = "O campo 'Senha' é obrigatória!")]
+        [DataType(DataType.Password)]
+        public string Password { get; set; }
+
+        [Required(ErrorMessage = "Confirme sua senha!")]
+        [DataType(DataType.Password)]
+        [Compare("Password", ErrorMessage = "As senhas não coincidem.")]
+        public string ConfirmPassword { get; set; }
+
+        [Required(ErrorMessage = "O campo 'Role' é obrigatório!")]
+        public Roles Role { get; set; }
+    }
+}

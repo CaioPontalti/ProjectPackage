@@ -8,6 +8,8 @@ public class User
 
     public string Email { get; set; }
 
+    public string Role { get; set; }
+
     public DateTime CreatedDate { get; set; }
 
     public DateTime LastUpdatedDate { get; set; }
@@ -21,6 +23,7 @@ public class User
             Id = user.Id,
             Name = user.Name,
             Email = user.Email,
+            Role = user.Role,
             CreatedDate = user.CreatedDate,
             LastUpdatedDate = user.LastUpdatedDate,
             IsActive = user.IsActive,
