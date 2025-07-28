@@ -10,28 +10,18 @@
 <PageTitle>Home</PageTitle>
 <AuthGuard/>
 
-<MudText Typo="Typo.h6" GutterBottom="true">@TokenExpiredTime()</MudText>
+<MudPaper Elevation="2" Class="pa-6 mx-auto">
 
-<MudButton Class="mb-3" 
-           Variant="Variant.Filled" 
-           OnClick="Logout"
-           Style="text-transform: none;">
-    @if (isLoading)
-    {
-        <MudProgressCircular Color="Color.Primary" Size=Size.Small Indeterminate="true" />
-    }
-    else
-    {
-        <span>Logout</span>
-    }
-</MudButton>
+    <MudText Typo="Typo.h6" GutterBottom="true">@TokenExpiredTime()</MudText>
 
-<MudAlert Severity="Severity.Normal">
-    You can find documentation and examples on our website here:
-    <MudLink Href="https://mudblazor.com" Target="_blank" Typo="Typo.body2" Color="Color.Primary">
-        <b>www.mudblazor.com</b>
-    </MudLink>
-</MudAlert>
+    <MudAlert Severity="Severity.Normal">
+        You can find documentation and examples on our website here:
+        <MudLink Href="https://mudblazor.com" Target="_blank" Typo="Typo.body2" Color="Color.Primary">
+            <b>www.mudblazor.com</b>
+        </MudLink>
+    </MudAlert>
+
+</MudPaper>
 
     @code{
 

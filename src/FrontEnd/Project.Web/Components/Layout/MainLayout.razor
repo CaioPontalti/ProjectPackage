@@ -1,8 +1,9 @@
 ﻿@inherits LayoutComponentBase
-@inject AuthenticationStateProvider AuthStateProvider
+
+@inject IAccessTokenService AccessTokenService
 @inject NavigationManager Navigation
-@using Microsoft.AspNetCore.Components.Routing
-@using MudBlazor
+@inject CustomAuthenticationStateProvider AuthProvider
+@inject AuthenticationStateProvider AuthStateProvider
 
 @if (_isAuthorization)
 {
@@ -11,11 +12,23 @@
     <MudDialogProvider />
     <MudSnackbarProvider />
     <MudLayout>
-        <MudAppBar Elevation="1" >
+        <MudAppBar Elevation="1" Dense="true">
             <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" OnClick="@ToggleDrawer" Edge="Edge.Start" />
             <MudText Typo="Typo.h6" Class="ml-2">Projeto Blazor MudJWT</MudText>
             <MudSpacer />
+
             <MudIconButton Icon="@(DarkLightModeButtonIcon)" Color="Color.Inherit" OnClick="@DarkModeToggle" />
+
+            <MudMenu Icon="@Icons.Material.Filled.Settings"
+                     Color="Color.Inherit"
+                     Dense="true"
+                     AnchorOrigin="Origin.TopRight"
+                     TransformOrigin="Origin.TopRight">
+                <MudMenuItem >Perfil</MudMenuItem>
+                <MudMenuItem >Configurações</MudMenuItem>
+                <MudMenuItem OnClick="Logout">Sair</MudMenuItem>
+            </MudMenu>
+            
         </MudAppBar>
 
         <MudDrawer @bind-Open="_drawerOpen" Elevation="1" ClipMode="DrawerClipMode.Always">
@@ -45,7 +58,7 @@
             _isAuthorization = false;
             Navigation.NavigateTo("/auth/login");
         }
-        
+
     }
 
     // private MudTheme _theme => _isDarkMode ? _darkTheme : _lightTheme;
@@ -78,6 +91,8 @@
     private void DarkModeToggle()
     {
         _isDarkMode = !_isDarkMode;
+
+        var dark = _isDarkMode;
     }
 
     public string DarkLightModeButtonIcon => _isDarkMode switch
@@ -85,4 +100,12 @@
         true => Icons.Material.Rounded.AutoMode,
         false => Icons.Material.Outlined.DarkMode,
     };
+
+    private async Task Logout()
+    {
+        AuthProvider.MarkUserAsLoggedOut();
+        await AccessTokenService.RemoveTokenAsync();
+
+        Navigation.NavigateTo("/auth/login");
+    }
 }
