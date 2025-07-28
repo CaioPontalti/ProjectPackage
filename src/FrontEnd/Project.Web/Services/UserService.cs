@@ -38,7 +38,7 @@ public class UserService : IUserService
         var response = await _httpClient.GetAsync($"v1/user?page={page}&pageSize={pageSize}&search={search}");
         
         if (response.StatusCode == HttpStatusCode.Unauthorized)
-            return new ApiResponse<GetAllUser> { Errors = ["Usuário sem autorização. Faça login novamente."] };
+            throw new UnauthorizedAccessException("Usuário sem autorização. Faça login novamente.");
 
         var json = await response.Content.ReadAsStringAsync();
         var result = JsonConvert.DeserializeObject<ApiResponse<GetAllUser>>(json);

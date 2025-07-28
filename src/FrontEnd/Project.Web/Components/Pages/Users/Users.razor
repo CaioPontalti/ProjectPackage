@@ -152,6 +152,11 @@
                 TotalItems = response.Data.TotalItems
             };
         }
+        catch (UnauthorizedAccessException ex)
+        {
+            NavigationManager.NavigateTo("/auth/login", true);
+            return null;
+        }
         catch (Exception ex)
         {
             Errors.Add(ex.Message);
