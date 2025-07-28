@@ -1,4 +1,5 @@
 ﻿@page "/user/create2"
+@attribute [Authorize]
 @using Project.Web.Enums
 @using Project.Web.Extension
 
@@ -11,64 +12,53 @@
 @inject ILogger<Create> Logger
 
 <PageTitle>Log in</PageTitle>
+<AuthGuard/>
 
 <MudPaper Elevation="2" Class="pa-6 mx-auto">
 
-    <MudText Typo="Typo.h5" Align="Align.Center" Class="mb-2">
+    <MudText Typo="Typo.h6" Align="Align.Left" Class="mb-2">
         Criar uma nova conta
     </MudText>
 
-    <MudText Typo="Typo.body2" Align="Align.Center" Style="color: #7f8c8d;">
-        Crie sua conta para acessar o app.
-    </MudText>
-
-    <MudDivider Class="my-3" />
+    <div class="col-lg-12">
+        @if (Errors.Any())
+        {
+            @foreach (var error in Errors)
+            {
+                <MudAlert Severity="Severity.Error" Dense="true" Class="my-1">@error</MudAlert>
+            }
+        }
+        @if (!string.IsNullOrEmpty(MessageSuccess))
+        {
+            <MudAlert Severity="Severity.Success" Dense="true" Class="my-1">@MessageSuccess</MudAlert>
+        }
+    </div>
 
     <EditForm Model="Input" OnValidSubmit="CreateAccountAsync">
         <DataAnnotationsValidator />
 
         <MudGrid Spacing="2">
-            <MudItem xs="12">
-                <MudTextField Label="Nome" For="@(() => Input.Name)" @bind-Value="Input.Name"
-                              Adornment="Adornment.Start"
-                              AdornmentIcon="@Icons.Material.Filled.Person"
-                              Variant="Variant.Outlined"
+            <MudItem xs="12" md="4">
+                <MudTextField Label="Nome"
+                              For="@(() => Input.Name)"
+                              @bind-Value="Input.Name"
+                              Variant="Variant.Text"
                               FullWidth="true" />
             </MudItem>
 
-            <MudItem xs="12">
-                <MudTextField Label="Email" For="@(() => Input.Email)" @bind-Value="Input.Email"
-                              Adornment="Adornment.Start"
-                              AdornmentIcon="@Icons.Material.Filled.Email"
-                              Variant="Variant.Outlined"
+            <MudItem xs="12" md="4">
+                <MudTextField Label="Email"
+                              For="@(() => Input.Email)"
+                              @bind-Value="Input.Email"
+                              Variant="Variant.Text"
                               FullWidth="true" />
             </MudItem>
 
-            <MudItem xs="6">
-                <MudTextField Label="Senha" For="@(() => Input.Password)" @bind-Value="Input.Password"
-                              InputType="InputType.Password"
-                              Adornment="Adornment.Start"
-                              AdornmentIcon="@Icons.Material.Filled.Lock"
-                              Variant="Variant.Outlined"
-                              FullWidth="true" />
-            </MudItem>
-
-            <MudItem xs="6">
-                <MudTextField Label="Confirme a Senha" For="@(() => Input.ConfirmPassword)" @bind-Value="Input.ConfirmPassword"
-                              InputType="InputType.Password"
-                              Adornment="Adornment.Start"
-                              AdornmentIcon="@Icons.Material.Filled.Lock"
-                              Variant="Variant.Outlined"
-                              FullWidth="true" />
-            </MudItem>
-
-            <MudItem xs="12">
+            <MudItem xs="12" md="4">
                 <MudSelect T="Roles"
                            Label="Função"
                            @bind-Value="Input.Role"
-                           Adornment="Adornment.Start"
-                           AdornmentIcon="@Icons.Material.Filled.Security"
-                           Variant="Variant.Outlined"
+                           Variant="Variant.Text"
                            FullWidth="true">
                     @foreach (Roles role in Enum.GetValues(typeof(Roles)).Cast<Roles>().OrderBy(r => r.GetDescription()))
                     {
@@ -77,16 +67,34 @@
                 </MudSelect>
             </MudItem>
 
-            <MudItem xs="12" Class="mt-4">
+            <MudItem xs="12" md="6">
+                <MudTextField Label="Senha"
+                              For="@(() => Input.Password)"
+                              @bind-Value="Input.Password"
+                              InputType="InputType.Password"
+                              Variant="Variant.Text"
+                              FullWidth="true" />
+            </MudItem>
+
+            <MudItem xs="12" md="6">
+                <MudTextField Label="Confirme a Senha"
+                              For="@(() => Input.ConfirmPassword)"
+                              @bind-Value="Input.ConfirmPassword"
+                              InputType="InputType.Password"
+                              Variant="Variant.Text"
+                              FullWidth="true" />
+            </MudItem>
+
+            <MudItem xs="12" Class="mt-4 d-flex justify-end">
                 <MudButton Variant="Variant.Filled"
                            Color="Color.Primary"
-                           Type="Submit"
-                           FullWidth="true"
+                           ButtonType="ButtonType.Submit"
+                           Size="Size.Small"
                            Disabled="@isLoading"
-                           Style="text-transform: none; transition: 0.2s ease-in-out;">
+                           Style="text-transform: none; min-width: 120px;">
                     @if (isLoading)
                     {
-                        <MudProgressCircular Size="Size.Small" Indeterminate="true" />
+                        <MudProgressCircular Color="Color.Primary" Size=Size.Small Indeterminate="true" />
                     }
                     else
                     {
@@ -97,14 +105,8 @@
         </MudGrid>
     </EditForm>
 
-    <MudDivider Class="my-3" />
-
-    <MudStack Justify="Justify.Center" AlignItems="AlignItems.Center">
-        <MudLink OnClick="@HandleClick" Style="cursor:pointer;" Class="hover-underline">
-            <MudText Typo="Typo.body2" Style="color: #7f8c8d;">Voltar para tela de login</MudText>
-        </MudLink>
-    </MudStack>
 </MudPaper>
+
 @code {
     private bool isLoading = false;
     private readonly List<string> Errors = new List<string>();
