@@ -4,6 +4,7 @@
 @inject NavigationManager Navigation
 @inject CustomAuthenticationStateProvider AuthProvider
 @inject AuthenticationStateProvider AuthStateProvider
+@inject NavigationManager NavigationManager
 @inject ICookieService CookieService
 
 @if (_isAuthorization)
@@ -25,7 +26,7 @@
                      Dense="true"
                      AnchorOrigin="Origin.TopRight"
                      TransformOrigin="Origin.TopRight">
-                <MudMenuItem >Perfil</MudMenuItem>
+                <MudMenuItem OnClick="HandleProfileClick">Perfil</MudMenuItem>
                 <MudMenuItem >Configurações</MudMenuItem>
                 <MudMenuItem OnClick="Logout">Sair</MudMenuItem>
             </MudMenu>
@@ -100,5 +101,10 @@
         await AccessTokenService.RemoveTokenAsync();
 
         Navigation.NavigateTo("/auth/login");
+    }
+
+    private void HandleProfileClick()
+    {
+        NavigationManager.NavigateTo("user/profile", false);
     }
 }
