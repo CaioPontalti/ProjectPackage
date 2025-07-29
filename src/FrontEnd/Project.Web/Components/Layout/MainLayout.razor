@@ -4,6 +4,7 @@
 @inject NavigationManager Navigation
 @inject CustomAuthenticationStateProvider AuthProvider
 @inject AuthenticationStateProvider AuthStateProvider
+@inject ICookieService CookieService
 
 @if (_isAuthorization)
 {
@@ -43,10 +44,9 @@
 
 @code {
     private bool _isDarkMode = false;
-    private const string DARK_MODE = "Dark";
+    private string _themeDefault = "Light";
     private bool _drawerOpen = true;
     private bool _isAuthorization { get; set; }
-
 
     protected override async Task OnInitializedAsync()
     {
@@ -55,9 +55,6 @@
 
         if (user.Identity?.IsAuthenticated ?? false)
         {
-            var theme = user.FindFirst("Theme")?.Value;
-            _isDarkMode = theme == DARK_MODE;
-
             _isAuthorization = true;
         }
         else
@@ -66,6 +63,14 @@
             Navigation.NavigateTo("/auth/login");
         }
 
+        var themeCookie = await CookieService.GetAsync("theme");
+        if (themeCookie is null)
+        {
+            themeCookie = _themeDefault;
+            await CookieService.SetAsync("theme", themeCookie, 365);
+        }
+
+        _isDarkMode = themeCookie != _themeDefault;
     }
 
     private void ToggleDrawer()
@@ -73,11 +78,14 @@
         _drawerOpen = !_drawerOpen;
     }
 
-    private void DarkModeToggle()
+    private async Task DarkModeToggle()
     {
         _isDarkMode = !_isDarkMode;
 
-        var dark = _isDarkMode;
+        var theme = _isDarkMode ? "Dark" : _themeDefault;
+        await CookieService.RemoveAsync("theme");
+        await CookieService.SetAsync("theme", theme, 365);
+        
     }
 
     public string DarkLightModeButtonIcon => _isDarkMode switch

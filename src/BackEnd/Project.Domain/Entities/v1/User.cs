@@ -13,7 +13,6 @@ public class User
     public string PasswordHash { get; private set; }
 
     public string Role { get; set; }
-    public string Theme { get; set; }
 
     public DateTime CreatedDate { get; private set; }
 
@@ -21,19 +20,16 @@ public class User
 
     public bool IsActive { get; private set; }
 
-    private const string THEME = "Light";
-
 
     public User() { }
 
-    public User(ObjectId id, string email, string name, string passwordHash, string role, string theme, DateTime createdDate, DateTime lastUpdatedDate, bool isActive)
+    public User(ObjectId id, string email, string name, string passwordHash, string role, DateTime createdDate, DateTime lastUpdatedDate, bool isActive)
     {
         Id = id.ToString();
         Email = email;
         Name = name;
         PasswordHash = passwordHash;
         Role = role;
-        Theme = theme;
         CreatedDate = createdDate;
         LastUpdatedDate = lastUpdatedDate;
         IsActive = isActive;
@@ -43,7 +39,7 @@ public class User
     {
         var createdDate = DateTime.Now;
         var hashPassword = BCrypt.Net.BCrypt.HashPassword(password);
-        return new User(ObjectId.GenerateNewId(), email, name, hashPassword, role, theme: THEME, createdDate, createdDate, isActive: true);
+        return new User(ObjectId.GenerateNewId(), email, name, hashPassword, role, createdDate, createdDate, isActive: true);
     }
 
     public void Update(string name)

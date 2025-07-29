@@ -12,6 +12,5 @@
   "lastUpdatedDate": {
     "$date": "2025-07-28T14:01:13.050Z"
   },
-  "isActive": true,
-  "theme": "Light"
+  "isActive": true
 }

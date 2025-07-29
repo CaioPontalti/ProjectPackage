@@ -16,8 +16,6 @@ public class User
 
     public bool IsActive { get; set; }
 
-    public string Theme { get; set; }
-
     public static explicit operator User(Domain.Entities.v1.User user)
     {
         return new User
@@ -28,8 +26,7 @@ public class User
             Role = user.Role,
             CreatedDate = user.CreatedDate,
             LastUpdatedDate = user.LastUpdatedDate,
-            IsActive = user.IsActive,
-            Theme = user.Theme
+            IsActive = user.IsActive
         };
     } 
 }

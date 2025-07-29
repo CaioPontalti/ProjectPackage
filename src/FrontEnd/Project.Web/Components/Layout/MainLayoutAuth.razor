@@ -1,6 +1,7 @@
 ﻿@inherits LayoutComponentBase
+@inject ICookieService CookieService
 
-<MudThemeProvider Theme="@_theme" IsDarkMode="_isDarkMode" />
+<MudThemeProvider IsDarkMode="_isDarkMode" />
 <MudPopoverProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
@@ -43,33 +44,24 @@
 
 @code {
     private bool _isDarkMode = false;
+    private string _themeDefault = "Light";
+
+    protected override async Task OnInitializedAsync()
+    {
+        var themeCookie = await CookieService.GetAsync("theme");
+        if (themeCookie is null)
+        {
+            themeCookie = _themeDefault;
+            await CookieService.SetAsync("theme", themeCookie, 365);
+        }
+
+        _isDarkMode = themeCookie != _themeDefault;
+    }
 
     private void DarkModeToggle()
     {
         _isDarkMode = !_isDarkMode;
     }
-
-    private MudTheme _theme => _isDarkMode ? _darkTheme : _lightTheme;
-
-    private readonly MudTheme _lightTheme = new MudTheme
-    {
-        PaletteLight = new PaletteLight
-        {
-            Primary = Colors.Blue.Default,
-            Background = "#f5f5f5",
-            AppbarBackground = Colors.Blue.Darken3
-        }
-    };
-
-    private readonly MudTheme _darkTheme = new MudTheme
-    {
-        PaletteDark = new PaletteDark
-        {
-            Primary = Colors.Blue.Lighten1,
-            Background = "#2e3238",
-            AppbarBackground = "#2D2D30"
-        }
-    };
 
     public string DarkLightModeButtonIcon => _isDarkMode switch
     {

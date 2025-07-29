@@ -7,6 +7,7 @@
 @inject IAccessTokenService AccessTokenService
 @inject ILogger<Login> Logger
 
+
 <PageTitle>Log in</PageTitle>
 
 <MudContainer MaxWidth="MaxWidth.False"
@@ -127,7 +128,6 @@
 @code {
     private bool isLoading = false;
     private readonly List<string> Errors = new List<string>();
-
     private InputModel Input { get; set; } = new();
 
     [Parameter]
