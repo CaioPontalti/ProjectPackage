@@ -1,5 +1,3 @@
-﻿using Project.Application.DTOs.v1.User;
+﻿namespace Project.Application.UseCases.Auth.Login.Response;
 
-namespace Project.Application.UseCases.Auth.Login.Response;
-
-public record LoginResponse(string Token, DTOs.v1.User.User User);
+public record LoginResponse(string Token, User.GetAll.Response.User User);

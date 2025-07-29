@@ -1,4 +1,4 @@
-﻿namespace Project.Application.DTOs.v1.User;
+﻿namespace Project.Application.UseCases.User.GetAll.Response;
 
 public class User
 {
