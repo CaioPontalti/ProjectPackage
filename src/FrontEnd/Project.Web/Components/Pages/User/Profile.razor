@@ -1,8 +1,11 @@
-﻿@page "/user/profile"
+﻿@page "/user/profile/{userId}"
 @attribute [Authorize]
 
 <h3>Profile</h3>
 
-@code {
+<h4>Meu Id: @userId </h4>
 
+@code {
+    [Parameter]
+    public string userId { get; set; }
 }

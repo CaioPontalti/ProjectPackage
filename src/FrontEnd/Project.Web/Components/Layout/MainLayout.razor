@@ -1,4 +1,5 @@
-﻿@inherits LayoutComponentBase
+﻿@using System.Security.Claims
+@inherits LayoutComponentBase
 
 @inject IAccessTokenService AccessTokenService
 @inject NavigationManager Navigation
@@ -27,7 +28,6 @@
                      AnchorOrigin="Origin.TopRight"
                      TransformOrigin="Origin.TopRight">
                 <MudMenuItem OnClick="HandleProfileClick">Perfil</MudMenuItem>
-                <MudMenuItem >Configurações</MudMenuItem>
                 <MudMenuItem OnClick="Logout">Sair</MudMenuItem>
             </MudMenu>
             
@@ -103,8 +103,13 @@
         Navigation.NavigateTo("/auth/login");
     }
 
-    private void HandleProfileClick()
+    private async Task HandleProfileClick()
     {
-        NavigationManager.NavigateTo("user/profile", false);
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        var userId = user.FindFirst(ClaimTypes.Sid).Value;
+
+        NavigationManager.NavigateTo($"/user/profile/{userId}");
     }
 }
