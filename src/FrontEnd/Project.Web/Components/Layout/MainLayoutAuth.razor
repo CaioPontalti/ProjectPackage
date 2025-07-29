@@ -7,7 +7,7 @@
 <MudSnackbarProvider />
 <MudLayout>
     <MudMainContent Class="main-content">
-        <div class="centralizador">
+        <div class="@centralizador">
             @Body
         </div>
     </MudMainContent>
@@ -20,7 +20,7 @@
         padding: 0;
     }
 
-    .centralizador {
+    .centralizadorLight {
         height: 100vh;
         width: 100vw;
         display: flex;
@@ -28,7 +28,19 @@
         align-items: center;
         overflow: hidden;
         background-image: linear-gradient(rgb(189 189 189), rgb(186 206 247 / 62%)), url(/images/login.jpg);
+        background-size: cover; /* cobre toda a área */
+        background-position: center; /* centraliza a imagem */
+        background-repeat: no-repeat;
+    }
 
+    .centralizadorDark {
+        height: 100vh;
+        width: 100vw;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        background-image: linear-gradient(rgb(56 49 49 / 84%), rgb(40 29 29 / 78%)), url(/images/login.jpg);
         background-size: cover; /* cobre toda a área */
         background-position: center; /* centraliza a imagem */
         background-repeat: no-repeat;
@@ -45,6 +57,7 @@
 @code {
     private bool _isDarkMode = false;
     private string _themeDefault = "Light";
+    private string centralizador = "centralizadorLight";
 
     protected override async Task OnInitializedAsync()
     {
@@ -56,11 +69,21 @@
         }
 
         _isDarkMode = themeCookie != _themeDefault;
+
+        if (_isDarkMode)
+            centralizador = "centralizadorDark";
+        else
+            centralizador = "centralizadorLight";
     }
 
     private void DarkModeToggle()
     {
         _isDarkMode = !_isDarkMode;
+
+        if (_isDarkMode)
+            centralizador = "centralizadorDark";
+        else
+            centralizador = "centralizadorLight";
     }
 
     public string DarkLightModeButtonIcon => _isDarkMode switch
