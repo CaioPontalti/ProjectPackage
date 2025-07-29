@@ -1,5 +1,6 @@
 ﻿using Project.Web.DTOs;
-using Project.Web.DTOs.Response.User;
+using Project.Web.DTOs.Response.User.Create;
+using Project.Web.DTOs.Response.User.GetAll;
 
 namespace Project.Web.Interfaces.Services;
 

@@ -43,8 +43,10 @@
 
 @code {
     private bool _isDarkMode = false;
+    private const string DARK_MODE = "Dark";
     private bool _drawerOpen = true;
     private bool _isAuthorization { get; set; }
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -52,7 +54,12 @@
         var user = authState.User;
 
         if (user.Identity?.IsAuthenticated ?? false)
+        {
+            var theme = user.FindFirst("Theme")?.Value;
+            _isDarkMode = theme == DARK_MODE;
+
             _isAuthorization = true;
+        }
         else
         {
             _isAuthorization = false;
@@ -60,28 +67,6 @@
         }
 
     }
-
-    // private MudTheme _theme => _isDarkMode ? _darkTheme : _lightTheme;
-
-    // private readonly MudTheme _lightTheme = new MudTheme
-    // {
-    //     PaletteLight = new PaletteLight
-    //     {
-    //         Primary = Colors.Blue.Default,
-    //         Background = "#f5f5f5",
-    //         AppbarBackground = "#455387"
-    //     }
-    // };
-
-    // private readonly MudTheme _darkTheme = new MudTheme
-    // {
-    //     PaletteDark = new PaletteDark
-    //     {
-    //         Primary = Colors.Blue.Lighten1,
-    //         Background = "#2e3238",
-    //         AppbarBackground = "#252531"
-    //     }
-    // };
 
     private void ToggleDrawer()
     {

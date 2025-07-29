@@ -25,6 +25,10 @@ public class UserMongoDb
     [BsonElement("role")]
     public string Role { get; set; }
 
+    [JsonProperty("theme")]
+    [BsonElement("theme")]
+    public string Theme { get; set; }
+
     [JsonProperty("createdDate")]
     [BsonElement("createdDate")]
     public DateTime CreatedDate { get; set; }
@@ -47,6 +51,7 @@ public class UserMongoDb
             Name = user.Name,
             PasswordHash = user.PasswordHash,
             Role = user.Role,
+            Theme = user.Theme,
             CreatedDate = user.CreatedDate,
             LastUpdatedDate = user.LastUpdatedDate,
             IsActive = user.IsActive
@@ -61,6 +66,7 @@ public class UserMongoDb
             user.Name,
             user.PasswordHash, 
             user.Role,
+            user.Theme,
             user.CreatedDate, 
             user.LastUpdatedDate, 
             user.IsActive);
