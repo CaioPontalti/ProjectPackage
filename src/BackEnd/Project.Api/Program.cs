@@ -4,6 +4,7 @@ using Microsoft.OpenApi.Models;
 using Project.Application.UseCases.Auth.Login;
 using Project.Application.UseCases.User.Create;
 using Project.Application.UseCases.User.GetAll;
+using Project.Application.UseCases.User.GetById;
 using Project.Application.UseCases.User.Inactivate;
 using Project.Application.UseCases.User.Update;
 using Project.Domain.Interfaces.Repositories;
@@ -27,6 +28,8 @@ builder.Services.AddScoped<IGetAllUsersUseCase, GetAllUsersUseCase>();
 builder.Services.AddScoped<IInactivateUserUseCase, InactivateUserUseCase>();
 builder.Services.AddScoped<ILoginUseCase, LoginUseCase>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+builder.Services.AddScoped<IGetByIdUserUseCase, GetByIdUserUseCase>();
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 

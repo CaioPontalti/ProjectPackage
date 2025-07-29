@@ -6,6 +6,7 @@ using Project.Application.UseCases.User.Create;
 using Project.Application.UseCases.User.Create.Request;
 using Project.Application.UseCases.User.Create.Response;
 using Project.Application.UseCases.User.GetAll;
+using Project.Application.UseCases.User.GetById;
 using Project.Application.UseCases.User.GetUsers.Response;
 using Project.Application.UseCases.User.Inactivate;
 using Project.Application.UseCases.User.Update;
@@ -117,6 +118,7 @@ namespace Project.Api.Controllers.v1
         ///                     "id": "68712260b37de642117fb3a7",
         ///                     "name": "Name",
         ///                     "email": "Mail",
+        ///                     "role": "User",
         ///                     "createdDate": "2025-07-11T14:40:31.993Z",
         ///                     "lastUpdatedDate": "2025-07-11T14:40:31.993Z",
         ///                     "isActive": true
@@ -147,13 +149,24 @@ namespace Project.Api.Controllers.v1
         /// <response code="200">Users retrieved successfully</response>
         /// <response code="500">Internal Server Error</response>
         [Authorize]
-        [HttpGet]
+        [HttpGet("users")]
         [ProducesResponseType(typeof(Result<GetAllUsersResponse>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAllUsersAsync(
             [FromServices] IGetAllUsersUseCase useCaseGetAllUsers,
             [FromQuery] int page, int pageSize, string search)
         {
             var result = await useCaseGetAllUsers.ExecuteAsync(page, pageSize, search);
+
+            return result.ToActionResult();
+        }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> GetByIdUserAsync(
+            [FromServices] IGetByIdUserUseCase useCaseGetByIdUser,
+            [FromQuery] string id)
+        {
+            var result = await useCaseGetByIdUser.ExecuteAsync(id);
 
             return result.ToActionResult();
         }

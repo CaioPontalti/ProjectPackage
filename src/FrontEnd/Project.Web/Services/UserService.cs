@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Project.Shared.Exceptions;
 using Project.Web.DTOs;
 using Project.Web.DTOs.Response.User.Create;
 using Project.Web.DTOs.Response.User.GetAll;
@@ -12,6 +13,7 @@ public class UserService : IUserService
 {
     private readonly HttpClient _httpClient;
     private readonly IAccessTokenService _accessTokenService;
+    private readonly string _messageError = "Ocorreu um erro ao chamar a api. Entre em contato com o Suporte.";
 
     public UserService(IHttpClientFactory httpClientFactory, IAccessTokenService accessTokenService)
     {
@@ -36,10 +38,13 @@ public class UserService : IUserService
         _httpClient.DefaultRequestHeaders.Remove("Authorization");
         _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
 
-        var response = await _httpClient.GetAsync($"v1/user?page={page}&pageSize={pageSize}&search={search}");
+        var response = await _httpClient.GetAsync($"v1/user/users?page={page}&pageSize={pageSize}&search={search}");
         
         if (response.StatusCode == HttpStatusCode.Unauthorized)
             throw new UnauthorizedAccessException("Usuário sem autorização. Faça login novamente.");
+
+        if (response.StatusCode != HttpStatusCode.OK)
+            throw new ApiResponseException(_messageError);
 
         var json = await response.Content.ReadAsStringAsync();
         var result = JsonConvert.DeserializeObject<ApiResponse<GetAllUser>>(json);

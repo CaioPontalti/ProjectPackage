@@ -31,4 +31,9 @@
   <ItemGroup>
     <AdditionalFiles Remove="C:\Users\caioalmeida\AppData\Roaming\SonarLint for Visual Studio\.global\csharp\SonarLint.xml" />
   </ItemGroup>
+
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\BackEnd\Project.Shared\Project.Shared.csproj" />
+  </ItemGroup>
 </Project>

@@ -1,10 +1,9 @@
 ﻿using Project.Application.Resources.Response;
 using Project.Application.UseCases.User.GetUsers.Response;
 
-namespace Project.Application.UseCases.User.GetAll
+namespace Project.Application.UseCases.User.GetAll;
+
+public interface IGetAllUsersUseCase
 {
-    public interface IGetAllUsersUseCase
-    {
-        Task<Result<GetAllUsersResponse>> ExecuteAsync(int page, int pageSize, string search);
-    }
+    Task<Result<GetAllUsersResponse>> ExecuteAsync(int page, int pageSize, string search);
 }
