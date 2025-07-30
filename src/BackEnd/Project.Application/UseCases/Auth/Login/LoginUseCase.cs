@@ -37,6 +37,6 @@ public class LoginUseCase : ILoginUseCase
         var token = _authService.GenerateToken(user);
 
         return Result<LoginResponse>
-            .Success(HttpStatusCode.OK, new LoginResponse(token.AcccessToken, (User.GetAll.Response.User)user));
+            .Success(HttpStatusCode.OK, new LoginResponse(token.AcccessToken, (User.GetAll.Response.Account)user));
     }
 }

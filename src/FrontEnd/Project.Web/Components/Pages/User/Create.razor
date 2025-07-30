@@ -12,11 +12,11 @@
 <PageTitle>Log in</PageTitle>
 <AuthGuard/>
 
-<MudPaper Elevation="2" Class="pa-6 mx-auto">
+<MudText Typo="Typo.h6" Align="Align.Left" Class="mb-2">
+    Criar uma nova conta
+</MudText>
 
-    <MudText Typo="Typo.h6" Align="Align.Left" Class="mb-2">
-        Criar uma nova conta
-    </MudText>
+<MudPaper Elevation="2" Class="pa-6 mx-auto">
 
     <div class="col-lg-12">
         @if (Errors.Any())
@@ -84,18 +84,15 @@
             </MudItem>
 
             <MudItem xs="12" Class="mt-4 d-flex justify-end">
-                <MudButton Variant="Variant.Filled"
-                           OnClick="HandleClick"
+                <MudButton ButtonType="ButtonType.Submit" 
                            Color="Color.Default"
-                           Size="Size.Small"
-                           Disabled="@isLoading"
-                           Style="text-transform: none; transition: 0.2s ease-in-out;">
+                           Style="text-transform: none; transition: 0.2s ease-in-out;"
+                           OnClick="HandleClick">
                     Voltar
                 </MudButton>
-                <MudButton Variant="Variant.Filled"
-                           Color="Color.Primary"
+
+                <MudButton Color="Color.Primary"
                            ButtonType="ButtonType.Submit"
-                           Size="Size.Small"
                            Disabled="@isLoading"
                            Style="margin-left: 8px; text-transform: none; transition: 0.2s ease-in-out;">
                     @if (isLoading)
@@ -105,7 +102,7 @@
                     else
                     {
                         <span>
-                            Cadastrar
+                            Salvar
                         </span>
                     }
                 </MudButton>
@@ -136,7 +133,7 @@
             isLoading = true;
             Errors.Clear();
 
-            var response = await UserService.CreateUserAsync(Input.Name, Input.Email, Input.Password, Input.Role.ToString());
+            var response = await UserService.CreateAsync(Input.Name, Input.Email, Input.Password, Input.Role.ToString());
             if (!response.IsSuccess)
             {
                 Errors.AddRange(response.Errors);

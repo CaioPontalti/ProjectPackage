@@ -97,8 +97,8 @@
     private bool _initialized = false;
     private string search = string.Empty;  // usado para filtro real
     private string searchInput = string.Empty;    // usado para manter o valor digitado
-    private User selectedItem = null;
-    private MudTable<User> _tableRef;
+    private Account selectedItem = null;
+    private MudTable<Account> _tableRef;
     private readonly List<string> Errors = new List<string>();
 
     private HorizontalAlignment horizontalAlignment = HorizontalAlignment.Right;
@@ -134,7 +134,7 @@
         }
     }
 
-    private async Task<TableData<User>> LoadServerDataAsync(TableState state, CancellationToken cancellationToken)
+    private async Task<TableData<Account>> LoadServerDataAsync(TableState state, CancellationToken cancellationToken)
     {
         try
         {
@@ -147,14 +147,15 @@
                 return null;
             }
 
-            return new TableData<User>
+            return new TableData<Account>
             {
-                Items = response.Data.Users,
+                Items = response.Data.Accounts,
                 TotalItems = response.Data.TotalItems
             };
         }
         catch (UnauthorizedAccessException ex)
         {
+            Logger.LogError(ex, "An error occurred in the method LoadServerDataAsync.");
             NavigationManager.NavigateTo("/auth/login", true);
             return null;
         }

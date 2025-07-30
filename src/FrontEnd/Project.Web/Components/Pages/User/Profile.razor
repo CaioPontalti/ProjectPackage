@@ -1,11 +1,108 @@
 ﻿@page "/user/profile/{userId}"
 @attribute [Authorize]
 
-<h3>Profile</h3>
+@inject IUserService UserService;
+@inject NavigationManager NavigationManager
+@inject ILogger<Profile> Logger
 
-<h4>Meu Id: @userId </h4>
+<PageTitle>Perfil</PageTitle>
+<AuthGuard />
+
+@if (_isLoading)
+{
+    <MudOverlay Visible="true" DarkBackground="true" ZIndex="9999">
+        <MudProgressCircular Color="Color.Primary" Indeterminate="true" Size="Size.Large" />
+    </MudOverlay>
+}
+else
+{
+    <MudText Typo="Typo.h6" Align="Align.Left" Class="mb-2">
+        Perfil
+    </MudText>
+
+    <MudPaper Elevation="2" Class="pa-6 mx-auto">
+
+        <div class="col-lg-12">
+            @if (Errors.Any())
+            {
+                @foreach (var error in Errors)
+                {
+                    <MudAlert Severity="Severity.Error" Dense="true" Class="my-1">@error</MudAlert>
+                }
+            }
+            @if (!string.IsNullOrEmpty(MessageSuccess))
+            {
+                <MudAlert Severity="Severity.Success" Dense="true" Class="my-1">@MessageSuccess</MudAlert>
+            }
+        </div>
+
+        <EditForm Model="User" OnValidSubmit="Save">
+            <DataAnnotationsValidator />
+
+            <MudItem xs="12" md="4">
+                <MudTextField Label="Nome"
+                              For="@(() => User.Name)"
+                              @bind-Value="User.Name"
+                              Variant="Variant.Text"
+                              FullWidth="true" />
+            </MudItem>
+
+            <MudItem xs="12" Class="mt-4 d-flex justify-end">
+                <MudButton ButtonType="ButtonType.Submit"
+                           Color="Color.Primary"
+                           Style="text-transform: none; transition: 0.2s ease-in-out;">
+                    Salvar
+                </MudButton>
+            </MudItem>
+
+        </EditForm>
+
+    </MudPaper>
+}
+
+
 
 @code {
     [Parameter]
     public string userId { get; set; }
+
+    private Project.Web.DTOs.Response.User.GetById.User User { get; set; } = new();
+    private readonly List<string> Errors = new List<string>();
+    private bool _isLoading = true;
+    private string MessageSuccess;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var response = await UserService.GetByIdAsync(userId);
+            if (!response.IsSuccess)
+            {
+                Errors.AddRange(response.Errors);
+                return;
+            }
+
+            User = response.Data.User;
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            Logger.LogError(ex, "An error occurred in the method OnInitializedAsync.");
+            NavigationManager.NavigateTo("/auth/login", true);
+        }
+        catch (Exception ex)
+        {
+            Errors.Add(ex.Message);
+            Logger.LogError(ex, "An error occurred in the method OnInitializedAsync.");
+            StateHasChanged();
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    private async Task Save()
+    {
+        await Task.CompletedTask;
+    }
 }

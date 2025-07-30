@@ -22,7 +22,7 @@ public class GetAllUsersUseCaseTest
             .ReturnsAsync(usersList);
 
         var result = await useCase.ExecuteAsync(page, pageSize, search);
-        Assert.NotEmpty(result.Data.Users);
+        Assert.NotEmpty(result.Data.Accunts);
         Assert.True(result.IsSuccess);
         Assert.Equal(HttpStatusCode.OK, result.StatusCode);
     }
@@ -37,7 +37,7 @@ public class GetAllUsersUseCaseTest
             .ReturnsAsync(Enumerable.Empty<Project.Domain.Entities.v1.User>);
 
         var result = await useCase.ExecuteAsync(page, pageSize, search);
-        Assert.Empty(result.Data.Users);
+        Assert.Empty(result.Data.Accunts);
         Assert.True(result.IsSuccess);
     }
 

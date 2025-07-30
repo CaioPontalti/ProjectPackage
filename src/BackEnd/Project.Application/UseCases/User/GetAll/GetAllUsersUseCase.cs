@@ -26,6 +26,6 @@ public class GetAllUsersUseCase : IGetAllUsersUseCase
         var paginatedItems = users.Skip(page * pageSize).Take(pageSize).ToList();
 
         return Result<GetAllUsersResponse>.Success(System.Net.HttpStatusCode.OK, 
-            new GetAllUsersResponse(paginatedItems.Select(user => (Response.User)user), users.Count()));
+            new GetAllUsersResponse(paginatedItems.Select(user => (Response.Account)user), users.Count()));
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Project.Application.UseCases.User.GetAll.Response;
 
-public class User
+public class Account
 {
     public string Id { get; set; }
 
@@ -16,9 +16,9 @@ public class User
 
     public bool IsActive { get; set; }
 
-    public static explicit operator User(Domain.Entities.v1.User user)
+    public static explicit operator Account(Domain.Entities.v1.User user)
     {
-        return new User
+        return new Account
         {
             Id = user.Id,
             Name = user.Name,
