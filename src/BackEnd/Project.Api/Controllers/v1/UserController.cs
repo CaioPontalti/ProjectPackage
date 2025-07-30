@@ -150,7 +150,7 @@ namespace Project.Api.Controllers.v1
         /// <response code="500">Internal Server Error</response>
         [Authorize]
         [HttpGet("users")]
-        [ProducesResponseType(typeof(Result<GetAllUsersResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Result<GetAllAccountsResponse>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAllUsersAsync(
             [FromServices] IGetAllUsersUseCase useCaseGetAllUsers,
             [FromQuery] int page, int pageSize, string search)

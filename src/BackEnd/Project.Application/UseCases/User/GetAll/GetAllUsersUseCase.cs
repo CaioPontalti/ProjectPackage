@@ -13,19 +13,19 @@ public class GetAllUsersUseCase : IGetAllUsersUseCase
         _userRepository = userRepository;
     }
 
-    public async Task<Result<GetAllUsersResponse>> ExecuteAsync(int page, int pageSize, string search)
+    public async Task<Result<GetAllAccountsResponse>> ExecuteAsync(int page, int pageSize, string search)
     {
         var users = await _userRepository.GetAllAsync(search);
 
         if (!users.Any())
         {
-            return Result<GetAllUsersResponse>.Success(System.Net.HttpStatusCode.OK,
-            new GetAllUsersResponse([], 0));
+            return Result<GetAllAccountsResponse>.Success(System.Net.HttpStatusCode.OK,
+            new GetAllAccountsResponse([], 0));
         }
 
         var paginatedItems = users.Skip(page * pageSize).Take(pageSize).ToList();
 
-        return Result<GetAllUsersResponse>.Success(System.Net.HttpStatusCode.OK, 
-            new GetAllUsersResponse(paginatedItems.Select(user => (Response.Account)user), users.Count()));
+        return Result<GetAllAccountsResponse>.Success(System.Net.HttpStatusCode.OK, 
+            new GetAllAccountsResponse(paginatedItems.Select(user => (Response.Account)user), users.Count()));
     }
 }

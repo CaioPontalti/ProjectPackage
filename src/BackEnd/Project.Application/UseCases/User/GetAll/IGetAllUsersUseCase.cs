@@ -5,5 +5,5 @@ namespace Project.Application.UseCases.User.GetAll;
 
 public interface IGetAllUsersUseCase
 {
-    Task<Result<GetAllUsersResponse>> ExecuteAsync(int page, int pageSize, string search);
+    Task<Result<GetAllAccountsResponse>> ExecuteAsync(int page, int pageSize, string search);
 }
