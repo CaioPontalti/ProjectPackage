@@ -20,7 +20,8 @@ else
         Perfil
     </MudText>
 
-    <MudPaper Elevation="2" Class="pa-6 mx-auto">
+    <EditForm Model="User" OnValidSubmit="Save">
+        <DataAnnotationsValidator />
 
         <div class="col-lg-12">
             @if (Errors.Any())
@@ -36,16 +37,66 @@ else
             }
         </div>
 
-        <EditForm Model="User" OnValidSubmit="Save">
-            <DataAnnotationsValidator />
+        <MudPaper Elevation="2" Class="pa-6 mx-auto">
 
-            <MudItem xs="12" md="4">
-                <MudTextField Label="Nome"
-                              For="@(() => User.Name)"
-                              @bind-Value="User.Name"
-                              Variant="Variant.Text"
-                              FullWidth="true" />
-            </MudItem>
+            <MudText Typo="Typo.subtitle1"
+                     Style="color: #7f8c8d; margin-top: -15px;">
+                Dados Gerais
+            </MudText>
+
+            <MudGrid>
+
+                <MudItem xs="12" md="3">
+                    <MudTextField Label="Email"
+                                  For="@(() => User.Email)"
+                                  @bind-Value="User.Email"
+                                  Variant="Variant.Text"
+                                  FullWidth="true"
+                                  Disabled="true" />
+                </MudItem>
+
+                <MudItem xs="12" md="3">
+                    <MudTextField Label="Nome"
+                                  For="@(() => User.Name)"
+                                  @bind-Value="User.Name"
+                                  Variant="Variant.Text"
+                                  FullWidth="true" />
+                </MudItem>
+
+                <MudItem xs="12" md="2">
+                    <MudDatePicker Label="Data de Criação"
+                                   For="@(() => User.CreatedDate)"
+                                   @bind-Date="User.CreatedDate"/>
+                </MudItem>
+
+            </MudGrid>
+
+            <MudText Typo="Typo.subtitle1"
+                     Style="color: #7f8c8d; margin-top: 15px;">
+                Endereço
+            </MudText>
+
+            <MudGrid>
+
+                <MudItem xs="12" md="3">
+                    <MudTextField Label="Email"
+                                  For="@(() => User.Email)"
+                                  @bind-Value="User.Email"
+                                  Variant="Variant.Text"
+                                  FullWidth="true"
+                                  Disabled="true" />
+                </MudItem>
+
+                <MudItem xs="12" md="3">
+                    <MudTextField Label="Nome"
+                                  For="@(() => User.Name)"
+                                  @bind-Value="User.Name"
+                                  Variant="Variant.Text"
+                                  FullWidth="true" />
+                </MudItem>
+
+
+            </MudGrid>
 
             <MudItem xs="12" Class="mt-4 d-flex justify-end">
                 <MudButton ButtonType="ButtonType.Submit"
@@ -55,12 +106,10 @@ else
                 </MudButton>
             </MudItem>
 
-        </EditForm>
+        </MudPaper>
 
-    </MudPaper>
+    </EditForm>
 }
-
-
 
 @code {
     [Parameter]
