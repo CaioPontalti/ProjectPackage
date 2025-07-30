@@ -19,7 +19,7 @@ namespace Project.Api.Controllers.v1
     public class UserController : ControllerBase
     {
         /// <summary>
-        /// Create a new user in the app
+        /// Create a new account in the app
         /// </summary>
         /// <remarks>
         /// Example of successful 201 response:
@@ -64,7 +64,7 @@ namespace Project.Api.Controllers.v1
         }
 
         /// <summary>
-        /// Update a user in the app
+        /// Update a account in the app
         /// </summary>
         /// <remarks>
         /// Example of successful 204 response:
@@ -106,14 +106,14 @@ namespace Project.Api.Controllers.v1
         }
 
         /// <summary>
-        /// Get all users from the app
+        /// Get all accounts from the app
         /// </summary>
         /// <remarks>
         /// Example of successful 200 response:
         ///
         ///     {
         ///         "data": {
-        ///             "users": [
+        ///             "accounts": [
         ///                 {
         ///                     "id": "68712260b37de642117fb3a7",
         ///                     "name": "Name",
@@ -149,7 +149,7 @@ namespace Project.Api.Controllers.v1
         /// <response code="200">Users retrieved successfully</response>
         /// <response code="500">Internal Server Error</response>
         [Authorize]
-        [HttpGet("users")]
+        [HttpGet("accounts")]
         [ProducesResponseType(typeof(Result<GetAllAccountsResponse>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAllUsersAsync(
             [FromServices] IGetAllUsersUseCase useCaseGetAllUsers,
@@ -160,6 +160,43 @@ namespace Project.Api.Controllers.v1
             return result.ToActionResult();
         }
 
+        /// <summary>
+        /// Get user by id from the app
+        /// </summary>
+        /// <remarks>
+        /// Example of successful 200 response:
+        ///
+        ///     {
+        ///         "data": {
+        ///             "user": {
+        ///                 "id": "688782a9ec629195423debb3",
+        ///                 "name": "user",
+        ///                 "email": "user@user.com",
+        ///                 "role": "Admin",
+        ///                 "createdDate": "2025-07-28T14:01:13.05Z",
+        ///                 "lastUpdatedDate": "2025-07-28T14:01:13.05Z",
+        ///                 "isActive": true
+        ///             }
+        ///         },
+        ///         "isSuccess": true,
+        ///         "errors": []
+        ///     }
+        ///
+        /// Example of error 500 response:
+        ///
+        ///     {
+        ///         "isSuccess": false,
+        ///         "data": null,
+        ///         "errors": [
+        ///             "System.Exception: Internal server error."
+        ///         ]
+        ///     }
+        /// </remarks>
+        /// <param name="useCaseGetByIdUser"></param>
+        /// <param name="id">Id user</param>
+        /// <returns>Return user data</returns>
+        /// <response code="200">User retrieved successfully</response>
+        /// <response code="500">Internal Server Error</response>
         [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetByIdUserAsync(
@@ -172,7 +209,7 @@ namespace Project.Api.Controllers.v1
         }
 
         /// <summary>
-        /// Update user status to inactive in the app
+        /// Update account status to inactive in the app
         /// </summary>
         /// <remarks>
         /// Example of successful 204 response:

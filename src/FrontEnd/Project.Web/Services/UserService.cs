@@ -39,7 +39,7 @@ public class UserService : IUserService
         _httpClient.DefaultRequestHeaders.Remove("Authorization");
         _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
 
-        var response = await _httpClient.GetAsync($"v1/user/users?page={page}&pageSize={pageSize}&search={search}");
+        var response = await _httpClient.GetAsync($"v1/user/accounts?page={page}&pageSize={pageSize}&search={search}");
         
         if (response.StatusCode == HttpStatusCode.Unauthorized)
             throw new UnauthorizedAccessException("Usuário sem autorização. Faça login novamente.");
