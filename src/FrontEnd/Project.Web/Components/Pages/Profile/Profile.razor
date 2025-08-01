@@ -1,7 +1,7 @@
-﻿@page "/user/profile/{userId}"
+﻿@page "/profile/{accountId}"
 @attribute [Authorize]
 
-@inject IUserService UserService;
+@inject IProfileService ProfileService;
 @inject NavigationManager NavigationManager
 @inject ILogger<Profile> Logger
 
@@ -20,7 +20,7 @@ else
         Perfil
     </MudText>
 
-    <EditForm Model="User" OnValidSubmit="Save">
+    <EditForm Model="AccountProfile" OnValidSubmit="Save">
         <DataAnnotationsValidator />
 
         <div class="col-lg-12">
@@ -47,26 +47,17 @@ else
             <MudGrid>
 
                 <MudItem xs="12" md="3">
-                    <MudTextField Label="Email"
-                                  For="@(() => User.Email)"
-                                  @bind-Value="User.Email"
-                                  Variant="Variant.Text"
-                                  FullWidth="true"
-                                  Disabled="true" />
-                </MudItem>
-
-                <MudItem xs="12" md="3">
                     <MudTextField Label="Nome"
-                                  For="@(() => User.Name)"
-                                  @bind-Value="User.Name"
+                                  For="@(() => AccountProfile.Name)"
+                                  @bind-Value="AccountProfile.Name"
                                   Variant="Variant.Text"
                                   FullWidth="true" />
                 </MudItem>
 
                 <MudItem xs="12" md="2">
-                    <MudDatePicker Label="Data de Criação"
-                                   For="@(() => User.CreatedDate)"
-                                   @bind-Date="User.CreatedDate"/>
+                    <MudDatePicker Label="Data de Nascimento"
+                                   For="@(() => AccountProfile.BirthDate)"
+                                   @bind-Date="AccountProfile.BirthDate" />
                 </MudItem>
 
             </MudGrid>
@@ -78,22 +69,7 @@ else
 
             <MudGrid>
 
-                <MudItem xs="12" md="3">
-                    <MudTextField Label="Email"
-                                  For="@(() => User.Email)"
-                                  @bind-Value="User.Email"
-                                  Variant="Variant.Text"
-                                  FullWidth="true"
-                                  Disabled="true" />
-                </MudItem>
-
-                <MudItem xs="12" md="3">
-                    <MudTextField Label="Nome"
-                                  For="@(() => User.Name)"
-                                  @bind-Value="User.Name"
-                                  Variant="Variant.Text"
-                                  FullWidth="true" />
-                </MudItem>
+                
 
 
             </MudGrid>
@@ -113,9 +89,9 @@ else
 
 @code {
     [Parameter]
-    public string userId { get; set; }
+    public string accountId { get; set; }
 
-    private Project.Web.DTOs.Response.User.GetById.Account User { get; set; } = new();
+    private Project.Web.DTOs.Response.User.GetById.Profile AccountProfile { get; set; } = new();
     private readonly List<string> Errors = new List<string>();
     private bool _isLoading = true;
     private string MessageSuccess;
@@ -124,14 +100,14 @@ else
     {
         try
         {
-            var response = await UserService.GetByIdAsync(userId);
+            var response = await ProfileService.GetByIdAsync(accountId);
             if (!response.IsSuccess)
             {
                 Errors.AddRange(response.Errors);
                 return;
             }
 
-            User = response.Data.User;
+            AccountProfile = response.Data.Profile;
         }
         catch (UnauthorizedAccessException ex)
         {

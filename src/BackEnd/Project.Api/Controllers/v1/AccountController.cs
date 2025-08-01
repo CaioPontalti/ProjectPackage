@@ -7,7 +7,6 @@ using Project.Application.UseCases.Account.Create.Request;
 using Project.Application.UseCases.Account.Create.Response;
 using Project.Application.UseCases.Account.GetAll;
 using Project.Application.UseCases.Account.GetAll.Response;
-using Project.Application.UseCases.Account.GetById;
 using Project.Application.UseCases.Account.Inactivate;
 
 namespace Project.Api.Controllers.v1
@@ -118,54 +117,6 @@ namespace Project.Api.Controllers.v1
             [FromQuery] int page, int pageSize, string search)
         {
             var result = await useCaseGetAllAccounts.ExecuteAsync(page, pageSize, search);
-
-            return result.ToActionResult();
-        }
-
-        /// <summary>
-        /// Get account by id from the app
-        /// </summary>
-        /// <remarks>
-        /// Example of successful 200 response:
-        ///
-        ///     {
-        ///         "data": {
-        ///             "account": {
-        ///                 "id": "688782a9ec629195423debb3",
-        ///                 "email": "user@user.com",
-        ///                 "role": "development",
-        ///                 "accountType":"Admin"
-        ///                 "createdDate": "2025-07-28T14:01:13.05Z",
-        ///                 "lastUpdatedDate": "2025-07-28T14:01:13.05Z",
-        ///                 "isActive": true
-        ///             }
-        ///         },
-        ///         "isSuccess": true,
-        ///         "errors": []
-        ///     }
-        ///
-        /// Example of error 500 response:
-        ///
-        ///     {
-        ///         "isSuccess": false,
-        ///         "data": null,
-        ///         "errors": [
-        ///             "System.Exception: Internal server error."
-        ///         ]
-        ///     }
-        /// </remarks>
-        /// <param name="useCaseGetByIdAccount"></param>
-        /// <param name="id">Id account</param>
-        /// <returns>Return account data</returns>
-        /// <response code="200">Account retrieved successfully</response>
-        /// <response code="500">Internal Server Error</response>
-        [Authorize]
-        [HttpGet]
-        public async Task<IActionResult> GetByIdAccountAsync(
-            [FromServices] IGetByIdAccountUseCase useCaseGetByIdAccount,
-            [FromQuery] string id)
-        {
-            var result = await useCaseGetByIdAccount.ExecuteAsync(id);
 
             return result.ToActionResult();
         }

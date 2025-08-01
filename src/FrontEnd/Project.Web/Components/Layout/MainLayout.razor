@@ -112,6 +112,6 @@
 
         var userId = user.FindFirst(ClaimTypes.Sid).Value;
 
-        NavigationManager.NavigateTo($"/user/profile/{userId}");
+        NavigationManager.NavigateTo($"/profile/{userId}");
     }
 }

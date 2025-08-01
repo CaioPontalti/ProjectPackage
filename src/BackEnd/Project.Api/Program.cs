@@ -3,9 +3,9 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Project.Application.UseCases.Account.Create;
 using Project.Application.UseCases.Account.GetAll;
-using Project.Application.UseCases.Account.GetById;
 using Project.Application.UseCases.Account.Inactivate;
 using Project.Application.UseCases.Auth.Login;
+using Project.Application.UseCases.Profile.GetById;
 using Project.Domain.Interfaces.Repositories;
 using Project.Domain.Interfaces.Services;
 using Project.Domain.Services;
@@ -28,8 +28,8 @@ builder.Services.AddScoped<IGetAllAccountsUseCase, GetAllAccountsUseCase>();
 builder.Services.AddScoped<IInactivateAccountUseCase, InactivateAccountUseCase>();
 builder.Services.AddScoped<ILoginUseCase, LoginUseCase>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
-
-builder.Services.AddScoped<IGetByIdAccountUseCase, GetByIdAccountUseCase>();
+builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
+builder.Services.AddScoped<IGetByIdProfileUseCase, GetByIdProfileUseCase>();
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 

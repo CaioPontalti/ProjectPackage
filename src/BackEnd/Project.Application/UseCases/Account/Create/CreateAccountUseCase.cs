@@ -10,10 +10,12 @@ namespace Project.Application.UseCases.Account.Create
     public class CreateAccountUseCase : ICreateAccountUseCase
     {
         private readonly IAccountRepository _userRepository;
+        private readonly IProfileRepository _profileRepository;
 
-        public CreateAccountUseCase(IAccountRepository accountRepository) 
+        public CreateAccountUseCase(IAccountRepository accountRepository, IProfileRepository profileRepository) 
         {
             _userRepository = accountRepository;
+            _profileRepository = profileRepository;
         }
 
         public async Task<Result<CreateAccountResponse>> ExecuteAsync(CreateAccountRequest request)
@@ -23,16 +25,20 @@ namespace Project.Application.UseCases.Account.Create
             if (request.HasNotification())
                 return Result<CreateAccountResponse>.Failure(HttpStatusCode.BadRequest, request.Notifications.ToArray());
 
-            var userDb = await _userRepository.GetByEmailAsync(request.Email);
-            if(userDb is not null)
+            var accountDb = await _userRepository.GetByEmailAsync(request.Email);
+            if(accountDb is not null)
                 return Result<CreateAccountResponse>.Failure(HttpStatusCode.Conflict, AccountMessageValidation.AccountExists);
 
-            var user = Domain.Entities.v1.Account.Create(request.Email, request.Password, request.Role, request.AccountType);
+            var account = Domain.Entities.v1.Account.Create(request.Email, request.Password, request.Role, request.AccountType);
 
-            await _userRepository.CreateAsync(user);
+            await _userRepository.CreateAsync(account);
+
+            var profile = Domain.Entities.v1.Profile.Create(account.Id.ToString(), null, null, null);
+
+            await _profileRepository.CreateAsync(profile);
 
             return Result<CreateAccountResponse>
-                .Success(HttpStatusCode.Created, new CreateAccountResponse(user.Id.ToString()));
+                .Success(HttpStatusCode.Created, new CreateAccountResponse(account.Id.ToString()));
         }
     }
 }
