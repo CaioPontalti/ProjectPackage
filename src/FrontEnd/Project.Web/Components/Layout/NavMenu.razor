@@ -1,5 +1,6 @@
 ﻿@using System.Security.Claims
 @using Project.Web.Enums
+@using Project.Web.Enums.Account
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
 <MudNavMenu>
@@ -15,7 +16,7 @@
     @if (adminRole == Roles.Admin.ToString())
     {
         <MudNavGroup Title="Administração" Icon="@Icons.Material.Filled.AdminPanelSettings">
-            <MudNavLink Href="/users" Icon="@Icons.Material.Filled.People">Contas</MudNavLink>
+            <MudNavLink Href="/accounts" Icon="@Icons.Material.Filled.People">Contas</MudNavLink>
             <MudNavLink Href="roles" Icon="@Icons.Material.Filled.Security">Funções</MudNavLink>
         </MudNavGroup>
     }

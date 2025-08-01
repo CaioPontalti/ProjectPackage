@@ -10,7 +10,7 @@ namespace UseCases.Test.Auth.Login;
 
 public class LoginUseCaseTest
 {
-    private readonly Mock<IUserRepository> _userRepository = new Mock<IUserRepository>();
+    private readonly Mock<IAccountRepository> _userRepository = new Mock<IAccountRepository>();
     private readonly Mock<IAuthService> _authService = new Mock<IAuthService>();
 
     [Fact]
@@ -21,7 +21,7 @@ public class LoginUseCaseTest
         request.Validate();
 
         var hashedPassword = BCrypt.Net.BCrypt.HashPassword(request.Password);
-        var user = UserMock.CreateUserActiveBuilder(hashedPassword);
+        var user = AccountMock.CreateAccountActiveBuilder(hashedPassword);
         var token = new Project.Domain.ValueObjects.Auth.Token { AcccessToken = "ceruivhuifhviuthiuthvrt" };
 
         var useCase = CreateUseCase();

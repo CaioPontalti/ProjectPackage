@@ -13,4 +13,17 @@ public static class EnumExtensionMethods
 
         return attribute?.Description ?? value.ToString();
     }
+
+    public static string GetEnumDescriptionFromString<TEnum>(this string enumValue)
+        where TEnum : struct, Enum
+    {
+        if (Enum.TryParse<TEnum>(enumValue, ignoreCase: true, out var result))
+        {
+            var field = typeof(TEnum).GetField(result.ToString());
+            var attribute = field?.GetCustomAttribute<DescriptionAttribute>();
+            return attribute?.Description ?? result.ToString();
+        }
+
+        return $"Valor '{enumValue}' não encontrado no enum {typeof(TEnum).Name}.";
+    }
 }

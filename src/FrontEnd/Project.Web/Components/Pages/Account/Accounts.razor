@@ -1,0 +1,176 @@
+﻿@page "/accounts"
+@using Project.Web.DTOs.Response.User.GetAll
+@using Project.Web.Enums.Account
+@attribute [Authorize]
+
+@inject IUserService UserService
+@inject ILogger<Accounts> Logger
+@inject IJSRuntime JS
+@inject NavigationManager NavigationManager
+
+<PageTitle>Usuários</PageTitle>
+<AuthGuard />
+
+<script>
+    window.isMobileScreen = () => {
+        return window.innerWidth <= 768;
+    };
+</script>
+
+<div class="col-lg-12">
+    @if (Errors.Any())
+    {
+        @foreach (var error in Errors)
+        {
+            <MudAlert Severity="Severity.Error" Dense="true" Class="my-1">@error</MudAlert>
+        }
+    }
+</div>
+<MudTable @ref="_tableRef"
+          ServerData="LoadServerDataAsync"
+          Dense="@dense"
+          Hover="@hover"
+          Bordered="@bordered"
+          Striped="@striped"
+          @bind-SelectedItem="selectedItem">
+
+    <ToolBarContent>
+        <MudFab Color="Color.Primary"
+                Size="Size.Small"
+                StartIcon="@Icons.Material.Filled.Add" 
+                Style="margin-right:10px;"
+                OnClick="@HandleClick" />
+
+        <MudText Typo="Typo.h6">Contas</MudText>
+        <MudSpacer />
+        
+        <MudTextField @bind-Value="searchInput"
+                      @onkeyup="HandleKeyUp"
+                      Placeholder="Search"
+                      Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search"
+                      IconSize="Size.Medium"
+                      Class="mt-0" />
+    </ToolBarContent>
+
+    <HeaderContent>
+        <MudTh>E-mail</MudTh>
+        <MudTh>Dt. Cadastro</MudTh>
+        <MudTh>Tipo</MudTh>
+        <MudTh>Acesso</MudTh>
+        <MudTh>Status</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="E-mail">@context.Email</MudTd>
+        <MudTd DataLabel="DtCadastro">@context.CreatedDate</MudTd>
+        <MudTd DataLabel="Tipo">@(context.Role == "User" ? "Usuário" : "Administrador")</MudTd>
+        <MudTd DataLabel="Acesso">@(EnumExtensionMethods.GetEnumDescriptionFromString<AccountTypes>(@context.AccountType))</MudTd>
+        <MudTd DataLabel="Status">@(context.IsActive ? "Ativo" : "Inativo")</MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager PageSizeOptions="new int[] { 10, 15, 20, 30, int.MaxValue }"
+                       RowsPerPageString="@rowsPerPageString"
+                       InfoFormat="@infoFormat"
+                       AllItemsText="@allItemsText"
+                       HorizontalAlignment="@horizontalAlignment"
+                       HideRowsPerPage="@hideRowsPerPage"
+                       HidePageNumber="@hidePageNumber"
+                       HidePagination="@hidePagination" />
+    </PagerContent>
+</MudTable>
+
+<div class="d-flex flex-wrap mt-4">
+    <MudSwitch @bind-Value="hover" Color="Color.Primary">Hover</MudSwitch>
+    <MudSwitch @bind-Value="dense" Color="Color.Secondary">Dense</MudSwitch>
+    <MudSwitch @bind-Value="striped" Color="Color.Tertiary">Striped</MudSwitch>
+    <MudSwitch @bind-Value="bordered" Color="Color.Warning">Bordered</MudSwitch>
+    <MudSpacer />
+    <div style="min-width:200px;">
+        <MudText>Selected: @selectedItem?.Email</MudText>
+    </div>
+</div>
+
+@code {
+    private bool dense = true;
+    private bool hover = true;
+    private bool striped = false;
+    private bool bordered = false;
+    private bool _initialized = false;
+    private string search = string.Empty;  // usado para filtro real
+    private string searchInput = string.Empty;    // usado para manter o valor digitado
+    private Account selectedItem = null;
+    private MudTable<Account> _tableRef;
+    private readonly List<string> Errors = new List<string>();
+
+    private HorizontalAlignment horizontalAlignment = HorizontalAlignment.Right;
+    private bool hidePageNumber = false;
+    private bool hidePagination = false;
+    private bool hideRowsPerPage = false;
+    private readonly string rowsPerPageString = "Itens por pagina";
+    private readonly string infoFormat = "{first_item}-{last_item} of {all_items}";
+    private readonly string allItemsText = "Todos";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !_initialized)
+        {
+            var isMobile = await JS.InvokeAsync<bool>("isMobileScreen");
+            striped = isMobile;
+            _initialized = true;
+            StateHasChanged(); // Atualiza a UI com o valor novo
+        }
+    }
+
+    private async Task OnSearchChanged(string value)
+    {
+        searchInput = value;
+    }
+
+    private async Task HandleKeyUp(KeyboardEventArgs args)
+    {
+        if (args.Key == "Enter")
+        {
+            search = searchInput;
+            await _tableRef.ReloadServerData();
+        }
+    }
+
+    private async Task<TableData<Account>> LoadServerDataAsync(TableState state, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var response = await UserService.GetAllAsync(state.Page, state.PageSize, search);
+
+            if (!response.IsSuccess)
+            {
+                Errors.AddRange(response.Errors);
+                StateHasChanged();
+                return null;
+            }
+
+            return new TableData<Account>
+            {
+                Items = response.Data.Accounts,
+                TotalItems = response.Data.TotalItems
+            };
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            Logger.LogError(ex, "An error occurred in the method LoadServerDataAsync.");
+            NavigationManager.NavigateTo("/auth/login", true);
+            return null;
+        }
+        catch (Exception ex)
+        {
+            Errors.Add(ex.Message);
+            Logger.LogError(ex, "An error occurred in the method LoadServerDataAsync.");
+            StateHasChanged();
+            return null;
+        }
+    }
+
+    private void HandleClick()
+    {
+        NavigationManager.NavigateTo("account/create", false);
+    }
+}

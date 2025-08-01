@@ -1,19 +1,20 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Project.Application.UseCases.Account.Create;
+using Project.Application.UseCases.Account.GetAll;
+using Project.Application.UseCases.Account.GetById;
+using Project.Application.UseCases.Account.Inactivate;
 using Project.Application.UseCases.Auth.Login;
-using Project.Application.UseCases.User.Create;
-using Project.Application.UseCases.User.GetAll;
-using Project.Application.UseCases.User.GetById;
-using Project.Application.UseCases.User.Inactivate;
-using Project.Application.UseCases.User.Update;
 using Project.Domain.Interfaces.Repositories;
 using Project.Domain.Interfaces.Services;
 using Project.Domain.Services;
 using Project.Infrastructure.Middlewares;
 using Project.Infrastructure.Repositories;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Reflection;
 using System.Text;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,17 +23,21 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<ICreateUserUseCase, CreateUserUseCase>();
-builder.Services.AddScoped<IUpdateUserUseCase, UpdateUserUseCase>();
-builder.Services.AddScoped<IGetAllUsersUseCase, GetAllUsersUseCase>();
-builder.Services.AddScoped<IInactivateUserUseCase, InactivateUserUseCase>();
+builder.Services.AddScoped<ICreateAccountUseCase, CreateAccountUseCase>();
+builder.Services.AddScoped<IGetAllAccountsUseCase, GetAllAccountsUseCase>();
+builder.Services.AddScoped<IInactivateAccountUseCase, InactivateAccountUseCase>();
 builder.Services.AddScoped<ILoginUseCase, LoginUseCase>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 
-builder.Services.AddScoped<IGetByIdUserUseCase, GetByIdUserUseCase>();
+builder.Services.AddScoped<IGetByIdAccountUseCase, GetByIdAccountUseCase>();
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 
+builder.Services.AddControllers()
+    .AddJsonOptions(opts =>
+    {
+        opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 
 builder.Services.AddSwaggerGen(c =>
 {
@@ -53,6 +58,12 @@ builder.Services.AddSwaggerGen(c =>
                 Url = new Uri("http://opensource.org/licenses/MIT"),
             }
         });
+
+    // Garante que enums apareçam como strings
+    c.SchemaGeneratorOptions = new SchemaGeneratorOptions
+    {
+        UseInlineDefinitionsForEnums = true
+    };
 
     var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);

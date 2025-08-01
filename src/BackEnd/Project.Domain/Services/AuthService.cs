@@ -18,7 +18,7 @@ public class AuthService : IAuthService
         _configuration = configuration;
     }
 
-    public Token GenerateToken(User user)
+    public Token GenerateToken(Account user)
     {
         var accessToken = GenerateAccessToken(user);
 
@@ -28,7 +28,7 @@ public class AuthService : IAuthService
         };
     }
 
-    private string GenerateAccessToken(User user)
+    private string GenerateAccessToken(Account user)
     {
         string secretKey = _configuration["Jwt:SecretKey"];
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));

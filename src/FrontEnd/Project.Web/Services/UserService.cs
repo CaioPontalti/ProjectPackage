@@ -22,24 +22,24 @@ public class UserService : IUserService
         _accessTokenService = accessTokenService;
     }
 
-    public async Task<ApiResponse<CreateUser>> CreateAsync(string name, string email, string password, string role)
+    public async Task<ApiResponse<CreateAccount>> CreateAsync(string email, string password, string role, string accountType)
     {
-        var response = await _httpClient.PostAsJsonAsync("v1/user", new { Name = name, Email = email, Password = password, Role = role });
+        var response = await _httpClient.PostAsJsonAsync("v1/account", new { Email = email, Password = password, Role = role, AccountType = accountType});
 
         var json = await response.Content.ReadAsStringAsync();
-        var result = JsonConvert.DeserializeObject<ApiResponse<CreateUser>>(json);
+        var result = JsonConvert.DeserializeObject<ApiResponse<CreateAccount>>(json);
 
         return result;
     }
 
-    public async Task<ApiResponse<GetAllUser>> GetAllAsync(int page, int pageSize, string search)
+    public async Task<ApiResponse<GetAllAccount>> GetAllAsync(int page, int pageSize, string search)
     {
         var token = await _accessTokenService.GetTokenAsync();
 
         _httpClient.DefaultRequestHeaders.Remove("Authorization");
         _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
 
-        var response = await _httpClient.GetAsync($"v1/user/accounts?page={page}&pageSize={pageSize}&search={search}");
+        var response = await _httpClient.GetAsync($"v1/account/accounts?page={page}&pageSize={pageSize}&search={search}");
         
         if (response.StatusCode == HttpStatusCode.Unauthorized)
             throw new UnauthorizedAccessException("Usuário sem autorização. Faça login novamente.");
@@ -48,7 +48,7 @@ public class UserService : IUserService
             throw new ApiResponseException(_messageError);
 
         var json = await response.Content.ReadAsStringAsync();
-        var result = JsonConvert.DeserializeObject<ApiResponse<GetAllUser>>(json);
+        var result = JsonConvert.DeserializeObject<ApiResponse<GetAllAccount>>(json);
 
         return result;
     }

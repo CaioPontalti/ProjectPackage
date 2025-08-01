@@ -1,6 +1,5 @@
 ﻿using Bogus;
 using Project.Application.UseCases.Auth.Login.Request;
-using Project.Application.UseCases.User.Create.Request;
 
 namespace CommonTestUtilities.Requests.Auth
 {

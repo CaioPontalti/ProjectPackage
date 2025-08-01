@@ -10,10 +10,10 @@ namespace Project.Application.UseCases.Auth.Login;
 
 public class LoginUseCase : ILoginUseCase
 {
-    private readonly IUserRepository _userRepository;
+    private readonly IAccountRepository _userRepository;
     private readonly IAuthService _authService;
 
-    public LoginUseCase(IUserRepository userRepository, IAuthService authService)
+    public LoginUseCase(IAccountRepository userRepository, IAuthService authService)
     {
         _userRepository = userRepository;
         _authService = authService;
@@ -37,6 +37,6 @@ public class LoginUseCase : ILoginUseCase
         var token = _authService.GenerateToken(user);
 
         return Result<LoginResponse>
-            .Success(HttpStatusCode.OK, new LoginResponse(token.AcccessToken, (User.GetAll.Response.Account)user));
+            .Success(HttpStatusCode.OK, new LoginResponse(token.AcccessToken, (Account.GetAll.Response.Account)user));
     }
 }
