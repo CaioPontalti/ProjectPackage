@@ -1,8 +1,10 @@
 ﻿@page "/profile/{accountId}"
+@using System.Security.Claims
 @attribute [Authorize]
 
 @inject IProfileService ProfileService;
 @inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthStateProvider
 @inject ILogger<Profile> Logger
 
 <PageTitle>Perfil</PageTitle>
@@ -40,11 +42,20 @@ else
         <MudPaper Elevation="2" Class="pa-6 mx-auto">
 
             <MudText Typo="Typo.subtitle1"
-                     Style="color: #7f8c8d; margin-top: -15px;">
+                     Style="margin-top: -15px;">
                 Dados Gerais
             </MudText>
 
             <MudGrid>
+
+                <MudItem xs="12" md="3">
+                    <MudTextField Label="Email"
+                                  For="@(() => emailAccount)"
+                                  @bind-Value="emailAccount"
+                                  Variant="Variant.Text"
+                                  FullWidth="true"
+                                  Disabled="true" />
+                </MudItem>
 
                 <MudItem xs="12" md="3">
                     <MudTextField Label="Nome"
@@ -54,22 +65,37 @@ else
                                   FullWidth="true" />
                 </MudItem>
 
-                <MudItem xs="12" md="2">
+                <MudItem xs="12" md="3">
+                    <MudTextField Mask="@maskCellPhone"
+                                  Label="Telefone" 
+                                  Placeholder="(00) 00000-0000"
+                                  @bind-Value="AccountProfile.CellPhone" 
+                                  Variant="@Variant.Text"
+                                  FullWidth="true" />
+                </MudItem>
+
+                <MudItem xs="12" md="3">
                     <MudDatePicker Label="Data de Nascimento"
                                    For="@(() => AccountProfile.BirthDate)"
-                                   @bind-Date="AccountProfile.BirthDate" />
+                                   @bind-Date="AccountProfile.BirthDate"
+                                   Variant="@Variant.Text"/>
                 </MudItem>
 
             </MudGrid>
 
             <MudText Typo="Typo.subtitle1"
-                     Style="color: #7f8c8d; margin-top: 15px;">
-                Endereço
+                     Style="margin-top: 30px;">
+                Dados de Endereço
             </MudText>
 
             <MudGrid>
-
-                
+                <MudItem xs="12" md="3">
+                    <MudTextField Label="Endereço"
+                                  For="@(() => AccountProfile.Address.AddressDescription)"
+                                  @bind-Value="AccountProfile.Address.AddressDescription"
+                                  Variant="Variant.Text"
+                                  FullWidth="true" />
+                </MudItem>
 
 
             </MudGrid>
@@ -95,11 +121,22 @@ else
     private readonly List<string> Errors = new List<string>();
     private bool _isLoading = true;
     private string MessageSuccess;
+    private string emailAccount = string.Empty;
+
+    private PatternMask maskCellPhone = new PatternMask("(##) #####-####")
+    {
+        MaskChars = new[] { new MaskChar('#', @"[0-9]") }
+    };
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
+            var state = await AuthStateProvider.GetAuthenticationStateAsync();
+            var user = state.User;
+            if (user.Identity.IsAuthenticated)
+                emailAccount = user.FindFirst(ClaimTypes.Email)?.Value;
+
             var response = await ProfileService.GetByIdAsync(accountId);
             if (!response.IsSuccess)
             {
@@ -128,6 +165,8 @@ else
 
     private async Task Save()
     {
+        var teste = AccountProfile;
+
         await Task.CompletedTask;
     }
 }
