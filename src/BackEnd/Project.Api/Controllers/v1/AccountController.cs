@@ -55,6 +55,7 @@ namespace Project.Api.Controllers.v1
         /// <response code="400">Request Invalid</response>
         /// <response code="409">Conflict in Operation (ex: Account already exists)</response>
         /// <response code="500">Internal Server Error</response>
+        [Authorize]
         [HttpPost]
         [ProducesResponseType(typeof(Result<CreateAccountResponse>), StatusCodes.Status201Created)]
         public async Task<IActionResult> CreateAccountAsync(

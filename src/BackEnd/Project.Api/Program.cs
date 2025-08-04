@@ -29,7 +29,7 @@ builder.Services.AddScoped<IInactivateAccountUseCase, InactivateAccountUseCase>(
 builder.Services.AddScoped<ILoginUseCase, LoginUseCase>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
-builder.Services.AddScoped<IGetByIdProfileUseCase, GetByIdProfileUseCase>();
+builder.Services.AddScoped<IGetByAccountIdUseCase, GetByAccountIdUseCase>();
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 

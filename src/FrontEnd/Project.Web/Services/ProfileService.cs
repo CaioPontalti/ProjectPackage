@@ -21,7 +21,7 @@ public class ProfileService : IProfileService
         _accessTokenService = accessTokenService;
     }
 
-    public async Task<ApiResponse<GetByIdProfile>> GetByIdAsync(string accountId)
+    public async Task<ApiResponse<GetByAccountId>> GetByIdAsync(string accountId)
     {
         var token = await _accessTokenService.GetTokenAsync();
 
@@ -37,7 +37,7 @@ public class ProfileService : IProfileService
             throw new ApiResponseException(_messageError);
 
         var json = await response.Content.ReadAsStringAsync();
-        var result = JsonConvert.DeserializeObject<ApiResponse<GetByIdProfile>>(json);
+        var result = JsonConvert.DeserializeObject<ApiResponse<GetByAccountId>>(json);
 
         return result;
     }

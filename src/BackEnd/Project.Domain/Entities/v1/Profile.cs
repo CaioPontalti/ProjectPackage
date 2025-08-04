@@ -12,6 +12,8 @@ public class Profile
     public Address Address { get; private set; }
     public string CellPhone { get; set; }
 
+    public Profile() { }
+
     public Profile(Object id, string accountId, string name, Address address, DateTime? birthDate, string cellPhone)
     {
         Id = id.ToString();

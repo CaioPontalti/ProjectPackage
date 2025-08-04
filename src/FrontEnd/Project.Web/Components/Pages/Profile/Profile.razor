@@ -75,10 +75,10 @@ else
                 </MudItem>
 
                 <MudItem xs="12" md="3">
-                    <MudDatePicker Label="Data de Nascimento"
+                    <MudDatePicker Label="Dt. Nascimento"
                                    For="@(() => AccountProfile.BirthDate)"
                                    @bind-Date="AccountProfile.BirthDate"
-                                   Variant="@Variant.Text"/>
+                                   Variant="@Variant.Text" />
                 </MudItem>
 
             </MudGrid>
@@ -166,7 +166,6 @@ else
     private async Task Save()
     {
         var teste = AccountProfile;
-
         await Task.CompletedTask;
     }
 }

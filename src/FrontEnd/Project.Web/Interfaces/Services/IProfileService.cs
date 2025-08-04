@@ -5,5 +5,5 @@ namespace Project.Web.Interfaces.Services;
 
 public interface IProfileService
 {
-    Task<ApiResponse<GetByIdProfile>> GetByIdAsync(string accountId);
+    Task<ApiResponse<GetByAccountId>> GetByIdAsync(string accountId);
 }

@@ -3,7 +3,7 @@ using Project.Application.UseCases.Profile.GetById.Response;
 
 namespace Project.Application.UseCases.Profile.GetById;
 
-public interface IGetByIdProfileUseCase
+public interface IGetByAccountIdUseCase
 {
-    Task<Result<GetByIdProfileResponse>> ExecuteAsync(string accountId);
+    Task<Result<GetByAccountIdResponse>> ExecuteAsync(string accountId);
 }

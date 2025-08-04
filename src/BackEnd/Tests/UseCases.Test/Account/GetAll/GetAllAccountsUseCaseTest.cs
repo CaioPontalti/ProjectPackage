@@ -14,7 +14,7 @@ public class GetAllAccountsUseCaseTest
     [InlineData(0, 2, "")]
     public async Task GetAllAccountsUseCase_WithExistingAccounts_ReturnsListOfAccounts(int page, int pageSize, string search)
     {
-        var accountsList = GetAllUsersResponseBuilder.GetUsersLists();
+        var accountsList = GetAllAccountsResponseBuilder.GetAccountsList();
 
         var useCase = CreateUseCase();
         _accountRepository

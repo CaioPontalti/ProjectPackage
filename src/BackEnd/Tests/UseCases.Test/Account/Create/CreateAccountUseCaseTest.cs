@@ -10,6 +10,7 @@ namespace UseCases.Test.Account.Create;
 public class CreateAccountUseCaseTest
 {
 	private readonly Mock<IAccountRepository> _accountRepository = new Mock<IAccountRepository>();
+    private readonly Mock<IProfileRepository> _profileRepository = new Mock<IProfileRepository>();
 
     [Fact]
     public async Task CreateAccountUseCase_WhenEmailNotExists_ReturnsSuccess()
@@ -51,6 +52,6 @@ public class CreateAccountUseCaseTest
 
     private CreateAccountUseCase CreateUseCase()
 	{
-		return new CreateAccountUseCase(_accountRepository.Object);
+		return new CreateAccountUseCase(_accountRepository.Object, _profileRepository.Object);
     }
 }
