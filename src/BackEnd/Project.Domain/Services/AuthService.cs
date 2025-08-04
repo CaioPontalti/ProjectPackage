@@ -18,9 +18,9 @@ public class AuthService : IAuthService
         _configuration = configuration;
     }
 
-    public Token GenerateToken(Account user)
+    public Token GenerateToken(Account account)
     {
-        var accessToken = GenerateAccessToken(user);
+        var accessToken = GenerateAccessToken(account);
 
         return new Token
         {
@@ -28,7 +28,7 @@ public class AuthService : IAuthService
         };
     }
 
-    private string GenerateAccessToken(Account user)
+    private string GenerateAccessToken(Account account)
     {
         string secretKey = _configuration["Jwt:SecretKey"];
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
@@ -37,9 +37,9 @@ public class AuthService : IAuthService
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity([
-                new Claim(ClaimTypes.Sid, user.Id.ToString()),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.Role)
+                new Claim(ClaimTypes.Sid, account.Id.ToString()),
+                new Claim(ClaimTypes.Email, account.Email),
+                new Claim(ClaimTypes.Role, account.Role)
                 ]),
             Expires = DateTime.Now.AddHours(12),
             SigningCredentials = credentials,

@@ -7,7 +7,7 @@ namespace Project.Domain.Interfaces.Repositories
         Task<Account> GetByEmailAsync(string email);
         Task<Account> GetByIdAsync(string id);
         Task<IEnumerable<Account>> GetAllAsync(string search);
-        Task CreateAsync(Account user);
-        Task UpdateAsync(Account user);
+        Task CreateAsync(Account account);
+        Task UpdateAsync(Account account);
     }
 }

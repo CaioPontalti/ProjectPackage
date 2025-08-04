@@ -39,31 +39,31 @@ public class AccountMongoDb
     public bool IsActive { get; set; }
 
 
-    public static explicit operator AccountMongoDb(Account user)
+    public static explicit operator AccountMongoDb(Account account)
     {
         return new AccountMongoDb
         {
-            Id = new ObjectId(user.Id),
-            Email = user.Email,
-            PasswordHash = user.PasswordHash,
-            Role = user.Role,
-            AccountType = user.AccountType,
-            CreatedDate = user.CreatedDate,
-            LastUpdatedDate = user.LastUpdatedDate,
-            IsActive = user.IsActive
+            Id = new ObjectId(account.Id),
+            Email = account.Email,
+            PasswordHash = account.PasswordHash,
+            Role = account.Role,
+            AccountType = account.AccountType,
+            CreatedDate = account.CreatedDate,
+            LastUpdatedDate = account.LastUpdatedDate,
+            IsActive = account.IsActive
         };
     }
 
-    public static explicit operator Account(AccountMongoDb user)
+    public static explicit operator Account(AccountMongoDb account)
     {
         return new Account(
-            user.Id, 
-            user.Email, 
-            user.PasswordHash, 
-            user.Role,
-            user.AccountType,
-            user.CreatedDate, 
-            user.LastUpdatedDate, 
-            user.IsActive);
+            account.Id, 
+            account.Email, 
+            account.PasswordHash, 
+            account.Role,
+            account.AccountType,
+            account.CreatedDate, 
+            account.LastUpdatedDate, 
+            account.IsActive);
     }
 }

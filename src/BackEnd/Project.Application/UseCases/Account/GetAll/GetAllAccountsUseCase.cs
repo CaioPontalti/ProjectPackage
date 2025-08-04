@@ -8,24 +8,24 @@ public class GetAllAccountsUseCase : IGetAllAccountsUseCase
 {
     private readonly IAccountRepository _accountRepository;
 
-    public GetAllAccountsUseCase(IAccountRepository userRepository)
+    public GetAllAccountsUseCase(IAccountRepository accountRepository)
     {
-        _accountRepository = userRepository;
+        _accountRepository = accountRepository;
     }
 
     public async Task<Result<GetAllAccountsResponse>> ExecuteAsync(int page, int pageSize, string search)
     {
-        var users = await _accountRepository.GetAllAsync(search);
+        var accounts = await _accountRepository.GetAllAsync(search);
 
-        if (!users.Any())
+        if (!accounts.Any())
         {
             return Result<GetAllAccountsResponse>.Success(System.Net.HttpStatusCode.OK,
             new GetAllAccountsResponse([], 0));
         }
 
-        var paginatedItems = users.Skip(page * pageSize).Take(pageSize).ToList();
+        var paginatedItems = accounts.Skip(page * pageSize).Take(pageSize).ToList();
 
         return Result<GetAllAccountsResponse>.Success(System.Net.HttpStatusCode.OK, 
-            new GetAllAccountsResponse(paginatedItems.Select(user => (Response.Account)user), users.Count()));
+            new GetAllAccountsResponse(paginatedItems.Select(user => (Response.Account)user), accounts.Count()));
     }
 }

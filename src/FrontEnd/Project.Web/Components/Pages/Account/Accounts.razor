@@ -1,9 +1,9 @@
 ﻿@page "/accounts"
-@using Project.Web.DTOs.Response.User.GetAll
+@using Project.Web.DTOs.Response.Account.GetAll
 @using Project.Web.Enums.Account
 @attribute [Authorize]
 
-@inject IUserService UserService
+@inject IAccountService UserService
 @inject ILogger<Accounts> Logger
 @inject IJSRuntime JS
 @inject NavigationManager NavigationManager

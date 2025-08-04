@@ -1,5 +1,4 @@
 ﻿@page "/profile/{accountId}"
-@using System.Security.Claims
 @attribute [Authorize]
 
 @inject IProfileService ProfileService;
@@ -21,7 +20,6 @@ else
     <MudText Typo="Typo.h6" Align="Align.Left" Class="mb-2">
         Perfil
     </MudText>
-
     <EditForm Model="AccountProfile" OnValidSubmit="Save">
         <DataAnnotationsValidator />
 
@@ -67,9 +65,10 @@ else
 
                 <MudItem xs="12" md="3">
                     <MudTextField Mask="@maskCellPhone"
-                                  Label="Telefone" 
+                                  Label="Telefone"
                                   Placeholder="(00) 00000-0000"
-                                  @bind-Value="AccountProfile.CellPhone" 
+                                  For="@(() => AccountProfile.CellPhone)"
+                                  @bind-Value="AccountProfile.CellPhone"
                                   Variant="@Variant.Text"
                                   FullWidth="true" />
                 </MudItem>
@@ -97,7 +96,6 @@ else
                                   FullWidth="true" />
                 </MudItem>
 
-
             </MudGrid>
 
             <MudItem xs="12" Class="mt-4 d-flex justify-end">
@@ -116,8 +114,13 @@ else
 @code {
     [Parameter]
     public string accountId { get; set; }
+    private MudForm form;
 
-    private Project.Web.DTOs.Response.User.GetById.Profile AccountProfile { get; set; } = new();
+    private DTOs.Response.Profile.GetByAccountId.Profile AccountProfile = new()
+    {
+        Address = new Address()
+    };
+
     private readonly List<string> Errors = new List<string>();
     private bool _isLoading = true;
     private string MessageSuccess;
@@ -144,7 +147,8 @@ else
                 return;
             }
 
-            AccountProfile = response.Data.Profile;
+            AccountProfile = response.Data.Profile ?? new();
+            AccountProfile.Address ??= new Address();
         }
         catch (UnauthorizedAccessException ex)
         {
@@ -155,11 +159,11 @@ else
         {
             Errors.Add(ex.Message);
             Logger.LogError(ex, "An error occurred in the method OnInitializedAsync.");
-            StateHasChanged();
         }
         finally
         {
             _isLoading = false;
+            StateHasChanged();
         }
     }
 

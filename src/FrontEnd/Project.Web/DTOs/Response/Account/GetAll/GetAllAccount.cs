@@ -1,3 +1,3 @@
-﻿namespace Project.Web.DTOs.Response.User.GetAll;
+﻿namespace Project.Web.DTOs.Response.Account.GetAll;
 
 public record GetAllAccount(IEnumerable<Account> Accounts, int TotalItems);

@@ -1,21 +1,21 @@
 ﻿using Newtonsoft.Json;
 using Project.Shared.Exceptions;
 using Project.Web.DTOs;
-using Project.Web.DTOs.Response.User.Create;
-using Project.Web.DTOs.Response.User.GetAll;
+using Project.Web.DTOs.Response.Account.Create;
+using Project.Web.DTOs.Response.Account.GetAll;
 using Project.Web.Interfaces.Services;
 using Project.Web.Interfaces.Services.Security;
 using System.Net;
 
 namespace Project.Web.Services;
 
-public class UserService : IUserService
+public class AccountService : IAccountService
 {
     private readonly HttpClient _httpClient;
     private readonly IAccessTokenService _accessTokenService;
     private readonly string _messageError = "Ocorreu um erro ao chamar a api. Entre em contato com o Suporte.";
 
-    public UserService(IHttpClientFactory httpClientFactory, IAccessTokenService accessTokenService)
+    public AccountService(IHttpClientFactory httpClientFactory, IAccessTokenService accessTokenService)
     {
         _httpClient = httpClientFactory.CreateClient("ApiClient");
         _accessTokenService = accessTokenService;

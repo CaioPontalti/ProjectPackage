@@ -8,7 +8,7 @@
 @inject IAuthService AuthService
 @inject CustomAuthenticationStateProvider AuthProvider
 @inject IAccessTokenService AccessTokenService
-@inject IUserService UserService
+@inject IAccountService AccountService
 @inject ILogger<Create> Logger
 
 <PageTitle>Log in</PageTitle>
@@ -148,7 +148,7 @@
             isLoading = true;
             Errors.Clear();
 
-            var response = await UserService.CreateAsync(Input.Name, Input.Email, Input.Password, Input.Role.ToString());
+            var response = await AccountService.CreateAsync(Input.Name, Input.Email, Input.Password, Input.Role.ToString());
             if (!response.IsSuccess)
             {
                 Errors.AddRange(response.Errors);

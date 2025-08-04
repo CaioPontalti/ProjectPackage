@@ -5,5 +5,5 @@ namespace Project.Domain.Interfaces.Services;
 
 public interface IAuthService
 {
-    Token GenerateToken(Account user);
+    Token GenerateToken(Account account);
 }

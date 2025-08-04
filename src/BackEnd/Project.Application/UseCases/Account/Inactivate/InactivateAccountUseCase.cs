@@ -7,11 +7,11 @@ namespace Project.Application.UseCases.Account.Inactivate;
 
 public class InactivateAccountUseCase : IInactivateAccountUseCase
 {
-    private readonly IAccountRepository _userRepository;
+    private readonly IAccountRepository _accountRepository;
 
-    public InactivateAccountUseCase(IAccountRepository userRepository)
+    public InactivateAccountUseCase(IAccountRepository accountRepository)
     {
-        _userRepository = userRepository;
+        _accountRepository = accountRepository;
     }
 
     public async Task<Result> ExecuteAsync(string id)
@@ -19,16 +19,16 @@ public class InactivateAccountUseCase : IInactivateAccountUseCase
         if (string.IsNullOrEmpty(id?.Trim()))
             return Result.Failure(HttpStatusCode.BadRequest, AccountMessageValidation.IdRequerid);
 
-        var userDb = await _userRepository.GetByIdAsync(id);
-        if (userDb is null)
+        var accountDb = await _accountRepository.GetByIdAsync(id);
+        if (accountDb is null)
             return Result.Failure(HttpStatusCode.NotFound, AccountMessageValidation.AccountNotFound);
 
-        if (!userDb.IsActive)
+        if (!accountDb.IsActive)
             return Result.Failure(HttpStatusCode.Conflict, AccountMessageValidation.AccountAlreadyInactive);
 
-        userDb.SetInactive();
+        accountDb.SetInactive();
 
-        await _userRepository.UpdateAsync(userDb);
+        await _accountRepository.UpdateAsync(accountDb);
 
         return Result.Success(HttpStatusCode.NoContent);
     }

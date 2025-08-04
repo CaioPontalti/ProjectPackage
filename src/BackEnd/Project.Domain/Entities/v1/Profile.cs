@@ -14,14 +14,14 @@ public class Profile
 
     public Profile() { }
 
-    public Profile(Object id, string accountId, string name, Address address, DateTime? birthDate, string cellPhone)
+    public Profile(ObjectId id, string accountId, string name, Address address, DateTime? birthDate, string cellPhone)
     {
         Id = id.ToString();
         AccountId = accountId;  
         Name = name;
         Address = address;
         BirthDate = birthDate;
-        Address = new Address();
+        Address = address;
         CellPhone = cellPhone;
     }
 

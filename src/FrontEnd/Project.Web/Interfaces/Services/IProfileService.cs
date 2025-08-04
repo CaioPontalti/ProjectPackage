@@ -1,5 +1,5 @@
 ﻿using Project.Web.DTOs;
-using Project.Web.DTOs.Response.User.GetById;
+using Project.Web.DTOs.Response.Profile.GetByAccountId;
 
 namespace Project.Web.Interfaces.Services;
 

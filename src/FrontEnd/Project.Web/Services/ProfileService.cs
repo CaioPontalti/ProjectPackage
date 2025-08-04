@@ -1,11 +1,10 @@
 ﻿using Newtonsoft.Json;
 using Project.Shared.Exceptions;
 using Project.Web.DTOs;
-using Project.Web.DTOs.Response.User.GetById;
+using Project.Web.DTOs.Response.Profile.GetByAccountId;
 using Project.Web.Interfaces.Services;
 using Project.Web.Interfaces.Services.Security;
 using System.Net;
-using System.Net.Http;
 
 namespace Project.Web.Services;
 

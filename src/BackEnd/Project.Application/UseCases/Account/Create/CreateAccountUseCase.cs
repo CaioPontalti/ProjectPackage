@@ -9,12 +9,12 @@ namespace Project.Application.UseCases.Account.Create
 {
     public class CreateAccountUseCase : ICreateAccountUseCase
     {
-        private readonly IAccountRepository _userRepository;
+        private readonly IAccountRepository _accountRepository;
         private readonly IProfileRepository _profileRepository;
 
         public CreateAccountUseCase(IAccountRepository accountRepository, IProfileRepository profileRepository) 
         {
-            _userRepository = accountRepository;
+            _accountRepository = accountRepository;
             _profileRepository = profileRepository;
         }
 
@@ -25,13 +25,13 @@ namespace Project.Application.UseCases.Account.Create
             if (request.HasNotification())
                 return Result<CreateAccountResponse>.Failure(HttpStatusCode.BadRequest, request.Notifications.ToArray());
 
-            var accountDb = await _userRepository.GetByEmailAsync(request.Email);
+            var accountDb = await _accountRepository.GetByEmailAsync(request.Email);
             if(accountDb is not null)
                 return Result<CreateAccountResponse>.Failure(HttpStatusCode.Conflict, AccountMessageValidation.AccountExists);
 
             var account = Domain.Entities.v1.Account.Create(request.Email, request.Password, request.Role, request.AccountType);
 
-            await _userRepository.CreateAsync(account);
+            await _accountRepository.CreateAsync(account);
 
             var profile = Domain.Entities.v1.Profile.Create(account.Id.ToString(), null, null, null);
 

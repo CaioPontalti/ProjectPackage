@@ -10,7 +10,7 @@ namespace UseCases.Test.Auth.Login;
 
 public class LoginUseCaseTest
 {
-    private readonly Mock<IAccountRepository> _userRepository = new Mock<IAccountRepository>();
+    private readonly Mock<IAccountRepository> _accountRepository = new Mock<IAccountRepository>();
     private readonly Mock<IAuthService> _authService = new Mock<IAuthService>();
 
     [Fact]
@@ -25,7 +25,7 @@ public class LoginUseCaseTest
         var token = new Project.Domain.ValueObjects.Auth.Token { AcccessToken = "ceruivhuifhviuthiuthvrt" };
 
         var useCase = CreateUseCase();
-        _userRepository
+        _accountRepository
             .Setup(rep => rep.GetByEmailAsync(It.IsAny<string>()))
             .ReturnsAsync(user);
 
@@ -46,6 +46,6 @@ public class LoginUseCaseTest
 
     private LoginUseCase CreateUseCase()
     {
-        return new LoginUseCase(_userRepository.Object, _authService.Object);
+        return new LoginUseCase(_accountRepository.Object, _authService.Object);
     }
 }
