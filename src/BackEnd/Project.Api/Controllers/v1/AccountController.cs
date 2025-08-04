@@ -48,7 +48,7 @@ namespace Project.Api.Controllers.v1
         ///   - User ou Admin
         ///
         /// </remarks>
-        /// <param name="useCaseCreateAccount"></param>
+        /// <param name="useCaseCreateAccount">Service that executes the use case logic.</param>
         /// <param name="request">Resquest Object</param>
         /// <returns>Return Messages</returns>
         /// <response code="201">Account created successfully</response>
@@ -103,7 +103,7 @@ namespace Project.Api.Controllers.v1
         ///     }
         ///
         /// </remarks>
-        /// <param name="useCaseGetAllAccounts"></param>
+        /// <param name="useCaseGetAllAccounts">Service that executes the use case logic.</param>
         /// <param name="search"> Texto para pesquisa</param>
         /// <param name="page">Pagina </param>
         /// <param name="pageSize">Itens por página</param>
@@ -144,7 +144,7 @@ namespace Project.Api.Controllers.v1
         ///     }
         ///
         /// </remarks>
-        /// <param name="useCaseInactiveUser"></param>
+        /// <param name="useCaseInactiveUser">Service that executes the use case logic.</param>
         /// <param name="id">Entity Id</param>
         /// <returns>Return Messages</returns>
         /// <response code="204">Status user updated successfully</response>

@@ -2,7 +2,7 @@
 
 namespace CommonTestUtilities.Responses.Profile;
 
-public static class GetByProfileIdResponseBuilder
+public static class GetByAccountIdResponseBuilder
 {
     public static Project.Domain.Entities.v1.Profile GetProfileBuilser()
     {
