@@ -87,7 +87,7 @@ else
                 Dados de Endereço
             </MudText>
 
-            <MudGrid Spacing="2">
+            <MudGrid >
 
                 <MudItem xs="12" md="2">
                     <MudTextField Mask="@maskPostalCode"
@@ -126,7 +126,7 @@ else
 
             </MudGrid>
 
-            <MudGrid Spacing="2">
+            <MudGrid Style="margin-top: 5px;">
                 <MudItem xs="12" md="4">
                     <MudTextField Label="Bairro"
                                   For="@(() => InputModelProfile.Neighborhood)"
@@ -200,16 +200,6 @@ else
         MaskChars = new[] { new MaskChar('#', @"[0-9]") }
     };
 
-    private async Task OnCepSearch(string e)
-    {
-        StateHasChanged();
-        if (e.Length >= 9)
-        {
-            
-
-        }
-    }
-
     protected override async Task OnInitializedAsync()
     {
         try
@@ -248,6 +238,16 @@ else
         {
             _isLoading = false;
             StateHasChanged();
+        }
+    }
+
+    private async Task OnCepSearch(string e)
+    {
+        StateHasChanged();
+        if (e.Length >= 9)
+        {
+
+
         }
     }
 
