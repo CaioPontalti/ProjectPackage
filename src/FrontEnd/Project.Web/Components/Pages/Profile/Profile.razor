@@ -20,7 +20,7 @@ else
     <MudText Typo="Typo.h6" Align="Align.Left" Class="mb-2">
         Perfil
     </MudText>
-    <EditForm Model="AccountProfile" OnValidSubmit="Save">
+    <EditForm Model="InputModelProfile" OnInvalidSubmit="Save">
         <DataAnnotationsValidator />
 
         <div class="col-lg-12">
@@ -57,8 +57,8 @@ else
 
                 <MudItem xs="12" md="3">
                     <MudTextField Label="Nome"
-                                  For="@(() => AccountProfile.Name)"
-                                  @bind-Value="AccountProfile.Name"
+                                  For="@(() => InputModelProfile.Name)"
+                                  @bind-Value="InputModelProfile.Name"
                                   Variant="Variant.Text"
                                   FullWidth="true" />
                 </MudItem>
@@ -67,16 +67,16 @@ else
                     <MudTextField Mask="@maskCellPhone"
                                   Label="Telefone"
                                   Placeholder="(00) 00000-0000"
-                                  For="@(() => AccountProfile.CellPhone)"
-                                  @bind-Value="AccountProfile.CellPhone"
+                                  For="@(() => InputModelProfile.CellPhone)"
+                                  @bind-Value="InputModelProfile.CellPhone"
                                   Variant="@Variant.Text"
                                   FullWidth="true" />
                 </MudItem>
 
                 <MudItem xs="12" md="3">
                     <MudDatePicker Label="Dt. Nascimento"
-                                   For="@(() => AccountProfile.BirthDate)"
-                                   @bind-Date="AccountProfile.BirthDate"
+                                   For="@(() => InputModelProfile.BirthDate)"
+                                   @bind-Date="InputModelProfile.BirthDate"
                                    Variant="@Variant.Text" />
                 </MudItem>
 
@@ -87,22 +87,87 @@ else
                 Dados de Endereço
             </MudText>
 
-            <MudGrid>
-                <MudItem xs="12" md="3">
+            <MudGrid Spacing="2">
+
+                <MudItem xs="12" md="2">
+                    <MudTextField Mask="@maskPostalCode"
+                                  Label="CEP"
+                                  Placeholder="00000-000"
+                                  Variant="Variant.Text"
+                                  FullWidth="true"
+                                  Immediate="true"
+                                  Value="@InputModelProfile.PostalCode"
+                                  TextChanged="OnCepSearch" />
+                </MudItem>
+                
+                <MudItem xs="12" md="4">
                     <MudTextField Label="Endereço"
-                                  For="@(() => AccountProfile.Address.AddressDescription)"
-                                  @bind-Value="AccountProfile.Address.AddressDescription"
+                                  For="@(() => InputModelProfile.AddressDescription)"
+                                  @bind-Value="InputModelProfile.AddressDescription"
+                                  Variant="Variant.Text"
+                                  FullWidth="true" />
+                </MudItem>
+
+                <MudItem xs="12" md="2">
+                    <MudTextField Label="Número"
+                                  For="@(() => InputModelProfile.Number)"
+                                  @bind-Value="InputModelProfile.Number"
+                                  Variant="Variant.Text"
+                                  FullWidth="true" />
+                </MudItem>
+
+                <MudItem xs="12" md="4">
+                    <MudTextField Label="Complemento"
+                                  For="@(() => InputModelProfile.Complement)"
+                                  @bind-Value="InputModelProfile.Complement"
                                   Variant="Variant.Text"
                                   FullWidth="true" />
                 </MudItem>
 
             </MudGrid>
 
+            <MudGrid Spacing="2">
+                <MudItem xs="12" md="4">
+                    <MudTextField Label="Bairro"
+                                  For="@(() => InputModelProfile.Neighborhood)"
+                                  @bind-Value="InputModelProfile.Neighborhood"
+                                  Variant="Variant.Text"
+                                  FullWidth="true" />
+                </MudItem>
+
+                <MudItem xs="12" md="4">
+                    <MudTextField Label="Cidade"
+                                  For="@(() => InputModelProfile.City)"
+                                  @bind-Value="InputModelProfile.City"
+                                  Variant="Variant.Text"
+                                  FullWidth="true" />
+                </MudItem>
+
+                <MudItem xs="12" md="4">
+                    <MudTextField Label="Estado"
+                                  For="@(() => InputModelProfile.State)"
+                                  @bind-Value="InputModelProfile.State"
+                                  Variant="Variant.Text"
+                                  FullWidth="true" />
+                </MudItem>
+
+
+            </MudGrid>
             <MudItem xs="12" Class="mt-4 d-flex justify-end">
-                <MudButton ButtonType="ButtonType.Submit"
-                           Color="Color.Primary"
-                           Style="text-transform: none; transition: 0.2s ease-in-out;">
-                    Salvar
+                <MudButton Color="Color.Primary"
+                           ButtonType="ButtonType.Submit"
+                           Disabled="@_isLoadingSaveButton"
+                           Style="margin-left: 8px; text-transform: none; transition: 0.2s ease-in-out;">
+                    @if (_isLoadingSaveButton)
+                    {
+                        <MudProgressCircular Color="Color.Primary" Size=Size.Small Indeterminate="true" />
+                    }
+                    else
+                    {
+                        <span>
+                            Salvar
+                        </span>
+                    }
                 </MudButton>
             </MudItem>
 
@@ -114,15 +179,14 @@ else
 @code {
     [Parameter]
     public string accountId { get; set; }
-    private MudForm form;
+    private bool _isLoading = true;
+    private bool _isLoadingSaveButton = false;
 
-    private DTOs.Response.Profile.GetByAccountId.Profile AccountProfile = new()
-    {
-        Address = new Address()
-    };
+    private DTOs.Response.Profile.GetByAccountId.Profile AccountProfile = new();
+    private InputModelAccountProfile InputModelProfile = null;
 
     private readonly List<string> Errors = new List<string>();
-    private bool _isLoading = true;
+
     private string MessageSuccess;
     private string emailAccount = string.Empty;
 
@@ -130,6 +194,21 @@ else
     {
         MaskChars = new[] { new MaskChar('#', @"[0-9]") }
     };
+
+    private PatternMask maskPostalCode = new PatternMask("#####-###")
+    {
+        MaskChars = new[] { new MaskChar('#', @"[0-9]") }
+    };
+
+    private async Task OnCepSearch(string e)
+    {
+        StateHasChanged();
+        if (e.Length >= 9)
+        {
+            
+
+        }
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -147,8 +226,13 @@ else
                 return;
             }
 
-            AccountProfile = response.Data.Profile ?? new();
-            AccountProfile.Address ??= new Address();
+            if (response.Data.Profile is not null)
+            {
+                InputModelProfile = new();
+                InputModelProfile = (InputModelAccountProfile)response.Data.Profile;
+            }
+
+
         }
         catch (UnauthorizedAccessException ex)
         {
@@ -169,7 +253,56 @@ else
 
     private async Task Save()
     {
-        var teste = AccountProfile;
+        var teste = InputModelProfile;
         await Task.CompletedTask;
+    }
+
+    public class InputModelAccountProfile
+    {
+        [Required(ErrorMessage = "O campo 'Nome' é obrigatório!")]
+        public string Name { get; set; }
+
+        [Required(ErrorMessage = "O campo 'Dt. Nascimento' é obrigatório!")]
+        public DateTime? BirthDate { get; set; }
+
+        [Required(ErrorMessage = "O campo 'CEP' é obrigatório!")]
+        public string PostalCode { get; set; }
+
+        [Required(ErrorMessage = "O campo 'Endereço' é obrigatório!")]
+        public string AddressDescription { get; set; }
+
+        [Required(ErrorMessage = "O campo 'Número' é obrigatório!")]
+        public int? Number { get; set; }
+
+        [Required(ErrorMessage = "O campo 'Estado' é obrigatório!")]
+        public string State { get; set; }
+
+        [Required(ErrorMessage = "O campo 'Cidade' é obrigatório!")]
+        public string City { get; set; }
+
+        [Required(ErrorMessage = "O campo 'Bairro' é obrigatório!")]
+        public string Neighborhood { get; set; }
+
+        public string Complement { get; set; }
+
+        [Required(ErrorMessage = "O campo 'Telefone' é obrigatório!")]
+        public string CellPhone { get; set; }
+
+        public static explicit operator InputModelAccountProfile(DTOs.Response.Profile.GetByAccountId.Profile profile)
+        {
+            var inputProfile = new InputModelAccountProfile();
+            inputProfile.Name = profile.Name;
+            inputProfile.BirthDate = profile.BirthDate;
+            inputProfile.PostalCode = profile?.Address?.PostalCode;
+            inputProfile.AddressDescription = profile?.Address?.AddressDescription;
+            inputProfile.Number = profile?.Address?.Number;
+            inputProfile.State = profile?.Address?.State;
+            inputProfile.City = profile?.Address?.City;
+            inputProfile.Neighborhood = profile?.Address?.Neighborhood;
+            inputProfile.Complement = profile?.Address?.Complement;
+            inputProfile.CellPhone = profile.CellPhone;
+
+            return inputProfile;
+        }
     }
 }

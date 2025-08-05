@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Project.Web.DTOs.ValueObjects.Profile;
+﻿namespace Project.Web.DTOs.ValueObjects.Profile;
 
 public class Address
 {
