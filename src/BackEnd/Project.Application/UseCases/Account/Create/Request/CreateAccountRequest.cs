@@ -15,23 +15,23 @@ public class CreateAccountRequest : RequestBase
     public string Role { get; set; }
 
     public override void Validate()
-    { 
-        if (string.IsNullOrEmpty(Password))
-            Notifications.Add(AccountMessageValidation.AccountPasswordRequired);
-
-        if (!StringExtensions.IsValidEnum<AccountTypes>(AccountType))
-            Notifications.Add(AccountMessageValidation.AccountTypeIsInvalid);
-
-        if (!StringExtensions.IsValidEnum<Roles>(Role))
-            Notifications.Add(AccountMessageValidation.AccountRoleIsInvalid);
-
+    {
         if (string.IsNullOrEmpty(Email))
         {
             Notifications.Add(AccountMessageValidation.AccountEmailRequerid);
             return;
-        }           
+        }
 
         if (!Regex.IsMatch(Email, RegexPatterns.EmailPattern, RegexOptions.IgnoreCase))
             Notifications.Add(AccountMessageValidation.AccountEmailInvalid);
+
+        if (string.IsNullOrEmpty(Password))
+            Notifications.Add(AccountMessageValidation.AccountPasswordRequired);
+
+        if (!AccountType.IsValidEnum<AccountTypes>())
+            Notifications.Add(AccountMessageValidation.AccountTypeInvalid);
+
+        if (!Role.IsValidEnum<Roles>())
+            Notifications.Add(AccountMessageValidation.AccountRoleInvalid);
     }
 }

@@ -20,7 +20,7 @@ public class GetByAccountIdUseCase : IGetByAccountIdUseCase
         if (string.IsNullOrEmpty(accountId))
             return Result<GetByAccountIdResponse>.Failure(HttpStatusCode.BadRequest, ProfileMessageValidation.AccountIdRequerid);
 
-        var profile = await _profileRepository.GetByAccountId(accountId);
+        var profile = await _profileRepository.GetByAccountIdAsync(accountId);
         if (profile is null)
             return Result<GetByAccountIdResponse>.Failure(HttpStatusCode.NotFound, ProfileMessageValidation.AccountNotFound);
 

@@ -175,11 +175,11 @@
 
     private sealed class InputModel
     {
-        [Required(ErrorMessage = "O campo 'Email' é obrigatório!")]
+        [Required(ErrorMessage = "*Obrigatório")]
         [EmailAddress(ErrorMessage = "E-mail informado é inválido!")]
         public string Email { get; set; }
 
-        [Required(ErrorMessage = "O campo 'Senha' é obrigatório!")]
+        [Required(ErrorMessage = "*Obrigatório")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 

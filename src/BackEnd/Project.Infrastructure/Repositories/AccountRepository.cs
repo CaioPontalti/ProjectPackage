@@ -50,7 +50,7 @@ public class AccountRepository : IAccountRepository
 
     public async Task<IEnumerable<Account>> GetAllAsync(string search)
     {
-        var filter = AccountFilter.BuilderFilder(search);
+        var filter = AccountFilter.SearchBuilderFilder(search);
 
         var accounts = await _collection.Find(filter).ToListAsync();
         return accounts.Select(account => (Account)account);

@@ -91,7 +91,7 @@ else
 
                 <MudItem xs="12" md="2">
                     <MudTextField Mask="@maskPostalCode"
-                                  Label="CEP"
+                                  Label="Cep"
                                   Placeholder="00000-000"
                                   Variant="Variant.Text"
                                   FullWidth="true"
@@ -182,7 +182,7 @@ else
     private bool _isLoading = true;
     private bool _isLoadingSaveButton = false;
 
-    private DTOs.Response.Profile.GetByAccountId.Profile AccountProfile = new();
+    private DTOs.Response.Profile.GetByAccountId.Profile AccountProfile = null;
     private InputModelAccountProfile InputModelProfile = null;
 
     private readonly List<string> Errors = new List<string>();
@@ -259,33 +259,33 @@ else
 
     public class InputModelAccountProfile
     {
-        [Required(ErrorMessage = "O campo 'Nome' é obrigatório!")]
+        [Required(ErrorMessage = "*Obrigatório")]
         public string Name { get; set; }
 
-        [Required(ErrorMessage = "O campo 'Dt. Nascimento' é obrigatório!")]
+        [Required(ErrorMessage = "*Obrigatório")]
         public DateTime? BirthDate { get; set; }
 
-        [Required(ErrorMessage = "O campo 'CEP' é obrigatório!")]
+        [Required(ErrorMessage = "*Obrigatório")]
         public string PostalCode { get; set; }
 
-        [Required(ErrorMessage = "O campo 'Endereço' é obrigatório!")]
+        [Required(ErrorMessage = "*Obrigatório")]
         public string AddressDescription { get; set; }
 
-        [Required(ErrorMessage = "O campo 'Número' é obrigatório!")]
+        [Required(ErrorMessage = "*Obrigatório")]
         public int? Number { get; set; }
 
-        [Required(ErrorMessage = "O campo 'Estado' é obrigatório!")]
+        [Required(ErrorMessage = "*Obrigatório")]
         public string State { get; set; }
 
-        [Required(ErrorMessage = "O campo 'Cidade' é obrigatório!")]
+        [Required(ErrorMessage = "*Obrigatório")]
         public string City { get; set; }
 
-        [Required(ErrorMessage = "O campo 'Bairro' é obrigatório!")]
+        [Required(ErrorMessage = "*Obrigatório")]
         public string Neighborhood { get; set; }
 
         public string Complement { get; set; }
 
-        [Required(ErrorMessage = "O campo 'Telefone' é obrigatório!")]
+        [Required(ErrorMessage = "*Obrigatório")]
         public string CellPhone { get; set; }
 
         public static explicit operator InputModelAccountProfile(DTOs.Response.Profile.GetByAccountId.Profile profile)

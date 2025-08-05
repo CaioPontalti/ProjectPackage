@@ -1,4 +1,5 @@
 ﻿using MongoDB.Bson;
+using Project.Domain.Extensions;
 using Project.Domain.ValueObjects.Profile;
 
 namespace Project.Domain.Entities.v1;
@@ -29,5 +30,13 @@ public class Profile
     {
         var address = Address.Create(null, null, null, null, null,null, null);
         return new Profile(ObjectId.GenerateNewId(), accountId, name, address,  birthDate, cellPhone);
+    }
+
+    public void Update(string name, DateTime? birthDate, string cellPhone, Address address)
+    {
+        Name = name;
+        BirthDate = birthDate.NormalizeDateTimeForMongo();
+        CellPhone = cellPhone;  
+        Address = address;
     }
 }

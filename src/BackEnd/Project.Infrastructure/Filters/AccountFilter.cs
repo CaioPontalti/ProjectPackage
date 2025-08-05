@@ -6,7 +6,7 @@ namespace Project.Infrastructure.Filters;
 
 public static class AccountFilter
 {
-    public static FilterDefinition<AccountMongoDb> BuilderFilder(string search)
+    public static FilterDefinition<AccountMongoDb> SearchBuilderFilder(string search)
     {
         FilterDefinition<AccountMongoDb> filter;
 

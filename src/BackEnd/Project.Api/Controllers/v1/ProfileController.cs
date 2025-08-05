@@ -5,6 +5,8 @@ using Project.Application.Resources.Response;
 using Project.Application.UseCases.Account.GetAll.Response;
 using Project.Application.UseCases.Profile.GetById;
 using Project.Application.UseCases.Profile.GetById.Response;
+using Project.Application.UseCases.Profile.Update;
+using Project.Application.UseCases.Profile.Update.Request;
 
 namespace Project.Api.Controllers.v1
 {
@@ -28,15 +30,15 @@ namespace Project.Api.Controllers.v1
         ///                 "birthDate": "1993-08-04T00:00:00",
         ///                 "cellPhone": "(11) 91234-5678",
         ///                 "address": {
-        ///                     "postalCode": null,
-        ///                     "addressDescription": null,
-        ///                     "number": null,
-        ///                     "state": null,
-        ///                     "city": null,
-        ///                     "neighborhood": null,
+        ///                     "postalCode": 00000-000,
+        ///                     "addressDescription": Rua Santana,
+        ///                     "number": 10,
+        ///                     "state": São Paulo,
+        ///                     "city": São Paulo,
+        ///                     "neighborhood": Vila Teste,
         ///                     "complement": null
         ///                 },
-        ///                 "cellPhone": null
+        ///                 "cellPhone": (99) 99999-9999
         ///             }
         ///         },
         ///         "errors": []
@@ -71,6 +73,16 @@ namespace Project.Api.Controllers.v1
         {
             var result = await useCaseGetByAccountId.ExecuteAsync(accountId);
 
+            return result.ToActionResult();
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateAsync(
+            [FromServices] IUpdateProfileUseCase updateProfileUseCase,
+            [FromBody] UpdateProfileRequest request)
+        {
+            var result = await updateProfileUseCase.ExecuteAsync(request);
+            
             return result.ToActionResult();
         }
     }

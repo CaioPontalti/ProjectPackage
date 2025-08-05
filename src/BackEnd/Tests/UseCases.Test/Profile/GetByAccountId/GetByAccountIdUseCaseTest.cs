@@ -19,7 +19,7 @@ public class GetByAccountIdUseCaseTest
 
         var useCase = CreateUseCase();
         _profileRepository
-            .Setup(rep => rep.GetByAccountId(id))
+            .Setup(rep => rep.GetByAccountIdAsync(id))
             .ReturnsAsync(profile);
 
         var result = await useCase.ExecuteAsync(id);
@@ -35,7 +35,7 @@ public class GetByAccountIdUseCaseTest
     {
         var useCase = CreateUseCase();
         _profileRepository
-            .Setup(rep => rep.GetByAccountId(id))
+            .Setup(rep => rep.GetByAccountIdAsync(id))
             .ReturnsAsync((Project.Domain.Entities.v1.Profile)null);
 
         var result = await useCase.ExecuteAsync(id);
@@ -52,7 +52,7 @@ public class GetByAccountIdUseCaseTest
     {
         var useCase = CreateUseCase();
          _profileRepository
-            .Setup(rep => rep.GetByAccountId(id))
+            .Setup(rep => rep.GetByAccountIdAsync(id))
             .ReturnsAsync((Project.Domain.Entities.v1.Profile)null);
 
         var result = await useCase.ExecuteAsync(id);

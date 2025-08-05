@@ -36,7 +36,7 @@ public class LoginUseCaseTest
         var result = await useCase.ExecuteAsync(request);
         Assert.Empty(result.Errors);
         Assert.True(result.IsSuccess);
-        Assert.NotNull(result.Data.User);
+        Assert.NotNull(result.Data.Account);
         Assert.NotNull(result.Data.Token);
         Assert.Equal(HttpStatusCode.OK, result.StatusCode);
     }

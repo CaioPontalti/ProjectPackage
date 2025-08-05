@@ -59,7 +59,7 @@ public class CreateAccountValidatorTest
         request.Validate();
 
         Assert.NotEmpty(request.Notifications);
-        Assert.Contains(AccountMessageValidation.AccountRoleIsInvalid, request.Notifications);
+        Assert.Contains(AccountMessageValidation.AccountRoleInvalid, request.Notifications);
         Assert.Single(request.Notifications);
     }
 
@@ -71,7 +71,7 @@ public class CreateAccountValidatorTest
         request.Validate();
 
         Assert.NotEmpty(request.Notifications);
-        Assert.Contains(AccountMessageValidation.AccountTypeIsInvalid, request.Notifications);
+        Assert.Contains(AccountMessageValidation.AccountTypeInvalid, request.Notifications);
         Assert.Single(request.Notifications);
     }
 }

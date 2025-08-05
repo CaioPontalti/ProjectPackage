@@ -162,28 +162,28 @@
 
     private void HandleClick()
     {
-        NavigationManager.NavigateTo("/users", false);
+        NavigationManager.NavigateTo("/accounts", false);
     }
 
     private sealed class InputModel
     {
-        [Required(ErrorMessage = "O campo 'Email' é obrigatório!")]
+        [Required(ErrorMessage = "*Obrigatório")]
         [EmailAddress(ErrorMessage = "E-mail informado é inválido!")]
         public string Email { get; set; }
 
-        [Required(ErrorMessage = "O campo 'Senha' é obrigatória!")]
+        [Required(ErrorMessage = "*Obrigatório")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
-        [Required(ErrorMessage = "Confirme sua senha!")]
+        [Required(ErrorMessage = "*Obrigatório")]
         [DataType(DataType.Password)]
         [Compare("Password", ErrorMessage = "As senhas não coincidem.")]
         public string ConfirmPassword { get; set; }
 
-        [Required(ErrorMessage = "O campo 'Role' é obrigatório!")]
+        [Required(ErrorMessage = "*Obrigatório")]
         public Roles Role { get; set; }
 
-        [Required(ErrorMessage = "O campo 'Tipo da conta' é obrigatório!")]
+        [Required(ErrorMessage = "*Obrigatório")]
         public AccountTypes AccountType { get; set; }
     }
 }

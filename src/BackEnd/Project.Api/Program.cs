@@ -6,6 +6,7 @@ using Project.Application.UseCases.Account.GetAll;
 using Project.Application.UseCases.Account.Inactivate;
 using Project.Application.UseCases.Auth.Login;
 using Project.Application.UseCases.Profile.GetById;
+using Project.Application.UseCases.Profile.Update;
 using Project.Domain.Interfaces.Repositories;
 using Project.Domain.Interfaces.Services;
 using Project.Domain.Services;
@@ -27,10 +28,10 @@ builder.Services.AddScoped<ICreateAccountUseCase, CreateAccountUseCase>();
 builder.Services.AddScoped<IGetAllAccountsUseCase, GetAllAccountsUseCase>();
 builder.Services.AddScoped<IInactivateAccountUseCase, InactivateAccountUseCase>();
 builder.Services.AddScoped<ILoginUseCase, LoginUseCase>();
+builder.Services.AddScoped<IUpdateProfileUseCase, UpdateProfileUseCase>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
 builder.Services.AddScoped<IGetByAccountIdUseCase, GetByAccountIdUseCase>();
-
 builder.Services.AddScoped<IAuthService, AuthService>();
 
 builder.Services.AddControllers()
