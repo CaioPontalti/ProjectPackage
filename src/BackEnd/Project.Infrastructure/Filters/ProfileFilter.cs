@@ -7,5 +7,5 @@ namespace Project.Infrastructure.Filters;
 public static class ProfileFilter
 {
     public static FilterDefinition<ProfileMongoDb> GetByIdBuilderFilder(string id)
-        => Builders<ProfileMongoDb>.Filter.Eq(p => p.Id.ToString(), id);
+        => Builders<ProfileMongoDb>.Filter.Eq(p => p.Id, new ObjectId(id));
 }

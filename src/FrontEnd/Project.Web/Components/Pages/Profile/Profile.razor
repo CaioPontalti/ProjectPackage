@@ -191,12 +191,12 @@ else
     private string MessageSuccess;
     private string emailAccount = string.Empty;
 
-    private PatternMask maskCellPhone = new PatternMask("(##) #####-####")
+    private readonly PatternMask maskCellPhone = new PatternMask("(##) #####-####")
     {
         MaskChars = new[] { new MaskChar('#', @"[0-9]") }
     };
 
-    private PatternMask maskPostalCode = new PatternMask("#####-###")
+    private readonly PatternMask maskPostalCode = new PatternMask("#####-###")
     {
         MaskChars = new[] { new MaskChar('#', @"[0-9]") }
     };
@@ -272,11 +272,16 @@ else
                 return;
             }
 
-            await Task.Delay(2000);
+            var requestObject = RequestObjectBuild(InputModelProfile);
+
+            var response = await ProfileService.UpdateAsync(requestObject);
+            if (!response.IsSuccess)
+            {
+                Errors.AddRange(response.Errors);
+                return;
+            }
 
             MessageSuccess = "Perfil Atualizado com sucesso.";
-
-            await Task.CompletedTask;
         }
         catch (Exception ex)
         {
@@ -308,8 +313,30 @@ else
         return errors;
     }
 
+    private DTOs.Response.Profile.GetByAccountId.Profile RequestObjectBuild(InputModelAccountProfile input)
+    {
+        var profile = new DTOs.Response.Profile.GetByAccountId.Profile();
+        profile.Id = input.Id;
+        profile.Name = input.Name;
+        profile.BirthDate = input.BirthDate;
+        profile.CellPhone = input.CellPhone;
+
+        profile.Address = new Address();
+        profile.Address.PostalCode = input.PostalCode;
+        profile.Address.AddressDescription = input.AddressDescription;
+        profile.Address.Number = input.Number;
+        profile.Address.Neighborhood = input.Neighborhood;
+        profile.Address.City = input.City;
+        profile.Address.State = input.State;
+
+        return profile;
+    }
+
     public class InputModelAccountProfile
     {
+        [Required(ErrorMessage = "*Obrigatório")]
+        public string Id { get; set; }
+
         [Required(ErrorMessage = "*Obrigatório")]
         public string Name { get; set; }
 
@@ -342,6 +369,7 @@ else
         public static explicit operator InputModelAccountProfile(DTOs.Response.Profile.GetByAccountId.Profile profile)
         {
             var inputProfile = new InputModelAccountProfile();
+            inputProfile.Id = profile.Id;
             inputProfile.Name = profile.Name;
             inputProfile.BirthDate = profile.BirthDate;
             inputProfile.PostalCode = profile?.Address?.PostalCode;

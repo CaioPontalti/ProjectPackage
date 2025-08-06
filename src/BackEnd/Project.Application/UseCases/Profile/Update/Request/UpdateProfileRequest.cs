@@ -25,6 +25,7 @@ public class UpdateProfileRequest : RequestBase
 
         if (Address is null || 
             string.IsNullOrEmpty(Address.AddressDescription) ||
+            Address.Number == null ||
             string.IsNullOrEmpty(Address.PostalCode) ||
             string.IsNullOrEmpty(Address.City) ||
             string.IsNullOrEmpty(Address.State) ||
