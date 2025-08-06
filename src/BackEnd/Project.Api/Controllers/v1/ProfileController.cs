@@ -74,12 +74,42 @@ namespace Project.Api.Controllers.v1
             return result.ToActionResult();
         }
 
+        /// <summary>
+        /// Update profile in the app
+        /// </summary>
+        /// <remarks>
+        /// Example of successful 204 response:
+        ///
+        ///     No Content
+        ///     
+        /// Example of error 400 | 404 | 500 response:
+        ///
+        ///     {
+        ///        "isSuccess" : false,
+        ///        "data": null,
+        ///        "errors" : [
+        ///             "O campo id é obrigatório.",
+        ///             "Perfil não encontrado.",
+        ///             "System.DivideByZeroException: Attempted to divide by zero."
+        ///        ]
+        ///     }
+        ///
+        /// </remarks>
+        /// <param name="useCaseUpdateProfile">Service that executes the use case logic.</param>
+        /// <param name="request">Resquest Object</param>
+        /// <returns>Return Messages</returns>
+        /// <response code="204">Profile updated successfully</response>
+        /// <response code="400">Request Invalid</response>
+        /// <response code="404">Profile not found</response>
+        /// <response code="500">Internal Server Error</response>
+        [Authorize]
         [HttpPut]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> UpdateAsync(
-            [FromServices] IUpdateProfileUseCase updateProfileUseCase,
+            [FromServices] IUpdateProfileUseCase useCaseUpdateProfile,
             [FromBody] UpdateProfileRequest request)
         {
-            var result = await updateProfileUseCase.ExecuteAsync(request);
+            var result = await useCaseUpdateProfile.ExecuteAsync(request);
             
             return result.ToActionResult();
         }
