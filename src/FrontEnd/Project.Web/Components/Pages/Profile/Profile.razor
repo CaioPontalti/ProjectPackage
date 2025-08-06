@@ -5,6 +5,7 @@
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthStateProvider
 @inject ILogger<Profile> Logger
+@inject ICepService CepService
 
 <PageTitle>Perfil</PageTitle>
 <AuthGuard />
@@ -20,7 +21,7 @@ else
     <MudText Typo="Typo.h6" Align="Align.Left" Class="mb-2">
         Perfil
     </MudText>
-    <EditForm Model="InputModelProfile" OnInvalidSubmit="Save">
+    <EditForm Model="InputModelProfile" OnValidSubmit="SaveProfile">
         <DataAnnotationsValidator />
 
         <div class="col-lg-12">
@@ -221,8 +222,6 @@ else
                 InputModelProfile = new();
                 InputModelProfile = (InputModelAccountProfile)response.Data.Profile;
             }
-
-
         }
         catch (UnauthorizedAccessException ex)
         {
@@ -243,18 +242,70 @@ else
 
     private async Task OnCepSearch(string e)
     {
+        InputModelProfile.PostalCode = e;
         StateHasChanged();
         if (e.Length >= 9)
         {
-
-
+            var address = await CepService.SearchByPostalCode(e);
+            if (address is not null)
+            {
+                InputModelProfile.AddressDescription = address.AddressDescription;
+                InputModelProfile.Neighborhood = address.Neighborhood;
+                InputModelProfile.City = address.City;
+                InputModelProfile.State = address.State;
+            }
         }
     }
 
-    private async Task Save()
+    public async Task SaveProfile()
     {
-        var teste = InputModelProfile;
-        await Task.CompletedTask;
+        try
+        {
+            _isLoadingSaveButton = true;
+            MessageSuccess = string.Empty;
+            Errors.Clear();
+
+            var errorsModel = InputModelProfileIsValid(InputModelProfile);
+            if (errorsModel.Any())
+            {
+                Errors.AddRange(errorsModel);
+                return;
+            }
+
+            await Task.Delay(2000);
+
+            MessageSuccess = "Perfil Atualizado com sucesso.";
+
+            await Task.CompletedTask;
+        }
+        catch (Exception ex)
+        {
+            Errors.Add("Falha ao atualizar o Perfil: " + ex.Message);
+            Logger.LogError(ex, "An error occurred in the method SaveProfile.");
+        }
+        finally
+        {
+            _isLoadingSaveButton = false;
+        }
+    }
+
+    private List<string> InputModelProfileIsValid(InputModelAccountProfile input)
+    {
+        List<string> errors = new List<string>();
+
+        if (string.IsNullOrEmpty(input.Name))
+            errors.Add("O campo Nome é obrigatório.");
+
+        if (string.IsNullOrEmpty(input.CellPhone))
+            errors.Add("O campo Telefone é obrigatório.");
+
+        if (input.BirthDate is null)
+            errors.Add("O campo Dt. Nascimento é obrigatório.");
+
+        if (string.IsNullOrEmpty(input.PostalCode))
+            errors.Add("O campo Cep é obrigatório.");
+
+        return errors;
     }
 
     public class InputModelAccountProfile

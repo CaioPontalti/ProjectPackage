@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Project.Api.Extensions;
 using Project.Application.Resources.Response;
-using Project.Application.UseCases.Account.GetAll.Response;
 using Project.Application.UseCases.Profile.GetById;
 using Project.Application.UseCases.Profile.GetById.Response;
 using Project.Application.UseCases.Profile.Update;
@@ -63,7 +62,6 @@ namespace Project.Api.Controllers.v1
         /// <response code="400">Invalid request parameters.</response>
         /// <response code="404">Profile not found.</response>
         /// <response code="500">Unexpected internal server error.</response>
-
         [Authorize]
         [HttpGet]
         [ProducesResponseType(typeof(Result<GetByAccountIdResponse>), StatusCodes.Status200OK)]
