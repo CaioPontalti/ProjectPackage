@@ -35,7 +35,7 @@ public class Profile
     public void Update(string name, DateTime? birthDate, string cellPhone, Address address)
     {
         Name = name;
-        BirthDate = birthDate.NormalizeDateTimeForMongo();
+        BirthDate = birthDate;
         CellPhone = cellPhone;  
         Address = address;
     }

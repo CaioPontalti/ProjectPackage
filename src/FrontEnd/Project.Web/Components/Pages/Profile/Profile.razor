@@ -262,13 +262,6 @@ else
             MessageSuccess = string.Empty;
             Errors.Clear();
 
-            var errorsModel = InputModelProfileIsValid(InputModelProfile);
-            if (errorsModel.Any())
-            {
-                Errors.AddRange(errorsModel);
-                return;
-            }
-
             var requestObject = RequestObjectBuild(InputModelProfile);
 
             var response = await ProfileService.UpdateAsync(requestObject);
@@ -278,10 +271,12 @@ else
                 return;
             }
 
-            await Task.Delay(3000);
-
-
             MessageSuccess = "Perfil Atualizado com sucesso.";
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            Logger.LogError(ex, "An error occurred in the method SaveProfile.");
+            NavigationManager.NavigateTo("/auth/login", true);
         }
         catch (Exception ex)
         {
@@ -292,25 +287,6 @@ else
         {
             _isLoadingSaveButton = false;
         }
-    }
-
-    private List<string> InputModelProfileIsValid(InputModelAccountProfile input)
-    {
-        List<string> errors = new List<string>();
-
-        if (string.IsNullOrEmpty(input.Name))
-            errors.Add("O campo Nome é obrigatório.");
-
-        if (string.IsNullOrEmpty(input.CellPhone))
-            errors.Add("O campo Telefone é obrigatório.");
-
-        if (input.BirthDate is null)
-            errors.Add("O campo Dt. Nascimento é obrigatório.");
-
-        if (string.IsNullOrEmpty(input.PostalCode))
-            errors.Add("O campo Cep é obrigatório.");
-
-        return errors;
     }
 
     private DTOs.Response.Profile.GetByAccountId.Profile RequestObjectBuild(InputModelAccountProfile input)
@@ -325,6 +301,7 @@ else
         profile.Address.PostalCode = input.PostalCode;
         profile.Address.AddressDescription = input.AddressDescription;
         profile.Address.Number = input.Number;
+        profile.Address.Complement = input.Complement;
         profile.Address.Neighborhood = input.Neighborhood;
         profile.Address.City = input.City;
         profile.Address.State = input.State;
