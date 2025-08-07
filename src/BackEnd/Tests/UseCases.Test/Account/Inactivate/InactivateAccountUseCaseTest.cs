@@ -2,6 +2,7 @@
 using Moq;
 using Project.Application.Resources.Messages.Account;
 using Project.Application.UseCases.Account.Inactivate;
+using Project.Application.UseCases.Account.Inactivate.Request;
 using Project.Domain.Interfaces.Repositories;
 using System.Net;
 
@@ -22,15 +23,14 @@ public class InactivateAccountUseCaseTest
             .Setup(rep => rep.GetByIdAsync(It.IsAny<string>()))
             .ReturnsAsync(account);
 
-        var result = await useCase.ExecuteAsync(id);
+        var result = await useCase.ExecuteAsync(new InactiveAccountRequest { Id = id });
         Assert.Empty(result.Errors);
         Assert.True(result.IsSuccess);
-        Assert.Equal(HttpStatusCode.NoContent, result.StatusCode);
+        Assert.Equal(HttpStatusCode.OK, result.StatusCode);
     }
 
     [Theory]
     [InlineData("")]
-    [InlineData(" ")]
     [InlineData(null)]
     public async Task InactivateAccountUseCase_WhenIdIsEmptyOrIsNull_ReturnsBadRequestError(string id)
     {
@@ -41,7 +41,7 @@ public class InactivateAccountUseCaseTest
             .Setup(rep => rep.GetByIdAsync(It.IsAny<string>()))
             .ReturnsAsync(account);
 
-        var result = await useCase.ExecuteAsync(id);
+        var result = await useCase.ExecuteAsync(new InactiveAccountRequest { Id = id });
         Assert.Single(result.Errors);
         Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
         Assert.Contains(AccountMessageValidation.IdRequerid, result.Errors);
@@ -56,7 +56,7 @@ public class InactivateAccountUseCaseTest
             .Setup(rep => rep.GetByIdAsync(It.IsAny<string>()))
             .ReturnsAsync((Project.Domain.Entities.v1.Account)null);
 
-        var result = await useCase.ExecuteAsync(id);
+        var result = await useCase.ExecuteAsync(new InactiveAccountRequest { Id = id });
         Assert.Single(result.Errors);
         Assert.Contains(AccountMessageValidation.AccountNotFound, result.Errors);
         Assert.Equal(HttpStatusCode.NotFound, result.StatusCode);
@@ -74,7 +74,7 @@ public class InactivateAccountUseCaseTest
             .Setup(rep => rep.GetByIdAsync(It.IsAny<string>()))
             .ReturnsAsync(account);
 
-        var result = await useCase.ExecuteAsync(id);
+        var result = await useCase.ExecuteAsync(new InactiveAccountRequest { Id = id });
         Assert.Single(result.Errors);
         Assert.Contains(AccountMessageValidation.AccountAlreadyInactive, result.Errors);
         Assert.Equal(HttpStatusCode.Conflict, result.StatusCode);

@@ -1,9 +1,7 @@
 ﻿@page "/accounts"
-@using Project.Web.DTOs.Response.Account.GetAll
-@using Project.Web.Enums.Account
 @attribute [Authorize]
 
-@inject IAccountService UserService
+@inject IAccountService AccountService
 @inject ILogger<Accounts> Logger
 @inject IJSRuntime JS
 @inject NavigationManager NavigationManager
@@ -127,7 +125,7 @@
             var isMobile = await JS.InvokeAsync<bool>("isMobileScreen");
             striped = isMobile;
             _initialized = true;
-            StateHasChanged(); // Atualiza a UI com o valor novo
+            StateHasChanged();
         }
     }
 
@@ -149,7 +147,7 @@
     {
         try
         {
-            var response = await UserService.GetAllAsync(state.Page, state.PageSize, search);
+            var response = await AccountService.GetAllAsync(state.Page, state.PageSize, search);
 
             if (!response.IsSuccess)
             {
@@ -186,6 +184,43 @@
 
     private async Task UpdateStatusAccount(string id, bool isActive)
     {
-        
+        try
+        {
+            Errors.Clear();
+
+            if (isActive)
+            {
+                var response = await AccountService.InactiveAccountAsync(id);
+                if (!response.IsSuccess)
+                {
+                    Errors.AddRange(response.Errors);
+                    StateHasChanged();
+                    return;
+                }
+            }
+            else
+            {
+                var response = await AccountService.InactiveAccountAsync(id);
+                if (!response.IsSuccess)
+                {
+                    Errors.AddRange(response.Errors);
+                    StateHasChanged();
+                    return;
+                }
+            }
+
+            await _tableRef.ReloadServerData();
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            Logger.LogError(ex, ex.Message);
+            NavigationManager.NavigateTo("/auth/login", true);
+        }
+        catch (Exception ex)
+        {
+            Errors.Add(ex.Message);
+            Logger.LogError(ex, "An error occurred in the method UpdateStatusAccount.");
+            StateHasChanged();
+        }
     }
 }

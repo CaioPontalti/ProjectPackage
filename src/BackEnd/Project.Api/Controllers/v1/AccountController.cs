@@ -8,6 +8,7 @@ using Project.Application.UseCases.Account.Create.Response;
 using Project.Application.UseCases.Account.GetAll;
 using Project.Application.UseCases.Account.GetAll.Response;
 using Project.Application.UseCases.Account.Inactivate;
+using Project.Application.UseCases.Account.Inactivate.Request;
 
 namespace Project.Api.Controllers.v1
 {
@@ -126,9 +127,13 @@ namespace Project.Api.Controllers.v1
         /// Update account status to inactive in the app
         /// </summary>
         /// <remarks>
-        /// Example of successful 204 response:
+        /// Example of successful 200 response:
         ///
-        ///     No Content
+        ///     {
+        ///        "isSuccess" : true,
+        ///        "data": null,
+        ///        "errors" : []
+        ///     }
         ///     
         /// Example of error 400 | 404 | 409 | 500 response:
         ///
@@ -145,21 +150,21 @@ namespace Project.Api.Controllers.v1
         ///
         /// </remarks>
         /// <param name="useCaseInactiveUser">Service that executes the use case logic.</param>
-        /// <param name="id">Entity Id</param>
+        /// <param name="request">Resquest Object</param>
         /// <returns>Return Messages</returns>
-        /// <response code="204">Status user updated successfully</response>
+        /// <response code="200">Status user updated successfully</response>
         /// <response code="400">Request Invalid</response>
         /// <response code="404">User not found</response>
         /// <response code="409">User is already inactive</response>
         /// <response code="500">Internal Server Error</response>
         [Authorize]
-        [HttpPatch("{id}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [HttpPatch]
+        [ProducesResponseType(typeof(Result), StatusCodes.Status200OK)]
         public async Task<IActionResult> InactivateUserAsync(
             [FromServices] IInactivateAccountUseCase useCaseInactiveUser,
-            string id)
+            [FromBody] InactiveAccountRequest request)
         {
-            var result = await useCaseInactiveUser.ExecuteAsync(id);
+            var result = await useCaseInactiveUser.ExecuteAsync(request);
 
             return result.ToActionResult();
         }

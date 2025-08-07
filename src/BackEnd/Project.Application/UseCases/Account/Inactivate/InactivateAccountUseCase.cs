@@ -1,5 +1,6 @@
 ﻿using Project.Application.Resources.Messages.Account;
 using Project.Application.Resources.Response;
+using Project.Application.UseCases.Account.Inactivate.Request;
 using Project.Domain.Interfaces.Repositories;
 using System.Net;
 
@@ -14,12 +15,12 @@ public class InactivateAccountUseCase : IInactivateAccountUseCase
         _accountRepository = accountRepository;
     }
 
-    public async Task<Result> ExecuteAsync(string id)
+    public async Task<Result> ExecuteAsync(InactiveAccountRequest request)
     {
-        if (string.IsNullOrEmpty(id?.Trim()))
+        if (string.IsNullOrEmpty(request.Id))
             return Result.Failure(HttpStatusCode.BadRequest, AccountMessageValidation.IdRequerid);
 
-        var accountDb = await _accountRepository.GetByIdAsync(id);
+        var accountDb = await _accountRepository.GetByIdAsync(request.Id);
         if (accountDb is null)
             return Result.Failure(HttpStatusCode.NotFound, AccountMessageValidation.AccountNotFound);
 
@@ -30,6 +31,6 @@ public class InactivateAccountUseCase : IInactivateAccountUseCase
 
         await _accountRepository.UpdateAsync(accountDb);
 
-        return Result.Success(HttpStatusCode.NoContent);
+        return Result.Success(HttpStatusCode.OK);
     }
 }

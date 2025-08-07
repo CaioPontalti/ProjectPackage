@@ -54,4 +54,22 @@ public class AccountService : IAccountService
 
         return result;
     }
+
+    public async Task<ApiResponse> InactiveAccountAsync(string id)
+    {
+        var token = await _accessTokenService.GetTokenAsync();
+
+        _httpClient.DefaultRequestHeaders.Remove("Authorization");
+        _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+
+        var response = await _httpClient.PatchAsJsonAsync($"v1/account", new { Id = id });
+
+        if (response.StatusCode == HttpStatusCode.Unauthorized)
+            throw new UnauthorizedAccessException("Usuário sem autorização. Faça login novamente.");
+
+        var json = await response.Content.ReadAsStringAsync();
+        var result = JsonConvert.DeserializeObject<ApiResponse>(json);
+
+        return result;
+    }
 }

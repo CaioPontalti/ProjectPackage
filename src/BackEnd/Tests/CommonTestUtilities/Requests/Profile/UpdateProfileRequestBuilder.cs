@@ -12,6 +12,7 @@ public static class UpdateProfileRequestBuilder
             .RuleFor(a => a.PostalCode, f => f.Address.ZipCode("00000-000"))
             .RuleFor(a => a.AddressDescription, f => f.Address.FullAddress())
             .RuleFor(a => a.Neighborhood, f => f.Address.Locale)
+            .RuleFor(a => a.Number, f => 1)
             .RuleFor(a => a.City, f => f.Address.City())
             .RuleFor(a => a.State, f => f.Address.State());
 
@@ -29,6 +30,7 @@ public static class UpdateProfileRequestBuilder
             .RuleFor(a => a.PostalCode, f => f.Address.ZipCode("00000-000"))
             .RuleFor(a => a.AddressDescription, f => f.Address.FullAddress())
             .RuleFor(a => a.Neighborhood, f => f.Address.Locale)
+            .RuleFor(a => a.Number, f => 1)
             .RuleFor(a => a.City, f => f.Address.City())
             .RuleFor(a => a.State, f => f.Address.State());
 
