@@ -146,6 +146,11 @@
                 Input = new();
             }
         }
+        catch (UnauthorizedAccessException ex)
+        {
+            Logger.LogError(ex, "An error occurred in the method CreateAccountAsync.");
+            NavigationManager.NavigateTo("/auth/login", true);
+        }
         catch (Exception ex)
         {
             Errors.Add("Falha ao criar a conta: " + ex.Message);

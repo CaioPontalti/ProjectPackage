@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using Project.Shared.Exceptions;
 using Project.Web.DTOs;
 using Project.Web.DTOs.Response.Profile.GetByAccountId;
 using Project.Web.Interfaces.Services;
@@ -12,7 +11,6 @@ public class ProfileService : IProfileService
 {
     private readonly HttpClient _httpClient;
     private readonly IAccessTokenService _accessTokenService;
-    private readonly string _messageError = "Ocorreu um erro ao chamar a api. Entre em contato com o Suporte.";
 
     public ProfileService(IHttpClientFactory httpClientFactory, IAccessTokenService accessTokenService)
     {
@@ -31,9 +29,6 @@ public class ProfileService : IProfileService
 
         if (response.StatusCode == HttpStatusCode.Unauthorized)
             throw new UnauthorizedAccessException("Usuário sem autorização. Faça login novamente.");
-
-        if (response.StatusCode != HttpStatusCode.OK)
-            throw new ApiResponseException(_messageError);
 
         var json = await response.Content.ReadAsStringAsync();
         var result = JsonConvert.DeserializeObject<ApiResponse<GetByAccountId>>(json);

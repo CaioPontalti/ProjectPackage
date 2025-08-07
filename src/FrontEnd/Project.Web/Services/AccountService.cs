@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using Project.Shared.Exceptions;
 using Project.Web.DTOs;
 using Project.Web.DTOs.Response.Account.Create;
 using Project.Web.DTOs.Response.Account.GetAll;
@@ -13,7 +12,6 @@ public class AccountService : IAccountService
 {
     private readonly HttpClient _httpClient;
     private readonly IAccessTokenService _accessTokenService;
-    private readonly string _messageError = "Ocorreu um erro ao chamar a api. Entre em contato com o Suporte.";
 
     public AccountService(IHttpClientFactory httpClientFactory, IAccessTokenService accessTokenService)
     {
@@ -23,7 +21,15 @@ public class AccountService : IAccountService
 
     public async Task<ApiResponse<CreateAccount>> CreateAsync(string email, string password, string role, string accountType)
     {
+        var token = await _accessTokenService.GetTokenAsync();
+
+        _httpClient.DefaultRequestHeaders.Remove("Authorization");
+        _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+
         var response = await _httpClient.PostAsJsonAsync("v1/account", new { Email = email, Password = password, Role = role, AccountType = accountType});
+
+        if (response.StatusCode == HttpStatusCode.Unauthorized)
+            throw new UnauthorizedAccessException("Usuário sem autorização. Faça login novamente.");
 
         var json = await response.Content.ReadAsStringAsync();
         var result = JsonConvert.DeserializeObject<ApiResponse<CreateAccount>>(json);
@@ -42,9 +48,6 @@ public class AccountService : IAccountService
         
         if (response.StatusCode == HttpStatusCode.Unauthorized)
             throw new UnauthorizedAccessException("Usuário sem autorização. Faça login novamente.");
-
-        if (response.StatusCode != HttpStatusCode.OK)
-            throw new ApiResponseException(_messageError);
 
         var json = await response.Content.ReadAsStringAsync();
         var result = JsonConvert.DeserializeObject<ApiResponse<GetAllAccount>>(json);
