@@ -78,9 +78,13 @@ namespace Project.Api.Controllers.v1
         /// Update profile in the app
         /// </summary>
         /// <remarks>
-        /// Example of successful 204 response:
-        ///
-        ///     No Content
+        /// Example of successful 200 response:
+        /// 
+        ///     {
+        ///        "isSuccess" : true,
+        ///        "data": null,
+        ///        "errors" : []
+        ///     }
         ///     
         /// Example of error 400 | 404 | 500 response:
         ///
@@ -98,13 +102,13 @@ namespace Project.Api.Controllers.v1
         /// <param name="useCaseUpdateProfile">Service that executes the use case logic.</param>
         /// <param name="request">Resquest Object</param>
         /// <returns>Return Messages</returns>
-        /// <response code="204">Profile updated successfully</response>
+        /// <response code="200">Profile updated successfully</response>
         /// <response code="400">Request Invalid</response>
         /// <response code="404">Profile not found</response>
         /// <response code="500">Internal Server Error</response>
         [Authorize]
         [HttpPut]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(Result), StatusCodes.Status200OK)]
         public async Task<IActionResult> UpdateAsync(
             [FromServices] IUpdateProfileUseCase useCaseUpdateProfile,
             [FromBody] UpdateProfileRequest request)

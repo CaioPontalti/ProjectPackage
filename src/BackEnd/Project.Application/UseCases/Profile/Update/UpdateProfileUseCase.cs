@@ -30,6 +30,6 @@ public class UpdateProfileUseCase : IUpdateProfileUseCase
 
         await _profileRepository.UpdateAsync(profileDb);
 
-        return Result.Success(HttpStatusCode.NoContent);
+        return Result.Success(HttpStatusCode.OK);
     }
 }

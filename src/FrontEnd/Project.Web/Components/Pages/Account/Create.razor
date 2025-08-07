@@ -99,18 +99,16 @@
                 </MudButton>
 
                 <MudButton Color="Color.Primary"
-                           ButtonType="ButtonType.Submit"
                            Disabled="@isLoading"
-                           Style="margin-left: 8px; text-transform: none; transition: 0.2s ease-in-out;">
+                           Style="text-transform: none; transition: 0.2s ease-in-out;"
+                           ButtonType="ButtonType.Submit">
                     @if (isLoading)
                     {
-                        <MudProgressCircular Color="Color.Primary" Size=Size.Small Indeterminate="true" />
+                        <MudProgressCircular Size="Size.Small" Indeterminate="true" />
                     }
                     else
                     {
-                        <span>
-                            Salvar
-                        </span>
+                        <span>Salvar</span>
                     }
                 </MudButton>
                 

@@ -24,7 +24,7 @@ namespace Project.Api.Extensions
         {
             return result.StatusCode switch
             {
-                HttpStatusCode.OK => new OkResult(),
+                HttpStatusCode.OK => new OkObjectResult(result),
                 HttpStatusCode.Created => new StatusCodeResult((int)HttpStatusCode.Created),
                 HttpStatusCode.NoContent => new NoContentResult(),
                 HttpStatusCode.BadRequest => new BadRequestObjectResult(result),

@@ -155,19 +155,18 @@ else
 
             </MudGrid>
             <MudItem xs="12" Class="mt-4 d-flex justify-end">
-                <MudButton Color="Color.Primary"
-                           ButtonType="ButtonType.Submit"
+                <MudButton Class="mt-4"
+                           Color="Color.Primary"
                            Disabled="@_isLoadingSaveButton"
-                           Style="margin-left: 8px; text-transform: none; transition: 0.2s ease-in-out;">
+                           Style="text-transform: none; transition: 0.2s ease-in-out;"
+                           ButtonType="ButtonType.Submit">
                     @if (_isLoadingSaveButton)
                     {
-                        <MudProgressCircular Color="Color.Primary" Size=Size.Small Indeterminate="true" />
+                        <MudProgressCircular Size="Size.Small" Indeterminate="true" />
                     }
                     else
                     {
-                        <span>
-                            Salvar
-                        </span>
+                        <span>Salvar</span>
                     }
                 </MudButton>
             </MudItem>
@@ -182,8 +181,6 @@ else
     public string accountId { get; set; }
     private bool _isLoading = true;
     private bool _isLoadingSaveButton = false;
-
-    private DTOs.Response.Profile.GetByAccountId.Profile AccountProfile = null;
     private InputModelAccountProfile InputModelProfile = null;
 
     private readonly List<string> Errors = new List<string>();
@@ -280,6 +277,9 @@ else
                 Errors.AddRange(response.Errors);
                 return;
             }
+
+            await Task.Delay(3000);
+
 
             MessageSuccess = "Perfil Atualizado com sucesso.";
         }
