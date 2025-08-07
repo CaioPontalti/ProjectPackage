@@ -36,7 +36,7 @@ public class Profile
     {
         Name = name;
         BirthDate = birthDate;
-        CellPhone = cellPhone;  
+        CellPhone = cellPhone.Trim().Replace("(", "").Replace(")", ""). Replace("-", "").Replace(" ", "");  
         Address = address;
     }
 }
