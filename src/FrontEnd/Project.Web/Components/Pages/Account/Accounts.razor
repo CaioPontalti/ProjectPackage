@@ -58,14 +58,24 @@
         <MudTh>Dt. Cadastro</MudTh>
         <MudTh>Tipo</MudTh>
         <MudTh>Acesso</MudTh>
-        <MudTh>Status</MudTh>
+        <MudTh>Ação</MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="E-mail">@context.Email</MudTd>
         <MudTd DataLabel="DtCadastro">@context.CreatedDate</MudTd>
         <MudTd DataLabel="Tipo">@(context.Role == "User" ? "Usuário" : "Administrador")</MudTd>
         <MudTd DataLabel="Acesso">@(EnumExtensionMethods.GetEnumDescriptionFromString<AccountTypes>(@context.AccountType))</MudTd>
-        <MudTd DataLabel="Status">@(context.IsActive ? "Ativo" : "Inativo")</MudTd>
+        <MudTd DataLabel="Ação">
+            
+            <MudButton Variant="Variant.Filled" 
+                       Color="@(context.IsActive ? Color.Default : Color.Tertiary)"
+                       Size="Size.Small"
+                       Style="text-transform: none; transition: 0.2s ease-in-out; height:25px; min-width:80px;"
+                       OnClick="() => UpdateStatusAccount(context.Id, context.IsActive)">
+                @(context.IsActive ? "Desativar" : "Ativar")
+            </MudButton>
+            
+        </MudTd>
     </RowTemplate>
     <PagerContent>
         <MudTablePager PageSizeOptions="new int[] { 10, 15, 20, 30, int.MaxValue }"
@@ -172,5 +182,10 @@
     private void HandleClick()
     {
         NavigationManager.NavigateTo("account/create", false);
+    }
+
+    private async Task UpdateStatusAccount(string id, bool isActive)
+    {
+        
     }
 }
