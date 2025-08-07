@@ -75,10 +75,11 @@ else
                 </MudItem>
 
                 <MudItem xs="12" md="3">
-                    <MudDatePicker Label="Dt. Nascimento"
-                                   For="@(() => InputModelProfile.BirthDate)"
-                                   @bind-Date="InputModelProfile.BirthDate"
-                                   Variant="@Variant.Text" />
+                    <FixedDatePicker Label="Dt. Nascimento"
+                                     @bind-Date="InputModelProfile.BirthDate"
+                                     For="@(() => InputModelProfile.BirthDate)"
+                                     Mask="00/00/0000"
+                                     PickerVariant="PickerVariant.Inline" />
                 </MudItem>
 
             </MudGrid>
