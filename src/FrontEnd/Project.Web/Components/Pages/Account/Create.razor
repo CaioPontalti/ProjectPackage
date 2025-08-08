@@ -1,5 +1,4 @@
 ﻿@page "/account/create"
-@using Project.Web.Enums.Account
 @attribute [Authorize]
 
 @layout Components.Layout.MainLayout
@@ -11,13 +10,14 @@
 @inject ILogger<Create> Logger
 
 <PageTitle>Log in</PageTitle>
-<AuthGuard/>
+<AuthGuard />
 
 <MudText Typo="Typo.h6" Align="Align.Left" Class="mb-2">
     Criar uma nova conta
 </MudText>
 
-<MudPaper Elevation="2" Class="pa-6 mx-auto">
+<EditForm Model="Input" OnValidSubmit="CreateAccountAsync">
+    <DataAnnotationsValidator />
 
     <div class="col-lg-12">
         @if (Errors.Any())
@@ -29,14 +29,13 @@
         }
         @if (!string.IsNullOrEmpty(MessageSuccess))
         {
-            <MudAlert Severity="Severity.Success" Dense="true" Class="my-1">@MessageSuccess</MudAlert>
+            <MudAlert Severity="Severity.Success" Dense="true" Class="my-1" ShowCloseIcon="true" CloseIconClicked="CloseMe">@MessageSuccess</MudAlert>
         }
     </div>
 
-    <EditForm Model="Input" OnValidSubmit="CreateAccountAsync">
-        <DataAnnotationsValidator />
+    <MudPaper Elevation="2" Class="pa-6 mx-auto">
 
-        <MudGrid >            
+        <MudGrid>
 
             <MudItem xs="12" md="4">
                 <MudTextField Label="Email"
@@ -52,7 +51,7 @@
                            @bind-Value="Input.Role"
                            Variant="Variant.Text"
                            FullWidth="true">
-                    @foreach (Roles role in Enum.GetValues(typeof(Roles)).Cast<Roles>().OrderBy(r => r.GetDescription()))
+                    @foreach (Roles role in Enum.GetValues(typeof(Roles)).Cast<Roles>())
                     {
                         <MudSelectItem T="Roles" Value="@role">@role.GetDescription()</MudSelectItem>
                     }
@@ -65,7 +64,7 @@
                            @bind-Value="Input.AccountType"
                            Variant="Variant.Text"
                            FullWidth="true">
-                    @foreach (AccountTypes account in Enum.GetValues(typeof(AccountTypes)).Cast<AccountTypes>().OrderBy(r => r.GetDescription()))
+                    @foreach (AccountTypes account in Enum.GetValues(typeof(AccountTypes)).Cast<AccountTypes>())
                     {
                         <MudSelectItem T="AccountTypes" Value="@account">@account.GetDescription()</MudSelectItem>
                     }
@@ -91,7 +90,7 @@
             </MudItem>
 
             <MudItem xs="12" Class="mt-4 d-flex justify-end">
-                <MudButton ButtonType="ButtonType.Submit" 
+                <MudButton ButtonType="ButtonType.Submit"
                            Color="Color.Default"
                            Style="text-transform: none; transition: 0.2s ease-in-out;"
                            OnClick="HandleClick">
@@ -111,12 +110,13 @@
                         <span>Salvar</span>
                     }
                 </MudButton>
-                
+
             </MudItem>
         </MudGrid>
-    </EditForm>
 
-</MudPaper>
+    </MudPaper>
+
+</EditForm>
 
 @code {
     private bool isLoading = false;
@@ -165,6 +165,11 @@
     private void HandleClick()
     {
         NavigationManager.NavigateTo("/accounts", false);
+    }
+
+    private void CloseMe()
+    {
+        MessageSuccess = string.Empty;
     }
 
     private sealed class InputModel

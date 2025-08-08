@@ -17,7 +17,6 @@
 
   <ItemGroup>
     <Folder Include="Components\Pages\Administration\" />
-    <Folder Include="Helpers\" />
     <Folder Include="wwwroot\js\" />
     <Folder Include="wwwroot\images\" />
   </ItemGroup>

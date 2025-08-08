@@ -43,7 +43,7 @@ namespace Project.Api.Controllers.v1
         ///     }
         ///     
         ///   accountType: Define os tipos de conta que representam os papéis de usuários dentro do sistema:
-        ///   - Developer, TechLead, QA, ProductOwner, SysAdmin, ScrumMaster, ProjectManager, SoftwareArchitect
+        ///   - Developer, TechLead, QA, ProductOwner, ScrumMaster, ProjectManager, SoftwareArchitect
         ///
         ///   role: Define o tipo de acesso da conta de usuário:
         ///   - User ou Admin

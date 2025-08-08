@@ -2,6 +2,7 @@ using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor.Services;
 using Project.Web.Components;
+using Project.Web.Helpers;
 using Project.Web.Interfaces.Services;
 using Project.Web.Interfaces.Services.Security;
 using Project.Web.Services;
@@ -26,6 +27,8 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IProfileService, ProfileService>();
 builder.Services.AddScoped<ICepService, CepService>();
+
+builder.Services.AddScoped<NotificationService>();
 
 builder.Services.AddAuthorization();
 builder.Services.AddAuthentication()

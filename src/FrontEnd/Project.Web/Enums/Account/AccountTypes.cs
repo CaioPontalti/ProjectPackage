@@ -4,9 +4,6 @@ namespace Project.Web.Enums.Account;
 
 public enum AccountTypes
 {
-    [Description("Administrador")]
-    SysAdmin,
-
     [Description("Desenvolvedor")]
     Developer,
 

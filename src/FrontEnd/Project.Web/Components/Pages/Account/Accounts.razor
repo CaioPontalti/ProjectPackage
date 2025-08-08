@@ -5,6 +5,7 @@
 @inject ILogger<Accounts> Logger
 @inject IJSRuntime JS
 @inject NavigationManager NavigationManager
+@inject NotificationService Notify
 
 <PageTitle>Usuários</PageTitle>
 <AuthGuard />
@@ -56,6 +57,7 @@
         <MudTh>Dt. Cadastro</MudTh>
         <MudTh>Tipo</MudTh>
         <MudTh>Acesso</MudTh>
+        <MudTh>Status</MudTh>
         <MudTh>Ação</MudTh>
     </HeaderContent>
     <RowTemplate>
@@ -63,6 +65,7 @@
         <MudTd DataLabel="DtCadastro">@context.CreatedDate</MudTd>
         <MudTd DataLabel="Tipo">@(context.Role == "User" ? "Usuário" : "Administrador")</MudTd>
         <MudTd DataLabel="Acesso">@(EnumExtensionMethods.GetEnumDescriptionFromString<AccountTypes>(@context.AccountType))</MudTd>
+        <MudTd DataLabel="Status">@(context.IsActive ? "Ativa" : "Inativa")</MudTd>
         <MudTd DataLabel="Ação">
             
             <MudButton Variant="Variant.Filled" 
@@ -208,6 +211,8 @@
                     return;
                 }
             }
+
+            Notify.Success("Conta alterada com sucesso!");
 
             await _tableRef.ReloadServerData();
         }

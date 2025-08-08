@@ -34,7 +34,7 @@ else
             }
             @if (!string.IsNullOrEmpty(MessageSuccess))
             {
-                <MudAlert Severity="Severity.Success" Dense="true" Class="my-1">@MessageSuccess</MudAlert>
+                <MudAlert Severity="Severity.Success" Dense="true" Class="my-1" ShowCloseIcon="true" CloseIconClicked="CloseMe">@MessageSuccess</MudAlert>
             }
         </div>
 
@@ -236,6 +236,11 @@ else
             _isLoading = false;
             StateHasChanged();
         }
+    }
+
+    private void CloseMe()
+    {
+        MessageSuccess = string.Empty;
     }
 
     private async Task OnCepSearch(string e)
