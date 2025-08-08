@@ -10,20 +10,72 @@
 <PageTitle>Home</PageTitle>
 <AuthGuard/>
 
-<MudPaper Elevation="2" Class="pa-6 mx-auto">
+@* <MudPaper Elevation="1" Class="pa-1 mx-auto">
 
     <MudText Typo="Typo.h6" GutterBottom="true">@TokenExpiredTime()</MudText>
 
-    <MudAlert Severity="Severity.Normal">
-        You can find documentation and examples on our website here:
-        <MudLink Href="https://mudblazor.com" Target="_blank" Typo="Typo.body2" Color="Color.Primary">
-            <b>www.mudblazor.com</b>
-        </MudLink>
-    </MudAlert>
+</MudPaper> *@
 
+<style>
+    .donut-total-label {
+    fill: var(--mud-palette-text-primary);
+}
+</style>
+
+<MudPaper Elevation="1" Class="pa-2 mx-auto">
+ <MudText Typo="Typo.h6" GutterBottom="true">Meus Projetos</MudText>
+    <MudGrid >
+        @for (int i = 1; i < 5; i++)
+        {
+            <MudItem xs="12" sm="6" md="2">
+                <MudCard>
+                    <MudCardHeader>
+                        <CardHeaderContent>
+                            <MudText Typo="Typo.h6">Projeto</MudText>
+                        </CardHeaderContent>
+                    </MudCardHeader>
+                    <MudCardContent>
+                        <MudText>This day everything happened.</MudText>
+                        <MudText Typo="Typo.body2">The quick, brown fox jumps over a lazy dog.</MudText>
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudButton Variant="Variant.Text" Color="Color.Primary">Read more</MudButton>
+                    </MudCardActions>
+                </MudCard>
+            </MudItem>
+            }
+    </MudGrid>
 </MudPaper>
 
-    @code{
+<MudGrid>
+    <MudItem xs="12" sm="6" md="4">
+        <MudPaper Elevation="1" Class="pa-2 mx-auto" Style="margin-top:10px;">
+            <MudGrid>
+                <MudItem xs="12">
+                    <MudText Typo="Typo.h6" GutterBottom="true">Minhas horas</MudText>
+                    <MudChart ChartType="ChartType.Donut"
+                              Width="180px"
+                              Height="180px"
+                              InputData="@data"
+                              InputLabels="@labels"
+                              @bind-SelectedIndex="Index">
+                        <CustomGraphics>
+                            <text class="donut-total-label" x="50%" y="35%" dominant-baseline="middle" text-anchor="middle" font-family="Helvetica" font-size="3">Total</text>
+                            <text class="donut-total-label" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="black" font-family="Helvetica" font-size="6">@data.Sum().ToString()</text>
+                        </CustomGraphics>     
+                    </MudChart>
+                    <MudText Typo="Typo.body2" Align="Align.Center" >
+                        <span><strong>@labels[Index]</strong></span>: <span>@data[Index].ToString() horas</span>
+                    </MudText>
+                </MudItem>
+            </MudGrid>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+
+
+@code{
 
     private bool isLoading = false;
     private DateTime tokenExpired { get; set; }
@@ -31,6 +83,9 @@
     private Timer timer;
     private DateTime dateDif { get; set; }
 
+    private int Index = 0;
+    public double[] data = { 25, 75, 20, 5 };
+    public string[] labels = { "QA", "Development", "Documentation", "Analysis" };
 
     protected override async Task OnInitializedAsync()
     {
