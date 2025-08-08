@@ -16,7 +16,7 @@ public class AuthService : IAuthService
 
     public async Task<ApiResponse<Login>> LoginAsync(string userName, string password)
     {
-        var response = await _httpClient.PostAsJsonAsync("v1/auth/login", new { email = userName, password });
+        var response = await _httpClient.PostAsJsonAsync("v1/auth/login", new { email = userName.Trim(), password });
 
         var json = await response.Content.ReadAsStringAsync();
         var result = JsonConvert.DeserializeObject<ApiResponse<Login>>(json);

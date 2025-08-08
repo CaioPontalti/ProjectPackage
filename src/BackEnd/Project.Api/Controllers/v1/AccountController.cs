@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Project.Api.Extensions;
 using Project.Application.Resources.Response;
+using Project.Application.UseCases.Account.Active;
+using Project.Application.UseCases.Account.Active.Request;
 using Project.Application.UseCases.Account.Create;
 using Project.Application.UseCases.Account.Create.Request;
 using Project.Application.UseCases.Account.Create.Response;
@@ -142,8 +144,8 @@ namespace Project.Api.Controllers.v1
         ///        "data": null,
         ///        "errors" : [
         ///             "O campo id é obrigatório.",
-        ///             "Usuário não encontrado.",
-        ///             "O usuário já está inativo.",
+        ///             "Conta não encontrada.",
+        ///             "A conta já está aiva.",
         ///             "System.DivideByZeroException: Attempted to divide by zero."
         ///        ]
         ///     }
@@ -152,19 +154,65 @@ namespace Project.Api.Controllers.v1
         /// <param name="useCaseInactiveUser">Service that executes the use case logic.</param>
         /// <param name="request">Resquest Object</param>
         /// <returns>Return Messages</returns>
-        /// <response code="200">Status user updated successfully</response>
+        /// <response code="200">Status account updated successfully</response>
         /// <response code="400">Request Invalid</response>
-        /// <response code="404">User not found</response>
-        /// <response code="409">User is already inactive</response>
+        /// <response code="404">Account not found</response>
+        /// <response code="409">Account is already inactive</response>
         /// <response code="500">Internal Server Error</response>
         [Authorize]
-        [HttpPatch]
+        [HttpPatch("inactive")]
         [ProducesResponseType(typeof(Result), StatusCodes.Status200OK)]
-        public async Task<IActionResult> InactivateUserAsync(
+        public async Task<IActionResult> InactivateAccountAsync(
             [FromServices] IInactivateAccountUseCase useCaseInactiveUser,
             [FromBody] InactiveAccountRequest request)
         {
             var result = await useCaseInactiveUser.ExecuteAsync(request);
+
+            return result.ToActionResult();
+        }
+
+        /// <summary>
+        /// Update account status to active in the app
+        /// </summary>
+        /// <remarks>
+        /// Example of successful 200 response:
+        ///
+        ///     {
+        ///        "isSuccess" : true,
+        ///        "data": null,
+        ///        "errors" : []
+        ///     }
+        ///     
+        /// Example of error 400 | 404 | 409 | 500 response:
+        ///
+        ///     {
+        ///        "isSuccess" : false,
+        ///        "data": null,
+        ///        "errors" : [
+        ///             "O campo id é obrigatório.",
+        ///             "Conta não encontrada.",
+        ///             "A conta já está ativo.",
+        ///             "System.DivideByZeroException: Attempted to divide by zero."
+        ///        ]
+        ///     }
+        ///
+        /// </remarks>
+        /// <param name="useCaseActiveAccount">Service that executes the use case logic.</param>
+        /// <param name="request">Resquest Object</param>
+        /// <returns>Return Messages</returns>
+        /// <response code="200">Status account updated successfully</response>
+        /// <response code="400">Request Invalid</response>
+        /// <response code="404">Account not found</response>
+        /// <response code="409">Account is already inactive</response>
+        /// <response code="500">Internal Server Error</response>
+        [Authorize]
+        [HttpPatch("active")]
+        [ProducesResponseType(typeof(Result), StatusCodes.Status200OK)]
+        public async Task<IActionResult> IActiveAccountAsync(
+            [FromServices] IActiveAccountUseCase useCaseActiveAccount,
+            [FromBody] ActiveAccountRequest request)
+        {
+            var result = await useCaseActiveAccount.ExecuteAsync(request);
 
             return result.ToActionResult();
         }

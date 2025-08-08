@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Project.Application.UseCases.Account.Active;
 using Project.Application.UseCases.Account.Create;
 using Project.Application.UseCases.Account.GetAll;
 using Project.Application.UseCases.Account.Inactivate;
@@ -27,6 +28,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<ICreateAccountUseCase, CreateAccountUseCase>();
 builder.Services.AddScoped<IGetAllAccountsUseCase, GetAllAccountsUseCase>();
 builder.Services.AddScoped<IInactivateAccountUseCase, InactivateAccountUseCase>();
+builder.Services.AddScoped<IActiveAccountUseCase, ActiveAccountUseCase>();
 builder.Services.AddScoped<ILoginUseCase, LoginUseCase>();
 builder.Services.AddScoped<IUpdateProfileUseCase, UpdateProfileUseCase>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();

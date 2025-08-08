@@ -200,19 +200,19 @@
                     StateHasChanged();
                     return;
                 }
+                Notify.Success("Conta desativada com sucesso!");
             }
             else
             {
-                var response = await AccountService.InactiveAccountAsync(id);
+                var response = await AccountService.ActiveAccountAsync(id);
                 if (!response.IsSuccess)
                 {
                     Errors.AddRange(response.Errors);
                     StateHasChanged();
                     return;
                 }
-            }
-
-            Notify.Success("Conta alterada com sucesso!");
+                Notify.Success("Conta ativada com sucesso!");
+            }            
 
             await _tableRef.ReloadServerData();
         }

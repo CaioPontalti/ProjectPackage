@@ -1,9 +1,9 @@
 ﻿using Project.Application.Resources.Messages.Account;
 using Project.Application.Resources.Request;
 
-namespace Project.Application.UseCases.Account.Inactivate.Request;
+namespace Project.Application.UseCases.Account.Active.Request;
 
-public class InactiveAccountRequest : RequestBase
+public class ActiveAccountRequest : RequestBase
 {
     public string Id { get; set; }
 

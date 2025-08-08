@@ -46,4 +46,9 @@ public class Account
     {
         IsActive = false;
     }
+
+    public void SetActive()
+    {
+        IsActive = true;
+    }
 }

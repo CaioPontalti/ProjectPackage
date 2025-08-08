@@ -9,4 +9,5 @@ public interface IAccountService
     Task<ApiResponse<CreateAccount>> CreateAsync(string email, string password, string role, string accountType);
     Task<ApiResponse<GetAllAccount>> GetAllAsync(int page, int pageSize, string search);
     Task<ApiResponse> InactiveAccountAsync(string id);
+    Task<ApiResponse> ActiveAccountAsync(string id);
 }
