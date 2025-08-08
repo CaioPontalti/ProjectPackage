@@ -17,7 +17,8 @@ public class NotificationService
         _snackbar.Add(message, Severity.Success, config =>
         {
             config.ShowCloseIcon = true;
-            config.VisibleStateDuration = 2500;
+            config.VisibleStateDuration = 3000;
+            config.HideTransitionDuration = 500;
             config.SnackbarVariant = Variant.Filled;
         });
     }
@@ -28,6 +29,7 @@ public class NotificationService
         {
             config.ShowCloseIcon = true;
             config.VisibleStateDuration = 4000;
+            config.HideTransitionDuration = 500;
             config.SnackbarVariant = Variant.Filled;
         });
     }
@@ -38,6 +40,7 @@ public class NotificationService
         {
             config.ShowCloseIcon = true;
             config.VisibleStateDuration = 4000;
+            config.HideTransitionDuration = 500;
             config.SnackbarVariant = Variant.Filled;
         });
     }
@@ -48,6 +51,7 @@ public class NotificationService
         {
             config.ShowCloseIcon = true;
             config.VisibleStateDuration = 4000;
+            config.HideTransitionDuration = 500;
             config.SnackbarVariant = Variant.Filled;
         });
     }
