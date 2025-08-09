@@ -34,15 +34,16 @@
           @bind-SelectedItem="selectedItem">
 
     <ToolBarContent>
-        <MudFab Color="Color.Primary"
-                Size="Size.Small"
-                StartIcon="@Icons.Material.Filled.Add" 
-                Style="margin-right:10px;"
-                OnClick="@HandleClick" />
-
+        <MudTooltip Text="Criar nova conta">
+            <MudFab Color="Color.Primary"
+                    Size="Size.Small"
+                    StartIcon="@Icons.Material.Filled.Add"
+                    Style="margin-right:10px;"
+                    OnClick="@HandleClick" />
+        </MudTooltip>
         <MudText Typo="Typo.h6">Contas</MudText>
         <MudSpacer />
-        
+
         <MudTextField @bind-Value="searchInput"
                       @onkeyup="HandleKeyUp"
                       Placeholder="Search"
@@ -67,15 +68,15 @@
         <MudTd DataLabel="Acesso">@(EnumExtensionMethods.GetEnumDescriptionFromString<AccountTypes>(@context.AccountType))</MudTd>
         <MudTd DataLabel="Status">@(context.IsActive ? "Ativa" : "Inativa")</MudTd>
         <MudTd DataLabel="Ação">
-            
-            <MudButton Variant="Variant.Filled" 
+
+            <MudButton Variant="Variant.Filled"
                        Color="@(context.IsActive ? Color.Default : Color.Tertiary)"
                        Size="Size.Small"
                        Style="text-transform: none; transition: 0.2s ease-in-out; height:25px; min-width:80px;"
                        OnClick="() => UpdateStatusAccount(context.Id, context.IsActive)">
                 @(context.IsActive ? "Desativar" : "Ativar")
             </MudButton>
-            
+
         </MudTd>
     </RowTemplate>
     <PagerContent>
@@ -212,7 +213,7 @@
                     return;
                 }
                 Notify.Success("Conta ativada com sucesso!");
-            }            
+            }
 
             await _tableRef.ReloadServerData();
         }

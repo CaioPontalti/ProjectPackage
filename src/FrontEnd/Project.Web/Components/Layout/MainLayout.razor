@@ -17,7 +17,7 @@
     <MudLayout>
         <MudAppBar Elevation="1" Dense="true">
             <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" OnClick="@ToggleDrawer" Edge="Edge.Start" />
-            <MudText Typo="Typo.h6" Class="ml-2">Project Managment</MudText>
+            <MudText Typo="Typo.h6" Class="ml-2">DevOps</MudText>
             <MudSpacer />
 
             <MudIconButton Icon="@(DarkLightModeButtonIcon)" Color="Color.Inherit" OnClick="@DarkModeToggle" />
@@ -30,7 +30,6 @@
                 <MudMenuItem OnClick="HandleProfileClick">Perfil</MudMenuItem>
                 <MudMenuItem OnClick="Logout">Sair</MudMenuItem>
             </MudMenu>
-            
         </MudAppBar>
 
         <MudDrawer @bind-Open="_drawerOpen" Elevation="1" ClipMode="DrawerClipMode.Always">
@@ -88,7 +87,7 @@
         var theme = _isDarkMode ? "Dark" : _themeDefault;
         await CookieService.RemoveAsync("theme");
         await CookieService.SetAsync("theme", theme, 365);
-        
+
     }
 
     public string DarkLightModeButtonIcon => _isDarkMode switch

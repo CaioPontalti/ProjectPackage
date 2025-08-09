@@ -1,11 +1,11 @@
 ﻿@page "/"
-@rendermode InteractiveServer
 @attribute [Authorize]
 
 @inject IAccessTokenService AccessTokenService
 @inject NavigationManager Navigation
 @inject CustomAuthenticationStateProvider AuthProvider
 @inject AuthenticationStateProvider AuthStateProvider
+@using System.Globalization;
 
 <PageTitle>Home</PageTitle>
 <AuthGuard/>
@@ -22,43 +22,55 @@
 }
 </style>
 
-<MudPaper Elevation="1" Class="pa-2 mx-auto">
- <MudText Typo="Typo.h6" GutterBottom="true">Meus Projetos</MudText>
-    <MudGrid >
-        @for (int i = 1; i < 5; i++)
-        {
-            <MudItem xs="12" sm="6" md="2">
-                <MudCard>
+@* <MudText Typo="Typo.h6" GutterBottom="true">Meus Projetos</MudText>
+<MudGrid Spacing="2" >
+    @foreach (var project in projects)
+    {
+        <MudItem xs="12" sm="6" md="3" Class="pa-2">
+            <MudPaper Elevation="3" Style="width: 100%;">
+                <MudCard Style="min-height: 300px; display: flex; flex-direction: column; justify-content: space-between;">
                     <MudCardHeader>
                         <CardHeaderContent>
-                            <MudText Typo="Typo.h6">Projeto</MudText>
+                            <MudText Typo="Typo.h6">@project.Name</MudText>
                         </CardHeaderContent>
                     </MudCardHeader>
                     <MudCardContent>
-                        <MudText>This day everything happened.</MudText>
-                        <MudText Typo="Typo.body2">The quick, brown fox jumps over a lazy dog.</MudText>
+                        <MudText><strong>Sprint</strong> @project.SprintNumber.ToString()</MudText>
+                        <MudTooltip Text="@project.Description">
+                            <MudText Typo="Typo.body2">
+                                @((project.Description.Length > 100) 
+                                    ? project.Description.Substring(0, 100) + "..." 
+                                    : project.Description)
+                            </MudText>
+                        </MudTooltip>
                     </MudCardContent>
                     <MudCardActions>
-                        <MudButton Variant="Variant.Text" Color="Color.Primary">Read more</MudButton>
+                        <MudButton Variant="Variant.Text" Color="Color.Primary" Style="text-transform: none; transition: 0.2s ease-in-out;">Ver mais...</MudButton>
                     </MudCardActions>
                 </MudCard>
-            </MudItem>
-            }
-    </MudGrid>
-</MudPaper>
+            </MudPaper>
+        </MudItem>
+    }
+</MudGrid> *@
 
-<MudGrid>
+
+<MudGrid Spacing="2">
     <MudItem xs="12" sm="6" md="4">
-        <MudPaper Elevation="1" Class="pa-2 mx-auto" Style="margin-top:10px;">
+        <MudPaper Elevation="3" Class="pa-2 mx-auto" >
             <MudGrid>
                 <MudItem xs="12">
-                    <MudText Typo="Typo.h6" GutterBottom="true">Minhas horas</MudText>
+                    <MudTooltip Text="Minhas horas Projeto API">
+                    <MudText Typo="Typo.h6" GutterBottom="true">
+                        @Shorten("Horas Projeto API", 30)
+                    </MudText>
+                    </MudTooltip>
                     <MudChart ChartType="ChartType.Donut"
                               Width="180px"
                               Height="180px"
                               InputData="@data"
                               InputLabels="@labels"
-                              @bind-SelectedIndex="Index">
+                              @bind-SelectedIndex="Index"
+                              LegendPosition="Position.Left">
                         <CustomGraphics>
                             <text class="donut-total-label" x="50%" y="35%" dominant-baseline="middle" text-anchor="middle" font-family="Helvetica" font-size="3">Total</text>
                             <text class="donut-total-label" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="black" font-family="Helvetica" font-size="6">@data.Sum().ToString()</text>
@@ -71,8 +83,62 @@
             </MudGrid>
         </MudPaper>
     </MudItem>
-</MudGrid>
 
+    <MudItem xs="12" sm="6" md="4">
+        <MudPaper Elevation="3" Class="pa-2 mx-auto" >
+            <MudGrid>
+                <MudItem xs="12">
+                    <MudText Typo="Typo.h6" GutterBottom="true">
+                        Horas Front-End
+                    </MudText>
+                    <MudChart ChartType="ChartType.Donut"
+                              Width="180px"
+                              Height="180px"
+                              InputData="@data2"
+                              InputLabels="@labels2"
+                              @bind-SelectedIndex="Index2"
+                              LegendPosition="Position.Left">
+                        <CustomGraphics>
+                            <text class="donut-total-label" x="50%" y="35%" dominant-baseline="middle" text-anchor="middle" font-family="Helvetica" font-size="3">Total</text>
+                            <text class="donut-total-label" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="black" font-family="Helvetica" font-size="6">@data2.Sum().ToString()</text>
+                        </CustomGraphics>     
+                    </MudChart>
+                    <MudText Typo="Typo.body2" Align="Align.Center" >
+                        <span><strong>@labels2[Index2]</strong></span>: <span>@data2[Index2].ToString() horas</span>
+                    </MudText>
+                </MudItem>
+            </MudGrid>
+        </MudPaper>
+    </MudItem>
+
+    <MudItem xs="12" sm="6" md="4">
+        <MudPaper Elevation="3" Class="pa-2 mx-auto" >
+            <MudGrid>
+                <MudItem xs="12">
+                    <MudText Typo="Typo.h6" GutterBottom="true">
+                        Horas Scrum
+                    </MudText>
+                    <MudChart ChartType="ChartType.Donut"
+                              Width="180px"
+                              Height="180px"
+                              InputData="@data3"
+                              InputLabels="@labels3"
+                              @bind-SelectedIndex="Index3"
+                              LegendPosition="Position.Left">
+                        <CustomGraphics>
+                            <text class="donut-total-label" x="50%" y="35%" dominant-baseline="middle" text-anchor="middle" font-family="Helvetica" font-size="3">Total</text>
+                            <text class="donut-total-label" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="black" font-family="Helvetica" font-size="6">@data3.Sum().ToString()</text>
+                        </CustomGraphics>     
+                    </MudChart>
+                    <MudText Typo="Typo.body2" Align="Align.Center" >
+                        <span><strong>@labels3[Index3]</strong></span>: <span>@data3[Index3].ToString() horas</span>
+                    </MudText>
+                </MudItem>
+            </MudGrid>
+        </MudPaper>
+    </MudItem>
+
+</MudGrid>
 
 
 @code{
@@ -81,17 +147,36 @@
     private DateTime tokenExpired { get; set; }
     public DateTime currentTime { get; set; }
     private Timer timer;
-    private DateTime dateDif { get; set; }
 
     private int Index = 0;
-    public double[] data = { 25, 75, 20, 5 };
-    public string[] labels = { "QA", "Development", "Documentation", "Analysis" };
+    private int Index2 = 0;
+    private int Index3 = 0;
+    private readonly double[] data = { 15, 65, 10, 5 };
+    private readonly string[] labels = { "QA", "Development", "Documentation", "Analysis" };
+    private readonly double[] data2 = { 10, 35 };
+    private readonly string[] labels2 = { "UX", "Development Front" };
+    private readonly double[] data3 = { 3, 1.5, 2 };
+    private readonly string[] labels3 = { "Planning Task", "Daily", "Review/Retro" };
+
+    private List<Project> projects = new ();
 
     protected override async Task OnInitializedAsync()
     {
-        await InitialValues();
+        // await InitialValues();
 
-        timer = new Timer(UpdateClock, null, 0, 1000); 
+        // timer = new Timer(UpdateClock, null, 0, 1000);
+
+        var culture = new CultureInfo("en-US");
+        CultureInfo.DefaultThreadCurrentCulture = culture;
+        CultureInfo.DefaultThreadCurrentUICulture = culture;
+
+        projects = new ()
+        {
+            new Project{ Name = "Api Pagamentos", Description = "Este projeto vai desenvolver uma Api de Pagamentos", SprintNumber = 2 },
+            new Project{ Name = "Api Integração", Description = "Este projeto vai desenvolver uma Api de Integração", SprintNumber = 17 },
+            new Project{ Name = "App Mobile", Description = "Este projeto vai desenvolver o app Mobile para o sistema.", SprintNumber = 3 },
+            new Project{ Name = "Front-End", Description = "Este projeto vai desenvolver o Front-End da aplicação", SprintNumber = 2 }
+        };
     }
 
     private async Task Logout()
@@ -110,31 +195,44 @@
         if (user.Identity.IsAuthenticated)
         {
 
-            var expires = user.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Exp).Value;
-            if(long.TryParse(expires, out var exp))
-            {
-                tokenExpired = DateTimeOffset.FromUnixTimeSeconds(exp).LocalDateTime;
-            }
+            // var expires = user.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Exp).Value;
+            // if(long.TryParse(expires, out var exp))
+            // {
+            //     tokenExpired = DateTimeOffset.FromUnixTimeSeconds(exp).LocalDateTime;
+            // }
         }
     }
 
-    private void UpdateClock(object state)
+    private string Shorten(string text, int maxLength)
     {
-        // Update current time
-        currentTime = DateTime.Now;
-
-        // Trigger UI update
-        InvokeAsync(StateHasChanged);
+        if (string.IsNullOrWhiteSpace(text)) return string.Empty;
+        return text.Length <= maxLength ? text : text.Substring(0, maxLength) + "...";
     }
 
-    private string TokenExpiredTime()
-    {
-        TimeSpan restante = tokenExpired - currentTime;
+    // private void UpdateClock(object state)
+    // {
+    //     // Update current time
+    //     currentTime = DateTime.Now;
 
-        if (restante <= TimeSpan.Zero)
-            return $"Sua sessão expirou. Faça login novamente para continuar navegando.";
-        
-        var hora = new TimeOnly(restante.Hours, restante.Minutes, restante.Seconds);
-            return $"Faltam {hora.Hour}:{hora.Minute}:{hora.Second} para sua sessão expirar";
+    //     // Trigger UI update
+    //     InvokeAsync(StateHasChanged);
+    // }
+
+    // private string TokenExpiredTime()
+    // {
+    //     TimeSpan restante = tokenExpired - currentTime;
+
+    //     if (restante <= TimeSpan.Zero)
+    //         return $"Sua sessão expirou. Faça login novamente para continuar navegando.";
+
+    //     var hora = new TimeOnly(restante.Hours, restante.Minutes, restante.Seconds);
+    //     return $"Faltam {hora.Hour}:{hora.Minute}:{hora.Second} para sua sessão expirar";
+    // }
+
+    public class Project
+    {
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public int SprintNumber { get; set; }
     }
 }
