@@ -3,6 +3,7 @@
 
 @attribute [Authorize]
 @inject IJSRuntime JS
+@inject NavigationManager NavigationManager
 
 <PageTitle>Carros</PageTitle>
 <AuthGuard/>
@@ -22,6 +23,13 @@
           @bind-SelectedItem="selectedItem1">
 
     <ToolBarContent>
+        <MudTooltip Text="Criar nova conta">
+            <MudFab Color="Color.Primary"
+                    Size="Size.Small"
+                    StartIcon="@Icons.Material.Filled.Add"
+                    Style="margin-right:10px;"
+                    OnClick="@HandleClick" />
+        </MudTooltip>
         <MudText Typo="Typo.h6">Lista de Carros</MudText>
         <MudSpacer />
         <MudTextField @bind-Value="searchInput"
@@ -103,6 +111,11 @@
     private async Task OnSearchChanged(string value)
     {
         searchInput = value;
+    }
+
+    private void HandleClick()
+    {
+        NavigationManager.NavigateTo("project/create", false);
     }
 
     private async Task HandleKeyUp(KeyboardEventArgs args)

@@ -1,0 +1,239 @@
+﻿@page "/project/create"
+@attribute [Authorize]
+
+@layout Components.Layout.MainLayout
+@inject NavigationManager NavigationManager
+@inject IAuthService AuthService
+@inject CustomAuthenticationStateProvider AuthProvider
+@inject IAccessTokenService AccessTokenService
+@inject IAccountService AccountService
+@inject ILogger<Create> Logger
+
+<PageTitle>Log in</PageTitle>
+<AuthGuard />
+
+<MudText Typo="Typo.h6" Align="Align.Left" Class="mb-2">
+    Novo Projeto
+</MudText>
+
+@if (_isLoadingScreen)
+{
+    <MudOverlay Visible="true" DarkBackground="true" ZIndex="9999">
+        <MudProgressCircular Color="Color.Primary" Indeterminate="true" Size="Size.Large" />
+    </MudOverlay>
+}
+else
+{
+    <EditForm Model="InputModelProject" OnValidSubmit="OnValidSubmit">
+        <DataAnnotationsValidator />
+
+        <div class="col-lg-12">
+            @if (Errors.Any())
+            {
+                @foreach (var error in Errors)
+                {
+                    <MudAlert Severity="Severity.Error" Dense="true" Class="my-1">@error</MudAlert>
+                }
+            }
+            @if (!string.IsNullOrEmpty(MessageSuccess))
+            {
+                <MudAlert Severity="Severity.Success" Dense="true" Class="my-1" ShowCloseIcon="true" CloseIconClicked="CloseMe">@MessageSuccess</MudAlert>
+            }
+        </div>
+
+        <MudPaper Elevation="2" Class="pa-6 mx-auto">
+
+            <MudGrid>
+
+                <MudItem xs="4" md="3" Style="margin-top: -20px;">
+                    <MudTextField Label="Responsável"
+                                  For="@(() => InputModelProject.Name)"
+                                  @bind-Value="InputModelProject.Name"
+                                  Variant="Variant.Text"
+                                  FullWidth="true" />
+                </MudItem>
+
+                <MudItem xs="6" md="4" Style="margin-top: -20px;">
+                    <MudTextField Label="Nome do Projeto"
+                                  For="@(() => InputModelProject.Name)"
+                                  @bind-Value="InputModelProject.Name"
+                                  Variant="Variant.Text"
+                                  FullWidth="true" />
+                </MudItem>
+
+                <MudItem xs="12" md="12">
+                    <MudTextField Label="Descrição do Projeto"
+                                  @bind-Value="InputModelProject.Description"
+                                  Placeholder="Digite aqui..."
+                                  Lines="5"
+                                  Variant="Variant.Text" />
+                </MudItem>
+            </MudGrid>
+
+            <!-- Títulos acima dos DropZones -->
+            <MudGrid Style="margin-top: 1px;">
+                <MudItem xs="6">
+                    <MudText Typo="Typo.body1">Recursos Disponíveis</MudText>
+                </MudItem>
+                <MudItem xs="6">
+                    <MudText Typo="Typo.body1">Recursos Selecionados</MudText>
+                </MudItem>
+            </MudGrid>
+
+            <!-- DropZones lado a lado -->
+            <MudDropContainer T="AccountDropItem"
+                              @key="_items"
+                              Items="@_items"
+                              ItemsSelector="(item, dropzone) => 
+                              string.Equals(item.Identifier?.Trim(), dropzone?.Trim(), StringComparison.OrdinalIgnoreCase)" ItemDropped="ItemUpdated">
+
+                <!-- Renderização dos DropZones -->
+                <ChildContent>
+                    <MudGrid>
+                        <MudItem xs="6">
+                            <MudDropZone T="AccountDropItem"
+                                         Identifier="zone1"
+                                         Class="rounded"
+                                         Style="@_sizeStyleArea">
+                            </MudDropZone>
+                        </MudItem>
+                        <MudItem xs="6">
+                            <MudDropZone T="AccountDropItem"
+                                         Identifier="zone2"
+                                         Class="rounded"
+                                         Style="@_sizeStyleArea">
+                            </MudDropZone>
+                        </MudItem>
+                    </MudGrid>
+                </ChildContent>
+
+                <!-- Renderização dos itens -->
+                <ItemRenderer Context="account">
+                    @((RenderFragment)(@<MudPaper Elevation="3" Class="pa-2 my-1" Style="font-size:0.875rem;">
+                    @account.Email - <strong>@(EnumExtensionMethods.GetEnumDescriptionFromString<AccountTypes>(@account.AccountType))</strong>
+                </MudPaper>))
+            </ItemRenderer>
+
+            </MudDropContainer>
+
+            <MudItem xs="12" Class="mt-4 d-flex justify-end">
+                <MudButton Class="mt-4"
+                           Color="Color.Primary"
+                           Disabled="@_isLoadingSaveButton"
+                           Style="text-transform: none; transition: 0.2s ease-in-out;"
+                           ButtonType="ButtonType.Submit">
+                @if (_isLoadingSaveButton)
+                    {
+                        <MudProgressCircular Size="Size.Small" Indeterminate="true" />
+                    }
+                    else
+                    {
+                        <span>Salvar</span>
+                    }
+                </MudButton>
+            </MudItem>
+
+        </MudPaper>
+    </EditForm>
+    
+}
+@code {
+    private List<AccountDropItem> _items = new List<AccountDropItem>();
+
+    private InputProject InputModelProject = new();
+    private bool _isLoadingSaveButton = false;
+    private readonly List<string> Errors = new List<string>();
+    private bool _loaded;
+    private bool _isLoadingScreen = true;
+    private string _sizeStyleArea = string.Empty;
+    private int _sizeItemsArea = 0;
+    private string MessageSuccess;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        try
+        {
+            if (firstRender && !_loaded)
+            {
+                var response = await AccountService.GetAllAsync(0, 100000, string.Empty);
+
+                if (!response.IsSuccess)
+                {
+                    Errors.AddRange(response.Errors);
+                    StateHasChanged();
+                    return;
+                }
+
+                _sizeItemsArea = response.Data.TotalItems;
+                _sizeStyleArea = $"min-height:{_sizeItemsArea * 35}px;";
+
+                _items = response.Data.Accounts
+                    .Where(a => a.IsActive)
+                    .Select(a => new AccountDropItem
+                    {
+                        Id = a.Id,
+                        Email = a.Email,
+                        AccountType = a.AccountType,
+                        Identifier = "zone1"
+                    })
+                    .ToList();
+
+                _loaded = true;
+            }
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            Logger.LogError(ex, "An error occurred in the method OnAfterRenderAsync.");
+            NavigationManager.NavigateTo("/auth/login", true);
+        }
+        catch (Exception ex)
+        {
+            Errors.Add(ex.Message);
+            Logger.LogError(ex, "An error occurred in the method OnAfterRenderAsync.");
+        }
+        finally
+        {
+            _isLoadingScreen = false;
+            StateHasChanged();
+        }
+    }
+
+    public async Task OnValidSubmit()
+    {
+        var selecionados = _items
+        .Where(i => string.Equals(i.Identifier?.Trim(), "zone2", StringComparison.OrdinalIgnoreCase))
+        .ToList();
+    }
+
+    private void CloseMe()
+    {
+        MessageSuccess = string.Empty;
+    }
+
+    private void ItemUpdated(MudItemDropInfo<AccountDropItem> dropItem)
+    {
+        var selectedZone1 = _items.Count(i => string.Equals(i.Identifier?.Trim(), "zone1", StringComparison.OrdinalIgnoreCase)) + 1;
+
+        var selectedZone2 = _items.Count(i => string.Equals(i.Identifier?.Trim(), "zone2", StringComparison.OrdinalIgnoreCase)) + 1;
+
+        _sizeItemsArea = selectedZone1 > selectedZone2 ? selectedZone1 : selectedZone2;
+
+        _sizeStyleArea = $"min-height:{_sizeItemsArea * 35}px;";
+
+        dropItem.Item.Identifier = dropItem.DropzoneIdentifier;
+    }
+
+    public class AccountDropItem
+    {
+        public string Id { get; set; }
+        public string Email { get; set; }
+        public string Identifier { get; set; }
+        public string AccountType { get; set; }
+    }
+
+    public class InputProject
+    {
+        public string Name { get; set; }
+        public string Description { get; set; }
+    }
+}
