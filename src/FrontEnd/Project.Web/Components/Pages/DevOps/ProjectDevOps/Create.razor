@@ -70,6 +70,13 @@ else
                 </MudItem>
             </MudGrid>
 
+            @* <MudSelect T="string" Label="Selecione os Recursos do Projeto" MultiSelection="true" @bind-Value="_value" @bind-SelectedValues="_selectedEmails">
+                @foreach (var state in _items.OrderBy(u=>u.Email))
+                {
+                    <MudSelectItem T="string" Value="@state.Email">@state.Email - @(EnumExtensionMethods.GetEnumDescriptionFromString<AccountTypes>(@state.AccountType))</MudSelectItem>
+                }
+            </MudSelect> *@
+
             <!-- Títulos acima dos DropZones -->
             <MudGrid Style="margin-top: 1px;">
                 <MudItem xs="6">
@@ -138,8 +145,10 @@ else
     
 }
 @code {
-    private List<AccountDropItem> _items = new List<AccountDropItem>();
+    // private string _value = string.Empty;
+    // private IEnumerable<string> _selectedEmails = new List<string>();
 
+    private List<AccountDropItem> _items = new List<AccountDropItem>();
     private InputProject InputModelProject = new();
     private bool _isLoadingSaveButton = false;
     private readonly List<string> Errors = new List<string>();
@@ -169,6 +178,7 @@ else
 
                 _items = response.Data.Accounts
                     .Where(a => a.IsActive)
+                    .OrderBy(a=> a.Email)
                     .Select(a => new AccountDropItem
                     {
                         Id = a.Id,
@@ -200,6 +210,10 @@ else
 
     public async Task OnValidSubmit()
     {
+        // var contasSelecionadas = _items
+        //     .Where(i => _selectedEmails.Contains(i.Email))
+        //     .ToList();
+
         var selecionados = _items
         .Where(i => string.Equals(i.Identifier?.Trim(), "zone2", StringComparison.OrdinalIgnoreCase))
         .ToList();
