@@ -1,0 +1,16 @@
+{
+  "_id": {
+    "$oid": "688cfba16d1c33d6270b4be4"
+  },
+  "email": "caio@gmail.com",
+  "passwordHash": "$2a$11$MbLWODW0.x4ghU/HasmwfuOOWXcuZkVtfl9.QTJNSnk3HiKykKpgy",
+  "role": "Admin",
+  "accountType": "Developer",
+  "createdDate": {
+    "$date": "2025-08-01T17:38:41.216Z"
+  },
+  "lastUpdatedDate": {
+    "$date": "2025-08-01T17:38:41.216Z"
+  },
+  "isActive": true
+}

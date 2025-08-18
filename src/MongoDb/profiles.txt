@@ -1,0 +1,20 @@
+{
+  "_id": {
+    "$oid": "688cfba16d1c33d6270b4be5"
+  },
+  "accountId": "688cfba16d1c33d6270b4be4",
+  "name": "Caio Pontalti",
+  "birthDate": {
+    "$date": "1987-11-30T00:00:00.000Z"
+  },
+  "address": {
+    "PostalCode": "03380-160",
+    "AddressDescription": "Rua Curuena",
+    "Number": 75,
+    "State": "São Paulo",
+    "City": "São Paulo",
+    "Neighborhood": "Chácara Belenzinho",
+    "Complement": "Apto 111, Bloco 2"
+  },
+  "cellPhone": "11984346282"
+}
